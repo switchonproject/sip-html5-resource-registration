@@ -12,13 +12,24 @@
     "package.json"
   ],
   "dependencies": {
-    "angular": "1.2.25",
+    "angular": "1.2.29",
     "json3": "3.2.6",
     "es5-shim": "2.1.0",
-    "jquery": "2.1.1"
+    "jquery": "2.1.1",
+    "angular-wizard": "~0.6.1",
+    "angular-resource": "1.2.29",
+    "angular-bootstrap": "~0.14.3",
+    "bootstrap": "~3.3.6",
+    "Wicket": "*",
+    "leaflet": "~0.7.7",
+    "leaflet-draw": "plugn-leaflet-draw#~0.2.6",
+    "angular-leaflet-directive": "~0.10.0"
   },
   "devDependencies": {
-    "angular-mocks": "1.2.25",
-    "angular-scenario": "1.2.25"
+    "angular-mocks": "1.2.29",
+    "angular-scenario": "1.2.29"
+  },
+  "resolutions": {
+    "angular": "1.2.29"
   }
 }

@@ -1,0 +1,43 @@
+<div class="row">
+    <div class="col-md-9">
+        <leaflet id="mainmap" 
+            defaults="wzData.map.defaults" 
+            center="wzData.map.center"
+            height="600px" width="820px">   
+        </leaflet>
+    </div>
+    <div class="col-md-3">
+        <div class="row">
+            <div class="col-md-3">
+                <switch id="switch-bbox" name="bbox" ng-model="enabled"></switch> 
+            </div>
+            <div class="col-xs-8">
+                <strong>Define bounding box or polygon</strong>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <switch id="switch-europe" name="europe" ng-model="enabled1"></switch> 
+            </div>
+            <div class="col-xs-9">
+                <strong>Select European country or region</strong>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <switch id="switch-world" name="world" ng-model="enabled2"></switch> 
+            </div>
+            <div class="col-xs-9">
+                <strong>Select World country or region</strong>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <switch id="switch-coordinates" name="coordinates" ng-model="enabled3"></switch> 
+            </div>
+            <div class="col-xs-9">
+                <strong>Enter bounding box coordinates</strong>
+            </div>
+        </div>
+    </div>
+</div>

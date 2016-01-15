@@ -2,25 +2,104 @@
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<!--[if gt IE 8]><!--> 
+<html class="no-js" lang="en"> <!--<![endif]-->
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title></title>
         <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
-        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <meta name="content-language" content="en-GB">     
+        <meta name="author" content="cismet GmbH, http://www.cismet.de">	
+        <meta name="date" content="2015-04-07T00:00:00+02:00">
+        <meta http-equiv="imagetoolbar" content="no">     
+        <meta http-equiv="window-target" content="_top">  
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
+        <link rel="icon" type="image/vnd.microsoft.icon" href="images/favicon.ico"/>
+
         <!-- build:css() -->
-        <link rel="stylesheet" href="styles/my-style.css">
+        <link href="styles/switchon.css" rel="stylesheet" type="text/css"/>
+        <link href="styles/angular-wizard.css" rel="stylesheet" type="text/css"/>
         <!-- endbuild -->
+
+        <!-- Application related CSS -->
+
+        <link href="bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+        <link href="bower_components/leaflet/dist/leaflet.css" rel="stylesheet" type="text/css"/>
+        <link href="bower_components/leaflet-draw/dist/leaflet.draw.css" rel="stylesheet" type="text/css"/>
+        <link href="bower_components/angular-ui-switch/angular-ui-switch.css" rel="stylesheet" type="text/css"/>
+
+
     </head>
-    <body ng-app="de.cismet.sip-html5-resource-registration">
+    <body ng-app="de.cismet.sip-html5-resource-registration" 
+          ng-controller="de.cismet.sip-html5-resource-registration.controllers.masterController">
         <!--[if lt IE 7]>
           <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
         <!-- Add your site or application content here -->
-        <div class="container" ng-include="'views/myView.html'" ></div>
+        <!--<div class="container" ng-include="'views/myView.html'" ></div>-->
+  
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    
+                    <div class="switchon-header">
+                        <span><img src="images/sologo_white.png" alt=""/></span>
+                    <h1>Open-Data Registration Tool</h1>
+                    </div>
+
+                    <alert 
+                       ng-hide="wzData.message === null" 
+                       type="{{wzData.message.type}}">
+                        <span class="glyphicon glyphicon-align-left gi-3x" 
+                              ng-class="wzData.message.icon" 
+                              aria-hidden="true"></span>
+                        <div>{{wzData.message.text}}</div>
+                    </alert>
+
+                    <wizard on-finish="finishedWizard()" 
+                            name="Open Data Registration"
+                            template="templates/wizard-tpl.html"
+                            current-step="wzData.wizard.currentStep"> 
+                        
+                        
+                        <!-- Geographic Location -->
+                        <wz-step wz-title="Geographic Location"
+                                 template="templates/wizard-step-tpl.html"
+                                 wz-data="wzData"
+                                 canexit="wzData.wizard.exitValidation">
+                            <ng-include src="'templates/geographicLocation.html'"> 
+                            </ng-include>
+                            
+                        </wz-step>
+                        
+                        
+                        <!-- Dataset Description -->
+                        <wz-step wz-title="Dataset Description" 
+                                 template="templates/wizard-step-tpl.html"
+                                 wz-data="wzData"
+                                 canexit="wzData.wizard.exitValidation">
+                            <ng-include src="'templates/openDataRegistration.html'"> 
+                            </ng-include>
+                        </wz-step>
+                        
+                        
+                        
+                        <!-- License and Conditions -->
+                        <wz-step wz-title="More steps"
+                                 template="templates/wizard-step-tpl.html"
+                                 wz-data="wzData"
+                                 canexit="exitValidation">
+                            {{title}}
+                            <p>Even more steps!!</p>
+                            
+                        </wz-step>
+                        
+                    </wizard>
+                </div>
+            </div>
+        </div>
 
         <!--[if lt IE 9]>
         <script src="bower_components/es5-shim/es5-shim.js"></script>
@@ -29,16 +108,28 @@
         <!-- bower:js -->
         <script src="bower_components/jquery/dist/jquery.js"></script>
         <script src="bower_components/angular/angular.js"></script>
+        <script src="bower_components/angular-animate/angular-animate.js" type="text/javascript"></script>
+        <script src="bower_components/angular-resource/angular-resource.js" type="text/javascript"></script>
+        <script src="bower_components/angular-ui-router/release/angular-ui-router.js" type="text/javascript"></script>
+        <script src="bower_components/angular-bootstrap/ui-bootstrap.js" type="text/javascript"></script>
+        <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js" type="text/javascript"></script>
+        <script src="bower_components/leaflet/dist/leaflet.js" type="text/javascript"></script>
+        <script src="bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.js" type="text/javascript"></script>
+        <script src="bower_components/leaflet-draw/dist/leaflet.draw-src.js" type="text/javascript"></script>
+        <script src="bower_components/Wicket/wicket.js" type="text/javascript"></script>
+        <script src="bower_components/Wicket/wicket-leaflet.js" type="text/javascript"></script>
+        <script src="bower_components/angular-wizard/dist/angular-wizard.js" type="text/javascript"></script>
+        <script src="bower_components/angular-ui-switch/angular-ui-switch.js" type="text/javascript"></script>
         <!-- endbower -->
 
         <!-- build:js() -->
         <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/_module.js"></script>
-        <script src="scripts/controllers/myDirectiveController.js"></script>
-        <script src="scripts/directives/_module.js"></script>
-        <script src="scripts/directives/myDirective.js"></script>
-        <script src="scripts/services/_module.js"></script>
-        <script src="scripts/services/myService.js"></script>
+        <script src="scripts/controllers/_module.js" type="text/javascript"></script>
+        <script src="scripts/controllers/masterController.js" type="text/javascript"></script>
+        <script src="scripts/directives/_module.js" type="text/javascript"></script>
+        <script src="scripts/services/_module.js" type="text/javascript"></script>
+        <script src="scripts/factories/_module.js" type="text/javascript"></script>
+        <script src="scripts/factories/appConfigFactory.js" type="text/javascript"></script>
         <!-- endbuild -->
     </body>
 </html>

@@ -1,15 +1,17 @@
-<div class="row">
+<div class="row" ng-controller="de.cismet.sip-html5-resource-registration.controllers.geoLocationController as geoController" >
     <div class="col-md-9">
         <leaflet id="mainmap" 
-            defaults="wzData.map.defaults" 
-            center="wzData.map.center"
+            defaults="geoController.mapData.defaults" 
+            center="geoController.mapData.center"
             height="600px" width="820px">   
         </leaflet>
     </div>
     <div class="col-md-3">
         <div class="row">
             <div class="col-md-3">
-                <switch id="switch-bbox" name="bbox" ng-model="enabled"></switch> 
+                <switch id="switch-bbox" name="switch-bbox" 
+                        ng-model="geoController.mode.drawBBox"
+                        ng-change="geoController.switchMode('drawBBox')"></switch> 
             </div>
             <div class="col-xs-8">
                 <strong>Define bounding box or polygon</strong>
@@ -17,7 +19,9 @@
         </div>
         <div class="row">
             <div class="col-md-3">
-                <switch id="switch-europe" name="europe" ng-model="enabled1"></switch> 
+                <switch id="switch-europe" name="switch-europe"
+                        ng-model="geoController.mode.selectEC"
+                        ng-change="geoController.switchMode('selectEC')"></switch> 
             </div>
             <div class="col-xs-9">
                 <strong>Select European country or region</strong>
@@ -25,7 +29,9 @@
         </div>
         <div class="row">
             <div class="col-md-3">
-                <switch id="switch-world" name="world" ng-model="enabled2"></switch> 
+                <switch id="switch-world" name="switch-world" 
+                        ng-model="geoController.mode.selectWC"
+                        ng-change="geoController.switchMode('selectWC')"></switch> 
             </div>
             <div class="col-xs-9">
                 <strong>Select World country or region</strong>
@@ -33,11 +39,25 @@
         </div>
         <div class="row">
             <div class="col-md-3">
-                <switch id="switch-coordinates" name="coordinates" ng-model="enabled3"></switch> 
+                <switch id="switch-coordinates" name="switch-coordinates" 
+                        ng-model="geoController.mode.defineBBox"
+                        ng-change="geoController.switchMode('defineBBox')"></switch> 
             </div>
             <div class="col-xs-9">
                 <strong>Enter bounding box coordinates</strong>
             </div>
+        </div>
+        
+        <div class="row" ng-show="geoController.mode.selectEC">
+            <strong>geo.mode.selectEC</strong>
+        </div>
+        
+        <div class="row" ng-show="geoController.mode.selectWC">
+            <strong>geo.mode.selectWC</strong>
+        </div>
+        
+        <div class="row" ng-show="geoController.mode.defineBBox">
+            <strong>geo.mode.defineBBox</strong>
         </div>
     </div>
 </div>

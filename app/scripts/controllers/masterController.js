@@ -6,115 +6,110 @@ angular.module(
         '$scope',
         'AppConfig',
         'WizardHandler',
+        'de.cismet.sip-html5-resource-registration.services.dataset',
+        'de.cismet.sip-html5-resource-registration.services.TagGroupService',
         function (
             $scope,
             AppConfig,
-            WizardHandler 
+            WizardHandler, 
+            dataset,
+            tagGroupService
         ) {
             'use strict';
 
+            
+            // - dataset: the resource meta data, initilaized from a template and changed by the app
+            // - tags: list of selectable tags
+            // - wizard: the wizard status
 
-            //$scope.config = AppConfig;
+            // init Scope Soup -------------------------------------------------
 
-            $scope.wzData = {};
-            $scope.wzData.message = {};
-            $scope.wzData.message.text='Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!';
-            $scope.wzData.message.icon='glyphicon-info-sign'
-            $scope.wzData.message.type = 'success';
+            /**
+             * The resource meta data, initilaized from a template and changed by the app
+             */
+            $scope.dataset=dataset;
             
+            /**
+             * list of selectable tags. Initilaized by the controllers
+             */
+            $scope.tags = [];
             
-            $scope.getEnabledSteps = function() {
-              return WizardHandler.wizard('Open Data Registration').getEnabledSteps().length;
+            /**
+             * Message text
+             */
+            $scope.message = {};
+            $scope.message.text='Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!';
+            $scope.message.icon='glyphicon-info-sign';
+            $scope.message.type = 'success';
+            
+            /**
+             * Wizard status, etc.
+             */
+            $scope.wizard = {};
+            $scope.wizard.enterValidators = [];
+            $scope.wizard.exitValidators = [];
+            $scope.wizard.currentStep = '';
+            $scope.wizard.canProceed = true;
+            $scope.wizard.canGoBack = false;
+            $scope.wizard.proceedButtonText = 'Next';
+            $scope.wizard.isFinishStep = function () {
+                return $scope.wizard.currentStep === 'Summary';
+            };
+            $scope.wizard.isFirstStep = function () {
+                return $scope.wizard.currentStep === 'Dataset Description';
             };
             
-            $scope.wzData.wizard = {};
-            $scope.wzData.wizard.currentStep = '';
-            // TODO: proper validation, this should be false
-            $scope.wzData.wizard.canProceed = true;
-            $scope.wzData.wizard.canGoBack = false;
-            
-            $scope.wzData.wizard.isFinishStep = function () {
-                return $scope.wzData.wizard.currentStep === 'Summary';
-            };
-            
-            $scope.wzData.wizard.isFirstStep = function () {
-                return $scope.wzData.wizard.currentStep === 'Dataset Description';
-            };
-            
-            $scope.wzData.wizard.finish = function () {
-                $scope.params.run = true;
-                $scope.$hide();
-            };
-
-            // the wizard framework is not sufficient for user friendly display of states
-            $scope.wzData.wizard.validators = {noVal: function () { return true; }};
-            $scope.wzData.wizard.validators['Select Area'] = function () {
-                if ($scope.params.area && $scope.params.area.geometry && $scope.params.area.geometry.coordinates) {
-                    return true;
-                }
-
-                // TODO: proper validation, this should be false
-                return true;
-            };
-            
-            $scope.wzData.wizard.exitValidation = function(context){
-                $scope.wzData.message.text="NEXT!";
-                return true;
-            };
-
-            $scope.wzData.wizard.proceedButtonText = 'Next';
-            $scope.wzData.params = {};
-            
-            $scope.wzData.map = {};
-            $scope.wzData.map.center = AppConfig.mapView.home;
-            $scope.wzData.map.defaults = {
-                    tileLayer: AppConfig.mapView.backgroundLayer,
-                    //tileLayerOptions: {noWrap: true},
-                    //maxZoom: 14,
-                    minZoom: AppConfig.minZoom,
-                    path: {
-                        weight: 10,
-                        color: '#800000',
-                        opacity: 1
-                    }
-                }
-            
-            
-            
-           
-            $scope.$watch('wzData.wizard.currentStep', function (n) {
+            $scope.$watch('wizard.currentStep', function (n) {
                 if (n) {
-                    if ($scope.wzData.wizard.isFinishStep()) {
-                        $scope.wzData.wizard.proceedButtonText = 'Finish';
+                    if ($scope.wizard.isFinishStep()) {
+                        $scope.wizard.proceedButtonText = 'Finish';
                     } else {
-                        $scope.wzData.wizard.proceedButtonText = 'Next';
+                        $scope.wizard.proceedButtonText = 'Next';
                     }
                     
-                    $scope.wzData.wizard.canGoBack = !$scope.wzData.wizard.isFirstStep();
+                    $scope.wizard.canGoBack = !$scope.wizard.isFirstStep();
 
-/*
-                    if (n === 'Parameterize Earthquake') {
-                        // this has to be done as the map won't render properly as it is loaded when not displayed yet
-                        leafletData.getMap('eqParamMap').then(function (map) {
-                            map.invalidateSize(false);
-                        });
-                    }
- */                   
                 } else {
-                    $scope.wzData.wizard.proceedButtonText = 'Next';
+                    $scope.wizard.proceedButtonText = 'Next';
                 }
             });
             
-            $scope.$watch('wzData.params', function () {
-                // if currentstep is not set the wizard is just about to start
-                if ($scope.wzData.wizard.currentStep && $scope.wzData.wizard.currentStep !== '') {
-                    $scope.wzData.wizard.canProceed =
-                        ($scope.wzData.wizard.validators[$scope.wzData.wizard.currentStep] || $scope.wzData.wizard.validators.noVal)();
-                } else {
-                    // TODO: proper validation, this should be false instead
-                    $scope.wzData.wizard.canProceed = true;
-                }
-            }, true);
+            //$scope.functions = tagGroupService.getTagList('function');
+            
+            //$scope.wzData.wizard.finish = function () {
+            //    $scope.params.run = true;
+            //    $scope.$hide();
+            //};
+
+            // the wizard framework is not sufficient for user friendly display of states
+            //$scope.wzData.wizard.validators = {noVal: function () { return true; }};
+            //$scope.wzData.wizard.validators['Select Area'] = function () {
+            //    if ($scope.params.area && $scope.params.area.geometry && $scope.params.area.geometry.coordinates) {
+            //        return true;
+            //    }
+
+                // TODO: proper validation, this should be false
+            //    return true;
+            //};
+
+            //$scope.wzData.params = {};
+            
+                     //$scope.getEnabledSteps = function() {
+            //  return WizardHandler.wizard('Open Data Registration').getEnabledSteps().length;
+            //};
+                       
+            
+            
+//            $scope.$watch('wzData.params', function () {
+//                // if currentstep is not set the wizard is just about to start
+//                if ($scope.wzData.wizard.currentStep && $scope.wzData.wizard.currentStep !== '') {
+//                    $scope.wzData.wizard.canProceed =
+//                        ($scope.wzData.wizard.validators[$scope.wzData.wizard.currentStep] || $scope.wzData.wizard.validators.noVal)();
+//                } else {
+//                    // TODO: proper validation, this should be false instead
+//                    $scope.wzData.wizard.canProceed = true;
+//                }
+//            }, true);
             
             
             /*

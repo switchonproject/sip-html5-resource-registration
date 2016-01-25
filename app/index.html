@@ -32,7 +32,7 @@
 
     </head>
     <body ng-app="de.cismet.sip-html5-resource-registration" 
-          ng-controller="de.cismet.sip-html5-resource-registration.controllers.masterController">
+          ng-controller="de.cismet.sip-html5-resource-registration.controllers.masterController as master">
         <!--[if lt IE 7]>
           <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
@@ -50,39 +50,44 @@
                     </div>
 
                     <alert 
-                       ng-hide="wzData.message === null" 
-                       type="{{wzData.message.type}}">
+                       ng-hide="message === null" 
+                       type="{{message.type}}">
                         <span class="glyphicon glyphicon-align-left gi-3x" 
-                              ng-class="wzData.message.icon" 
+                              ng-class="message.icon" 
                               aria-hidden="true"></span>
-                        <div>{{wzData.message.text}}</div>
+                        <div>{{message.text}}</div>
                     </alert>
 
-                    <wizard on-finish="finishedWizard()" 
-                            name="Open Data Registration"
+                    <wizard on-finish="masterController.finishedWizard()" 
+                            name="open-data-registration"
                             template="templates/wizard-tpl.html"
-                            current-step="wzData.wizard.currentStep"> 
+                            current-step="wizard.currentStep"> 
+                        
+                        
+                        <!-- Dataset Description -->
+                        <wz-step wz-title="Dataset Description" 
+                                 template="templates/wizard-step-tpl.html"
+                                 wz-data="wizard"
+                                 canenter="wizard.enterValidators[wzTitle]"
+                                 canexit="wizard.exitValidators[wzTitle]">
+                            <ng-include src="'templates/openDataRegistration.html'"> 
+                            </ng-include>
+                        </wz-step>
                         
                         
                         <!-- Geographic Location -->
                         <wz-step wz-title="Geographic Location"
                                  template="templates/wizard-step-tpl.html"
-                                 wz-data="wzData"
-                                 canexit="wzData.wizard.exitValidation">
+                                 wz-data="wizard"
+                                 canenter="wizard.enterValidators[wzTitle]"
+                                 canexit="wizard.exitValidators[wzTitle]">
                             <ng-include src="'templates/geographicLocation.html'"> 
                             </ng-include>
                             
                         </wz-step>
                         
                         
-                        <!-- Dataset Description -->
-                        <wz-step wz-title="Dataset Description" 
-                                 template="templates/wizard-step-tpl.html"
-                                 wz-data="wzData"
-                                 canexit="wzData.wizard.exitValidation">
-                            <ng-include src="'templates/openDataRegistration.html'"> 
-                            </ng-include>
-                        </wz-step>
+                        
                         
                         
                         
@@ -126,8 +131,13 @@
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/_module.js" type="text/javascript"></script>
         <script src="scripts/controllers/masterController.js" type="text/javascript"></script>
+        <script src="scripts/controllers/odRegistrationController.js" type="text/javascript"></script>
+        <script src="scripts/controllers/geoLocationController.js" type="text/javascript"></script>
         <script src="scripts/directives/_module.js" type="text/javascript"></script>
         <script src="scripts/services/_module.js" type="text/javascript"></script>
+        <script src="scripts/services/dataset.js" type="text/javascript"></script>
+        <script src="scripts/services/tagGroupService.js" type="text/javascript"></script>
+        <script src="scripts/services/searchService.js" type="text/javascript"></script>
         <script src="scripts/factories/_module.js" type="text/javascript"></script>
         <script src="scripts/factories/appConfigFactory.js" type="text/javascript"></script>
         <!-- endbuild -->

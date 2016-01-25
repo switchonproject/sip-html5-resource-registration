@@ -1,10 +1,12 @@
-<form class="form-horizontal">
+<form class="form-horizontal"
+      ng-controller="de.cismet.sip-html5-resource-registration.controllers.odRegistrationController as odRegistrationController">
     <!-- Name -->
     <div class="form-group row">
         <label for="dataset-name" class="col-md-1 form-control-label">Name</label>
         <div class="col-md-8">
             <input type="text" class="form-control" 
-                   id="dataset-name" placeholder="Name of the Dataset">
+                   id="dataset-name" placeholder="Name of the Dataset"
+                   ng-model="dataset.name">
         </div>
     </div>
 
@@ -12,15 +14,16 @@
     <div class="form-group row">
         <label for="link" class="col-md-1 form-control-label">Link</label>
         <div class="col-md-2">
-            <select class="form-control" id="link-type">
-                <option>download</option>
-                <option>order</option>
-                <option>information</option>
+            <select class="form-control" 
+                    id="link-type" 
+                    ng-options="tag as tag.name for tag in tags['function'] track by tag.id"
+                    ng-model="dataset.representation[0].function">
             </select>
         </div>
         <div class="col-md-6">
             <input type="url" class="form-control" 
-                   id="url" placeholder="">
+                   id="url" placeholder=""
+                   ng-model="dataset.representation[0].contentlocation">
         </div>
         <div class="col-md-3">
             <select class="form-control" id="data-type">
@@ -49,7 +52,8 @@
     <div class="form-group row">
         <label for="description" class="col-md-1 form-control-label">Description</label>
         <div class="col-md-8">
-            <textarea class="form-control" id="description" rows="8"></textarea>
+            <textarea class="form-control" id="description" rows="8"
+                      ng-model="dataset.description"></textarea>
         </div>
     </div>
 

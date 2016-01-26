@@ -7,6 +7,7 @@
         </leaflet>
     </div>
     <div class="col-md-3">
+        <!-- SWITCH DRAW -->
         <div class="row">
             <div class="col-md-3">
                 <switch id="switch-bbox" name="switch-bbox" 
@@ -17,6 +18,7 @@
                 <strong>Define bounding box or polygon</strong>
             </div>
         </div>
+        <!-- SWITCH SELECT EUROPE -->
         <div class="row">
             <div class="col-md-3">
                 <switch id="switch-europe" name="switch-europe"
@@ -27,6 +29,7 @@
                 <strong>Select European country or region</strong>
             </div>
         </div>
+        <!-- SWITCH SELECT WORLD -->
         <div class="row">
             <div class="col-md-3">
                 <switch id="switch-world" name="switch-world" 
@@ -37,6 +40,7 @@
                 <strong>Select World country or region</strong>
             </div>
         </div>
+        <!-- SWITCH ENTER COORDINATES -->
         <div class="row">
             <div class="col-md-3">
                 <switch id="switch-coordinates" name="switch-coordinates" 
@@ -48,14 +52,45 @@
             </div>
         </div>
         
+        <!-- CONTROL SELECT EUROPE -->
         <div class="row" ng-show="geoController.mode.selectEC">
-            <strong>geo.mode.selectEC</strong>
+            <div class="col-md-12">
+                <hr>
+                <ui-select ng-model="geoController.contentLocation" 
+                               theme="bootstrap" 
+                               ng-disabled="disabled" 
+                               sortable="true"
+                               on-select="geoController.onSelectedCountry($item)">
+                    <ui-select-match>{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="country in geoController.countries['countries-europe'] | filter: {name: $select.search} track by country.name"
+                                       position="down"
+                                       style="max-height:350px">
+                        <div ng-bind-html="country.name | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
         </div>
         
+        <!-- CONTROL SELECT WORLD -->
         <div class="row" ng-show="geoController.mode.selectWC">
-            <strong>geo.mode.selectWC</strong>
+            <div class="col-md-12">
+                <hr>
+                <ui-select ng-model="geoController.contentLocation" 
+                               theme="bootstrap" 
+                               ng-disabled="disabled" 
+                               sortable="true"
+                               on-select="geoController.onSelectedCountry($item)">
+                    <ui-select-match>{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="country in geoController.countries['countries-world'] | filter: {name: $select.search} track by country.name"
+                                       position="down"
+                                       style="max-height:350px">
+                        <div ng-bind-html="country.name | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
         </div>
         
+        <!-- CONTROL ENTER COORDINATES -->
         <div class="row" ng-show="geoController.mode.defineBBox">
             <strong>geo.mode.defineBBox</strong>
         </div>

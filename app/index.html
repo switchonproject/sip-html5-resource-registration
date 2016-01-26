@@ -28,7 +28,7 @@
         <link href="bower_components/leaflet/dist/leaflet.css" rel="stylesheet" type="text/css"/>
         <link href="bower_components/leaflet-draw/dist/leaflet.draw.css" rel="stylesheet" type="text/css"/>
         <link href="bower_components/angular-ui-switch/angular-ui-switch.css" rel="stylesheet" type="text/css"/>
-
+        <link href="bower_components/ui-select/dist/select.css" rel="stylesheet" type="text/css"/>
 
     </head>
     <body ng-app="de.cismet.sip-html5-resource-registration" 
@@ -39,19 +39,19 @@
 
         <!-- Add your site or application content here -->
         <!--<div class="container" ng-include="'views/myView.html'" ></div>-->
-  
+
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    
+
                     <div class="switchon-header">
                         <span><img src="images/sologo_white.png" alt=""/></span>
-                    <h1>Open-Data Registration Tool</h1>
+                        <h1>Open-Data Registration Tool</h1>
                     </div>
 
                     <alert 
-                       ng-hide="message === null" 
-                       type="{{message.type}}">
+                        ng-hide="message === null" 
+                        type="{{message.type}}">
                         <span class="glyphicon glyphicon-align-left gi-3x" 
                               ng-class="message.icon" 
                               aria-hidden="true"></span>
@@ -62,8 +62,8 @@
                             name="open-data-registration"
                             template="templates/wizard-tpl.html"
                             current-step="wizard.currentStep"> 
-                        
-                        
+
+
                         <!-- Dataset Description -->
                         <wz-step wz-title="Dataset Description" 
                                  template="templates/wizard-step-tpl.html"
@@ -73,8 +73,8 @@
                             <ng-include src="'templates/openDataRegistration.html'"> 
                             </ng-include>
                         </wz-step>
-                        
-                        
+
+
                         <!-- Geographic Location -->
                         <wz-step wz-title="Geographic Location"
                                  template="templates/wizard-step-tpl.html"
@@ -83,14 +83,14 @@
                                  canexit="wizard.exitValidators[wzTitle]">
                             <ng-include src="'templates/geographicLocation.html'"> 
                             </ng-include>
-                            
+
                         </wz-step>
-                        
-                        
-                        
-                        
-                        
-                        
+
+
+
+
+
+
                         <!-- License and Conditions -->
                         <wz-step wz-title="More steps"
                                  template="templates/wizard-step-tpl.html"
@@ -98,9 +98,9 @@
                                  canexit="exitValidation">
                             {{title}}
                             <p>Even more steps!!</p>
-                            
+
                         </wz-step>
-                        
+
                     </wizard>
                 </div>
             </div>
@@ -113,8 +113,9 @@
         <!-- bower:js -->
         <script src="bower_components/jquery/dist/jquery.js"></script>
         <script src="bower_components/angular/angular.js"></script>
-        <script src="bower_components/angular-animate/angular-animate.js" type="text/javascript"></script>
+        <script src="bower_components/angular-animate/angular-animate.min.js" type="text/javascript"></script>
         <script src="bower_components/angular-resource/angular-resource.js" type="text/javascript"></script>
+        <script src="bower_components/angular-sanitize/angular-sanitize.min.js" type="text/javascript"></script>
         <script src="bower_components/angular-ui-router/release/angular-ui-router.js" type="text/javascript"></script>
         <script src="bower_components/angular-bootstrap/ui-bootstrap.js" type="text/javascript"></script>
         <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js" type="text/javascript"></script>
@@ -125,6 +126,7 @@
         <script src="bower_components/Wicket/wicket-leaflet.js" type="text/javascript"></script>
         <script src="bower_components/angular-wizard/dist/angular-wizard.js" type="text/javascript"></script>
         <script src="bower_components/angular-ui-switch/angular-ui-switch.js" type="text/javascript"></script>
+        <script src="bower_components/ui-select/dist/select.js" type="text/javascript"></script>
         <!-- endbower -->
 
         <!-- build:js() -->

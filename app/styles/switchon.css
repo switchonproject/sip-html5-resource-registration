@@ -31,3 +31,13 @@ body {
     display:table-cell;
     vertical-align: middle;
 }
+
+.ui-select-multiple.ui-select-bootstrap .ui-select-match-item {
+  background-color: #337ab7;
+  border-color: #204d74;
+  color: #fff;
+}
+
+.ui-select-multiple.ui-select-bootstrap {
+    min-height: 106px;
+}

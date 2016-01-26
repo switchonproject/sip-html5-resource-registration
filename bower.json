@@ -26,7 +26,9 @@
     "angular-leaflet-directive": "~0.10.0",
     "angular-ui-router": "~0.2.15",
     "angular-animate": "~1.2.29",
-    "angular-ui-switch": "~0.1.1"
+    "angular-ui-switch": "~0.1.1",
+    "ui-select": "angular-ui-select#~0.13.2",
+    "angular-sanitize": "1.2.29"
   },
   "devDependencies": {
     "angular-mocks": "1.2.29",

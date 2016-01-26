@@ -14,7 +14,7 @@ angular.module(
             };
 
             // cached tag group lists
-            tagGroups = {};
+            tagGroups = [];
 
             config = AppConfig.searchService;
             authdata = Base64.encode(config.username + ':' + config.password);
@@ -22,9 +22,9 @@ angular.module(
             // remote legagy search core search
             // FIXME: limit and offset not implemented in legacy search!
             // currently, limit and offset are appended to the POST query parameter!
-            searchResource = $resource(config.host + '/searches/SWITCHON.de.cismet.cids.custom.switchon.search.server.ResourceTagsSearch/results',
+            searchResource = $resource(config.host + '/searches/SWITCHON.de.cismet.cids.custom.switchon.search.server.TagsSearch/results',
                 {
-                    limit: 20,
+                    limit: 100,
                     offset: 0,
                     omitNullValues: true,
                     deduplicate: true
@@ -40,12 +40,21 @@ angular.module(
                     }
                 });
 
-            searchTags = function (tagGroups) {
+            searchTags = function (taggroup, tags) {
                 var queryObject, searchResult;
 
-                queryObject = {
-                    'list': [{'key': 'taggroups', 'value': tagGroups}]
+                if(!tags) {
+                    queryObject = {
+                    'list': [{'key': 'taggroup', 'value': taggroup}]
                 };
+                } else {
+                    queryObject = {
+                    'list': [{'key': 'taggroup', 'value': taggroup},
+                    {'key': 'tags', 'value': tags}]
+                };
+                }
+
+                
                 searchResult = searchResource.search(
                     {},
                     queryObject
@@ -53,32 +62,32 @@ angular.module(
                 return searchResult;
             };
 
-            lazyLoadTagLists = function (tagGroup, array) {
-                var intermediateResult, tags, tagResource, i;
+            lazyLoadTagLists = function (taggroup, tags) {
+                var intermediateResult, resultTags, i;
                 // cached list does exist
-                if (tagGroups.hasOwnProperty(tagGroup)) {
-                    return tagGroups[tagGroup];
+                if (tagGroups.hasOwnProperty(taggroup)) {
+                    return tagGroups[taggroup];
                 }
 
 
-                    intermediateResult = searchTags(tagSearches[tagGroup]);
-                    tags = [];
-                    tags.$resolved = false;
-                    tags.$promise = intermediateResult.$promise.then(function (resource) {
+                    intermediateResult = searchTags(taggroup, tags);
+                    resultTags = [];
+                    resultTags.$resolved = false;
+                    resultTags.$promise = intermediateResult.$promise.then(function (resource) {
                         for (i = 0; i < resource.$collection.length; i++) {
-                            tags.push(resource.$collection[i]);
+                            resultTags.push(resource.$collection[i]);
                         }
-                        tags.$resolved = true;
-                        return tags;
+                        resultTags.$resolved = true;
+                        return resultTags;
                     });
-                    tagGroups[tagGroup] = tags;
-                    return tagGroups[tagGroup];
+                    tagGroups[taggroup] = resultTags;
+                    return tagGroups[taggroup];
                 
             };
 
             getTagListFunction =
-                function (tagGroup) {
-                    return lazyLoadTagLists(tagGroup, true);
+                function (taggroup, tags) {
+                    return lazyLoadTagLists(taggroup, tags);
                 };
 
 

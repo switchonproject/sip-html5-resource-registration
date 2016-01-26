@@ -2,8 +2,8 @@
 var app = angular.module(
     'de.cismet.sip-html5-resource-registration',
     [
-        'ngAnimate', 'ui.bootstrap', 'leaflet-directive',
-        'uiSwitch', 'mgo-angular-wizard',
+        'ngAnimate', 'ngSanitize', 'ui.bootstrap', 'leaflet-directive',
+        'uiSwitch', 'mgo-angular-wizard','ui.select',
         'de.cismet.sip-html5-resource-registration.controllers',
         'de.cismet.sip-html5-resource-registration.directives',
         'de.cismet.sip-html5-resource-registration.services',

@@ -14,8 +14,7 @@
     <div class="form-group row">
         <label for="link" class="col-md-1 form-control-label">Link</label>
         <div class="col-md-2">
-            <select class="form-control" 
-                    id="link-type" 
+            <select class="form-control" id="link-type" 
                     ng-options="tag as tag.name for tag in tags['function'] track by tag.id"
                     ng-model="dataset.representation[0].function">
             </select>
@@ -26,24 +25,9 @@
                    ng-model="dataset.representation[0].contentlocation">
         </div>
         <div class="col-md-3">
-            <select class="form-control" id="data-type">
-                <option>netCDF-CF/Network Common Data Form</option>
-                <option>ADRG/ARC Digitilized Raster Graphics</option>
-                <option>ESRI ArcGIS Ascii Grid</option>
-                <option>ARC/INFO Coverages</option>
-                <option>USGS DEM/USGS Digital Elevation Model</option>
-                <option>DLG/Digital Line Graph</option>
-                <option>DRG/Digital raster graphic</option>
-                <option>Geography Markup Language</option>
-                <option>hdf5/hierachical data format</option>
-                <option>Java Script Object Notation</option>
-                <option>Comma Separated Values</option>
-                <option>Hypertext Markup Language (website)</option>
-                <option>raw, ascii text</option>
-                <option>Rich Text Format</option>
-                <option>Tab Separated Values</option>
-                <option>unknown</option>
-                <option>other</option>
+            <select class="form-control" id="data-type"
+                    ng-options="tag as tag.description for tag in tags['content type'] track by tag.id"
+                    ng-model="dataset.representation[0].contentype">   
             </select>
         </div>
     </div>
@@ -59,96 +43,26 @@
 
     <div class="form-group row">
         <label for="keyword-list" class="col-md-1 form-control-label">Keywords</label>
-        <div class="col-md-3">
-            <select multiple size="8" class="form-control" id="keyword-list">
-                <option>Area, atmosphere</option>
-                <option>Area, ice</option>
-                <option>Benthic</option>
-                <option>Benthic species</option>
-                <option>Biological community</option>
-                <option>Biomass, phytoplankton</option>
-                <option>Biomass, zooplankton</option>
-                <option>Carbon</option>
-                <option>Crop property</option>
-                <option>Crop type</option>
-                <option>Delineation</option>
-                <option>Delineation, catchment</option>
-                <option>Delineation, drainage lines</option>
-                <option>Density</option>
-                <option>Derived variable</option>
-                <option>Descriptive</option>
-                <option>Dissolved Gas</option>
-                <option>Dissolved Solids</option>
-                <option>Energy, flux</option>
-                <option>Fertilisation</option>
-                <option>Fish</option>
-                <option>Fish species</option>
-                <option>Flux, discharge</option>
-                <option>Flux, dissolved gas</option>
-                <option>Flux, evaporation</option>
-                <option>Flux, precipitation</option>
-                <option>Flux, wind</option>
-                <option>Geology</option>
-                <option>Indicator Organisms</option>
-                <option>Land management</option>
-                <option>Land surface</option>
-                <option>Land surface classification</option>
-                <option>Length</option>
-                <option>Level</option>
-                <option>Level, ice</option>
-                <option>Level, lake</option>
-                <option>Level, ocean</option>
-                <option>Level, snow</option>
-                <option>Level, stream</option>
-                <option>Macrophyte species</option>
-                <option>Major</option>
-                <option>Minor</option>
-                <option>Nekton</option>
-                <option>Nekton species</option>
-                <option>Nitrogen</option>
-                <option>Optical, water</option>
-                <option>Other organic chemical</option>
-                <option>Oxygen Demand</option>
-                <option>PCBs</option>
-                <option>Pesticide</option>
-                <option>Phosphorus</option>
-                <option>Phytoplankton species</option>
-                <option>Pigment</option>
-                <option>Population, human</option>
-                <option>Population, livestock</option>
-                <option>Pressure, air</option>
-                <option>Pressure, water</option>
-                <option>Radiochemical</option>
-                <option>Soil</option>
-                <option>soil depth</option>
-                <option>Soil type</option>
-                <option>Stable Isotopes</option>
-                <option>Surface</option>
-                <option>Surface, elevation</option>
-                <option>Surface, slope</option>
-                <option>Temperature</option>
-                <option>Temperature, air</option>
-                <option>Temperature, soil</option>
-                <option>Temperature, water</option>
-                <option>Velocity</option>
-                <option>Velocity, wind</option>
-                <option>Volume, lake</option>
-                <option>Water body</option>
-                <option>Water body, aquifer</option>
-                <option>Water body, lake</option>
-                <option>Water body, river</option>
-                <option>Water content, air</option>
-                <option>Water content, snow</option>
-                <option>Water content, soil</option>
-                <option>Water, descriptive</option>
-                <option>Water, dissolved solids</option>
-                <option>Water, suspended solids</option>
-                <option>Zooplankton species]</option>
+        <!--<div class="col-md-3">
+            <select  ng-minlength="1" multiple size="8" class="form-control" id="keyword-list"
+                    ng-options="tag as tag.name for tag in tags['keywords - X-CUAHSI'] track by tag.id"
+                    ng-model="dataset.tags">   
             </select>
 
-        </div>
-        <div class="col-md-5">
-            <textarea class="form-control" id="keyword-box" rows="7"></textarea>
+        </div>-->
+        <div class="col-md-8">
+            <!--<textarea class="form-control" id="keyword-box" rows="7"></textarea>-->
+            <ui-select multiple limit="20"
+                           ng-model="dataset.tags" 
+                           theme="bootstrap" 
+                           ng-disabled="disabled" 
+                           sortable="true">
+                <ui-select-match placeholder="Select keywords...">{{$item.name}}</ui-select-match>
+                <ui-select-choices repeat="tag in tags['keywords - X-CUAHSI'] | filter: {name: $select.search}"
+                                   group-by="odRegistrationController.groupBy">
+                    <div ng-bind-html="tag.name | highlight: $select.search"></div>
+                </ui-select-choices>
+            </ui-select>
         </div>
     </div>
 </form>

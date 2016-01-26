@@ -21,9 +21,29 @@ angular.module(
             'use strict';
 
             var _this = this;
-            
             _this.dataset = dataset;
             
+            /**
+             * ui-select groupBy furnction for grouping selectable items by
+             * name.
+             * 
+             * @param {String} selected item
+             * @returns {String} group of the item
+             */
+            _this.groupBy = function(item) {
+                
+                if(item.name.indexOf(',') > -1) {
+                    return item.name.split(',', 1)[0]; 
+                } else {
+                    return item.name.split(' ', 1)[0]; 
+                }
+
+            };
+            
+            $scope.tags['function'] = tagGroupService.getTagList('function', 'download,order,information');
+            $scope.tags['content type'] = tagGroupService.getTagList('content type');
+            $scope.tags['keywords - X-CUAHSI'] = tagGroupService.getTagList('keywords - X-CUAHSI');
+
             $scope.wizard.enterValidators[$scope.wzTitle] = function(){
                 return true;
             };
@@ -32,13 +52,6 @@ angular.module(
             $scope.wizard.exitValidators[$scope.wzTitle] = function(){
                 return true;
             };
-            
-            
-            $scope.tags['function'] = $http.get('data/tags.json')
-            .then(function(res){
-               $scope.tags['function'] = res.data;                
-             });
-
         }
     ]
 );

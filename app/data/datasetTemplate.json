@@ -1,0 +1,337 @@
+{
+    "$self": "/SWITCHON.RESOURCE/8657",
+    "id": 8657,
+    "fromdate": null,
+    "accessconditions": {
+        "$self": "/SWITCHON.TAG/1446",
+        "id": 1446,
+        "name": "non-commercial use",
+        "taggroup": {
+            "$self": "/SWITCHON.TAGGROUP/145",
+            "id": 145,
+            "name": "access conditions",
+            "description": "License regulating the conditions for access and use of the data (open group with some predefined tags)."
+        },
+        "description": "Free for non-commercial use"
+    },
+    "spatialcoverage": {
+        "$self": "/SWITCHON.GEOM/8716",
+        "id": 8716,
+        "geo_field": "SRID=4326;POLYGON ((11 72, 66 72, 66 28, 11 28, 11 72))"
+    },
+    "todate": null,
+    "srid": {
+        "$self": "/SWITCHON.TAG/226",
+        "id": 226,
+        "name": "EPSG:4326",
+        "taggroup": {
+            "$self": "/SWITCHON.TAGGROUP/167",
+            "id": 167,
+            "name": "srid",
+            "description": "The Spatial Reference System Identifier (SRID) of the spatial coverage of the resource EPSG format (open group with some predefined tags)."
+        },
+        "description": "WGS 84 / World Geodetic System 1984"
+    },
+    "conformity": {
+        "$self": "/SWITCHON.TAG/253",
+        "id": 253,
+        "name": "Not evaluated",
+        "taggroup": {
+            "$self": "/SWITCHON.TAGGROUP/150",
+            "id": 150,
+            "name": "conformity",
+            "description": "This is a citation of the implementing rules adopted under Article 7(1) of Directive 2007/2/EC or other specification to which a particular resource conforms. (fixed group)"
+        },
+        "description": "Not evaluated"
+    },
+    "language": {
+        "$self": "/SWITCHON.TAG/145",
+        "id": 145,
+        "name": "eng",
+        "taggroup": {
+            "$self": "/SWITCHON.TAGGROUP/157",
+            "id": 157,
+            "name": "language",
+            "description": "The language(s) used within the resource or in which the metadata elements are expressed.  The value domain of this tag is limited to the languages defined in ISO 639-2."
+        },
+        "description": "English"
+    },
+    "description": "CLC 2000 is one of the datasets produced within the frame the Corine Land Cover programme referring to land cover / land use status of year 2000. The Corine Land Cover (CLC) is an European programme, coordinated by the European Environment Agency (EEA), providing consistent information on land cover and land cover changes across Europe. CLC products are based on the photointerpretation of satellite images by the national teams of the participating countries - the EEA member or cooperating countries. The resulting national land cover inventories are further integrated into a seamless land cover map of Europe. The resulting European database is based on standard methodology and nomenclature with following base parameters: - 44 classes in the hierarchical 3-level Corine nomenclature - minimum mapping unit (MMU) for status layers is 25 hectares - minimum width of linear elements is 100 metres - minimum mapping unit (MMU) for Land Cover Changes (LCC) for change layers is 5 hectares CLC programme provides important data sets supporting the implementation of key priority areas of the Environment Action Programmes of the European Community as protecting ecosystems, halting the loss of biological diversity, tracking the impacts of climate change, assessing developments in agriculture and implementing the EU Water Framework Directive etc.. CLC programme is also a part of the Global Monitoring for Environment and Security (GMES http://gmes.info) initiative, run by the European Commission and the European Space Agency, which will provide environmental information from a combination of air- and space-based observation systems and in-situ monitoring. More about the Corine Land Cover (CLC) programme and datasets can be found at http://www.eea.eu.",
+    "type": {
+        "$self": "/SWITCHON.TAG/254",
+        "id": 254,
+        "name": "external data",
+        "taggroup": {
+            "$self": "/SWITCHON.TAGGROUP/164",
+            "id": 164,
+            "name": "resource type",
+            "description": "SIP internal type of the resource (fixed group)."
+        },
+        "description": "This is data available as open data from any source on the Internet in a format, which can be directly used in experiments in the Laboratory."
+    },
+    "location": {
+        "$self": "/SWITCHON.TAG/865",
+        "id": 865,
+        "name": "World",
+        "taggroup": {
+            "$self": "/SWITCHON.TAGGROUP/158",
+            "id": 158,
+            "name": "location",
+            "description": "Geographic Location of the resource (covered by the data). E.g. Continent, Country, Region, City, etc. Open Group. (open group with some predefined tags)."
+        },
+        "description": "n/a"
+    },
+    "topiccategory": {
+        "$self": "/SWITCHON.TAG/236",
+        "id": 236,
+        "name": "imageryBaseMapsEarthCover",
+        "taggroup": {
+            "$self": "/SWITCHON.TAGGROUP/168",
+            "id": 168,
+            "name": "topic category",
+            "description": "High-level classification of resources in accordance with ISO 19115 for grouping and topic-based search (fixed group)."
+        },
+        "description": "base maps Examples: land cover, topographic maps, imagery, unclassified images, annotations"
+    },
+    "creationdate": null,
+    "name": "CLC 2000",
+    "licensestatement": "EEA standard re-use policy",
+    "tags": [{
+            "$self": "/SWITCHON.TAG/1475",
+            "id": 1475,
+            "name": "Water body, river",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/169",
+                "id": 169,
+                "name": "keywords - X-CUAHSI",
+                "description": "X-CUAHSI keywords build on a hierarchical keyword selection from the hydrologic ontology developed by CUAHSI, with additinal hierarchical keywords for relevant non-hydrosphere data."
+            },
+            "description": "n/a"
+        }, {
+            "$self": "/SWITCHON.TAG/1492",
+            "id": 1492,
+            "name": "Water body, sea",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/169",
+                "id": 169,
+                "name": "keywords - X-CUAHSI",
+                "description": "X-CUAHSI keywords build on a hierarchical keyword selection from the hydrologic ontology developed by CUAHSI, with additinal hierarchical keywords for relevant non-hydrosphere data."
+            },
+            "description": null
+        }, {
+            "$self": "/SWITCHON.TAG/1487",
+            "id": 1487,
+            "name": "Land cover",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/169",
+                "id": 169,
+                "name": "keywords - X-CUAHSI",
+                "description": "X-CUAHSI keywords build on a hierarchical keyword selection from the hydrologic ontology developed by CUAHSI, with additinal hierarchical keywords for relevant non-hydrosphere data."
+            },
+            "description": null
+        }],
+    "contact": {
+        "$self": "/SWITCHON.CONTACT/37",
+        "id": 37,
+        "organisation": "SWITCH-ON (Meta-Data Provider)",
+        "name": "SWITCH-ON (Meta-Data Provider)",
+        "description": "The SWITCH-ON (Sharing Water-related Information to Tackle Changes in the Hydrosphere â€“ for Operational Needs) project prepared the Meta-Data Record of this dataset and made it available in the SWITCH-ON Spatial Information Platform Spatial Information Platform (SIP).",
+        "email": "switchon.wm@gmail.com",
+        "url": "http://www.water-switch-on.eu/",
+        "role": {
+            "$self": "/SWITCHON.TAG/1515",
+            "id": 1515,
+            "name": "metadataProvider",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/165",
+                "id": 165,
+                "name": "role",
+                "description": "Function performed by the responsible party (fixed group, standard codelist)."
+            },
+            "description": "Party that collects, supplies and publishes meta-data about the resource. Person or organisation offering a meta-data catalogue that contains meta-data about the resource."
+        }
+    },
+    "geography": null,
+    "representation": [{
+            "$self": "/SWITCHON.REPRESENTATION/8658",
+            "id": 8658,
+            "name": "CLC 2000 Representation",
+            "description": "Representation of the resource CLC 2000",
+            "content": null,
+            "type": {
+                "$self": "/SWITCHON.TAG/212",
+                "id": 212,
+                "name": "original data",
+                "taggroup": {
+                    "$self": "/SWITCHON.TAGGROUP/163",
+                    "id": 163,
+                    "name": "representation type",
+                    "description": "SIP internal type of the representation of the resource (fixed group)."
+                },
+                "description": "The representation holds the original data of the resource"
+            },
+            "function": {
+                "$self": "/SWITCHON.TAG/71",
+                "id": 71,
+                "name": "download",
+                "taggroup": {
+                    "$self": "/SWITCHON.TAGGROUP/152",
+                    "id": 152,
+                    "name": "function",
+                    "description": "Function that can be perfomred following the contentLocation link to the resource representation (fixed group, standard codelist)."
+                },
+                "description": "link will get resource. The function of the link is to get a representation of the resource"
+            },
+            "protocol": {
+                "$self": "/SWITCHON.TAG/197",
+                "id": 197,
+                "name": "WWW:LINK-1.0-http--link",
+                "taggroup": {
+                    "$self": "/SWITCHON.TAGGROUP/161",
+                    "id": 161,
+                    "name": "protocol",
+                    "description": "Protocol of the service that can be accessed at the contentLocation of the resource representation (open group with several predefined tags from standard codelists)."
+                },
+                "description": "Web Address (URL), should be used when no further information about the resource is available"
+            },
+            "applicationprofile": {
+                "$self": "/SWITCHON.TAG/1359",
+                "id": 1359,
+                "name": "Web Browser",
+                "taggroup": {
+                    "$self": "/SWITCHON.TAGGROUP/147",
+                    "id": 147,
+                    "name": "application profile",
+                    "description": "Application that can be used to open or process the resource representation (open group with some predefined tags)."
+                },
+                "description": null
+            },
+            "uuid": "cc26b60a-c337-4d55-89bf-0f5d7081fa21",
+            "temporalresolution": null,
+            "spatialresolution": null,
+            "spatialscale": null,
+            "contentlocation": "http://ftp.eea.europa.eu/www/corine_land_cover/v17/clc00_spatialite.rar",
+            "tags": [],
+            "contenttype": {
+                "$self": "/SWITCHON.TAG/1270",
+                "id": 1270,
+                "name": "application/x-rar-compressed",
+                "taggroup": {
+                    "$self": "/SWITCHON.TAGGROUP/151",
+                    "id": 151,
+                    "name": "content type",
+                    "description": "MIME Type of the representation (open group which several predefined tags)."
+                },
+                "description": "n/a"
+            },
+            "uploadstatus": null,
+            "uploadmessage": null
+        }],
+    "lastmodificationdate": null,
+    "metadata": [{
+            "$self": "/SWITCHON.METADATA/14433",
+            "id": 14433,
+            "name": "Autogenerated SWITCH-ON Basic Meta-Data",
+            "tags": [],
+            "description": "Basic Meta-Data record created, derived or imported by the SWITCH-ON project according to the SWITCH-ON Standard Information Model (SIM) for Meta-Data for the SWITCH-ON Spatial Information Platform (SIP).",
+            "contact": {
+                "$self": "/SWITCHON.CONTACT/37",
+                "id": 37,
+                "organisation": "SWITCH-ON (Meta-Data Provider)",
+                "name": "SWITCH-ON (Meta-Data Provider)",
+                "description": "The SWITCH-ON (Sharing Water-related Information to Tackle Changes in the Hydrosphere â€“ for Operational Needs) project prepared the Meta-Data Record of this dataset and made it available in the SWITCH-ON Spatial Information Platform Spatial Information Platform (SIP).",
+                "email": "switchon.wm@gmail.com",
+                "url": "http://www.water-switch-on.eu/",
+                "role": {
+                    "$self": "/SWITCHON.TAG/1515",
+                    "id": 1515,
+                    "name": "metadataProvider",
+                    "taggroup": {
+                        "$self": "/SWITCHON.TAGGROUP/165",
+                        "id": 165,
+                        "name": "role",
+                        "description": "Function performed by the responsible party (fixed group, standard codelist)."
+                    },
+                    "description": "Party that collects, supplies and publishes meta-data about the resource. Person or organisation offering a meta-data catalogue that contains meta-data about the resource."
+                }
+            },
+            "type": {
+                "$self": "/SWITCHON.TAG/177",
+                "id": 177,
+                "name": "basic meta-data",
+                "taggroup": {
+                    "$self": "/SWITCHON.TAGGROUP/160",
+                    "id": 160,
+                    "name": "meta-data type",
+                    "description": "SIP internal type of the Meta-Data Record (fixed group)."
+                },
+                "description": "Type of the Meta-Data Record. \"basic meta-data\" refers to meta-data collected by switch-on according to the SIM meta-data schema. In fact, this meta-meta-data record refers to enclosing resource meta-data record."
+            },
+            "language": {
+                "$self": "/SWITCHON.TAG/145",
+                "id": 145,
+                "name": "eng",
+                "taggroup": {
+                    "$self": "/SWITCHON.TAGGROUP/157",
+                    "id": 157,
+                    "name": "language",
+                    "description": "The language(s) used within the resource or in which the metadata elements are expressed.  The value domain of this tag is limited to the languages defined in ISO 639-2."
+                },
+                "description": "English"
+            },
+            "standard": {
+                "$self": "/SWITCHON.TAG/1387",
+                "id": 1387,
+                "name": "SWITCH-ON SIM",
+                "taggroup": {
+                    "$self": "/SWITCHON.TAGGROUP/159",
+                    "id": 159,
+                    "name": "meta-data standard",
+                    "description": "Official standard on which the meta-data record is based (open group with some predefined tags)."
+                },
+                "description": "Meta-Data Record compliant to the Standard Information Model (SIM) of the Spatial Information Platform (SIP) of the EU FP7 project SWITCH-ON."
+            },
+            "uuid": null,
+            "contentlocation": null,
+            "creationdate": null,
+            "contenttype": {
+                "$self": "/SWITCHON.TAG/43",
+                "id": 43,
+                "name": "application/octet-stream",
+                "taggroup": {
+                    "$self": "/SWITCHON.TAGGROUP/151",
+                    "id": 151,
+                    "name": "content type",
+                    "description": "MIME Type of the representation (open group which several predefined tags)."
+                },
+                "description": "General Binary Data"
+            },
+            "content": null
+        }],
+    "accesslimitations": {
+        "$self": "/SWITCHON.TAG/1",
+        "id": 1,
+        "name": "limitation not listed",
+        "taggroup": {
+            "$self": "/SWITCHON.TAGGROUP/146",
+            "id": 146,
+            "name": "access limitations",
+            "description": "Limitations on public access in accordance to Article 13 of Directive 2007/2/EC (fixed group with tags from a standard codelist)."
+        },
+        "description": "otherRestrictions (limitation not listed)"
+    },
+    "uuid": "d333eac3-e6e1-4e93-b2f0-7624461818e3",
+    "collection": {
+        "$self": "/SWITCHON.TAG/1162",
+        "id": 1162,
+        "name": "EEA - CLC",
+        "taggroup": {
+            "$self": "/SWITCHON.TAGGROUP/149",
+            "id": 149,
+            "name": "collection",
+            "description": "Assigns the resource to a collection of resources for cataloguing purposes, e.g. SWITCH-ON Experiment Results, etc. (open group with some predefined tags)."
+        },
+        "description": "n/a"
+    },
+    "publicationdate": null
+}

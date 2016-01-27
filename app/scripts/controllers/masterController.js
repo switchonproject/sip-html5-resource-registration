@@ -51,6 +51,7 @@ angular.module(
             $scope.wizard.currentStep = '';
             $scope.wizard.canProceed = true;
             $scope.wizard.canGoBack = false;
+            $scope.wizard.hasError = false;
             $scope.wizard.proceedButtonText = 'Next';
             $scope.wizard.isFinishStep = function () {
                 return $scope.wizard.currentStep === 'Summary';

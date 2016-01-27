@@ -4,7 +4,6 @@ angular.module(
     'de.cismet.sip-html5-resource-registration.controllers.geoLocationController',
     [
         '$scope',
-        '$timeout',
         'AppConfig',
         'leafletData',
         'de.cismet.sip-html5-resource-registration.services.dataset',
@@ -12,7 +11,6 @@ angular.module(
         // Controller Constructor Function
         function (
             $scope,
-    $timeout,
             AppConfig,
             leafletData,
             dataset,
@@ -37,9 +35,10 @@ angular.module(
             
             _this.contentLocation = {};
             _this.contentLocation.name = 'Belarus';
-            _this.contentLocation.type = null;
-            _this.contentLocation.wkt = null;
-            _this.contentLocation.layer = null;
+            //_this.contentLocation.type = null;
+            //_this.contentLocation.wkt = null;
+            //_this.contentLocation.layer = null;
+            _this.contentLocation.bounds = {};
             
             _this.countries = [];
             _this.countries['countries-world'] = countriesService.getCountryList('countries-world'); 
@@ -66,8 +65,9 @@ angular.module(
                         });
                    });
                    
-                   _this.contentLocation = Object.create(item);
-                   _this.contentLocation.layer = layer;
+                   //_this.contentLocation.type = item.type;
+                   //_this.contentLocation.wkt = item.wkt;
+                   //_this.contentLocation.layer = layer;
            };
             
             wicket = new Wkt.Wkt();
@@ -153,20 +153,76 @@ angular.module(
                      drawControlsEnabled = false;
                 }
                 
-                if(_this.mode.defineBBox === true && _this.contentLocation.layer !== null) {
-                    console.log(_this.contentLocation.layer.getBounds());
+                if(_this.mode.defineBBox === true && layerGroup.getLayers().length >  0) {
+                    var bounds = layerGroup.getBounds();
+                    _this.contentLocation.bounds = {};
+                    _this.contentLocation.bounds.west = bounds.getWest();
+                    _this.contentLocation.bounds.south = bounds.getSouth();
+                    _this.contentLocation.bounds.east = bounds.getEast();
+                    _this.contentLocation.bounds.north = bounds.getNorth();
                 }
             };
             
+            _this.applyBoundingBox = function() {
+                var bounds = [[_this.contentLocation.bounds.south, 
+                        _this.contentLocation.bounds.west], 
+                    [_this.contentLocation.bounds.north, 
+                        _this.contentLocation.bounds.east]];
+
+
+                var layer = L.rectangle(bounds, defaultStyle);
+
+                layerGroup.clearLayers();
+                layerGroup.addLayer(layer);
+                
+                leafletData.getMap('mainmap').then(function (map) {
+                        map.fitBounds(layer, {
+                            animate: true,
+                            pan: {animate: true, duration: 0.6},
+                            zoom: {animate: true}
+                        });
+                   });
+                   
+                   _this.contentLocation.name = 'New user-defined Bounding Box';
+                   //_this.contentLocation.type = 'rectangle';
+                   //_this.contentLocation.wkt = null;
+                   //_this.contentLocation.layer = layer;
+            };
+            
             // resize the map on enter
-            $scope.wizard.enterValidators[$scope.wzTitle] = function(){
-                fireResize();
+            $scope.wizard.enterValidators['Geographic Location'] = function(){
+                 fireResize();
+                 
+                var layer = readSpatialCoverage(_this.dataset);
+                if(layer !== undefined && layer !== null) {
+                    layerGroup.clearLayers();
+                    layerGroup.addLayer(layer);
+                    
+                     leafletData.getMap('mainmap').then(function (map) {
+                        map.fitBounds(layer, {
+                            animate: true,
+                            pan: {animate: true, duration: 0.6},
+                            zoom: {animate: true}
+                        });
+                   });
+                }
+                
+               
+                
+              //  fireResize();
+                
+                
                 return true;
             };
             
             
-            $scope.wizard.exitValidators[$scope.wzTitle] = function(){
-                return true;
+            $scope.wizard.exitValidators['Geographic Location'] = function(){
+                
+                if(layerGroup.getLayers().length > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
             };
             
             // local methods and variables
@@ -227,31 +283,30 @@ angular.module(
                 map.addLayer(layerGroup);
                 map.addControl(drawControls);
                 map.on('draw:created', function (event) {
-                    console.log(event.layerType + ' created'); 
+                    //console.log(event.layerType + ' created'); 
                     layerGroup.clearLayers();
                     layerGroup.addLayer(event.layer);
                     
-                    wicket.fromObject(event.layer);
-
+                    //wicket.fromObject(event.layer);
                     _this.contentLocation = {};
                     _this.contentLocation.name = 'New ' + event.layerType;
-                    _this.contentLocation.type = event.layerType;
-                    _this.contentLocation.layer = event.layer;
-                    _this.contentLocation.wkt = wicket.write();
+                    //_this.contentLocation.type = event.layerType;
+                    //_this.contentLocation.layer = event.layer;
+                    //_this.contentLocation.wkt = wicket.write();
                     
                 });
                 
                 map.on('draw:edited', function (event) {
-                    console.log(event.layers.getLayers().length + ' edited'); 
+                    //console.log(event.layers.getLayers().length + ' edited'); 
                     //layerGroup.addLayer(event.layers.getLayers()[0]);
                     
-                    wicket.fromObject(event.layers.getLayers()[0]);
+                    //wicket.fromObject(event.layers.getLayers()[0]);
                     _this.contentLocation = Object.create(_this.contentLocation);
                     if(_this.contentLocation.name.indexOf('(edited)') === -1) {
                         _this.contentLocation.name += ' (edited)';
                     }
-                    _this.contentLocation.layer = event.layers.getLayers()[0];
-                    _this.contentLocation.wkt = wicket.write();
+                    //_this.contentLocation.layer = event.layers.getLayers()[0];
+                    //_this.contentLocation.wkt = wicket.write();
                 });
 
                 map.on('draw:deleted', function (event) {
@@ -261,16 +316,8 @@ angular.module(
                 });
             });
             
-            // local functions 
             
-            
-            
-           
-
-           
-            
-            
-            
+            // scope watches
             
             
            

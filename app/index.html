@@ -63,28 +63,37 @@
                             template="templates/wizard-tpl.html"
                             current-step="wizard.currentStep"> 
 
-
+                        <!-- Dataset Description -->
+                        <wz-step wz-title="Dataset Description" 
+                                 template="templates/wizard-step-tpl.html"
+                                 wz-data="wizard"
+                                 canenter="wizard.enterValidators['Dataset Description']"
+                                 canexit="wizard.exitValidators['Dataset Description']">       
+                            <ng-include src="'templates/openDataRegistration.html'"> 
+                            </ng-include>
+                        </wz-step>
+                        
+                        
                         <!-- Geographic Location -->
                         <wz-step wz-title="Geographic Location"
                                  template="templates/wizard-step-tpl.html"
                                  wz-data="wizard"
-                                 canenter="wizard.enterValidators[wzTitle]"
-                                 canexit="wizard.exitValidators[wzTitle]">
+                                 canenter="wizard.enterValidators['Geographic Location']"
+                                 canexit="wizard.exitValidators['Geographic Location']">
                             <ng-include src="'templates/geographicLocation.html'"> 
                             </ng-include>
 
                         </wz-step>
                         
                         
-                        <!-- Dataset Description -->
-                        <wz-step wz-title="Dataset Description" 
-                                 template="templates/wizard-step-tpl.html"
-                                 wz-data="wizard"
-                                 canenter="wizard.enterValidators[wzTitle]"
-                                 canexit="wizard.exitValidators[wzTitle]">
-                            <ng-include src="'templates/openDataRegistration.html'"> 
-                            </ng-include>
-                        </wz-step>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
 
 
                         

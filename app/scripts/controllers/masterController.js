@@ -7,13 +7,11 @@ angular.module(
         'AppConfig',
         'WizardHandler',
         'de.cismet.sip-html5-resource-registration.services.dataset',
-        'de.cismet.sip-html5-resource-registration.services.TagGroupService',
         function (
             $scope,
             AppConfig,
             WizardHandler, 
-            dataset,
-            tagGroupService
+            dataset
         ) {
             'use strict';
 
@@ -38,9 +36,15 @@ angular.module(
              * Message text
              */
             $scope.message = {};
-            $scope.message.text='Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!';
-            $scope.message.icon='glyphicon-info-sign';
+            $scope.message.text='<strong>Welcome to the SWITCH-ON tool for the registration of (hydrological) open-data in the <a href=\'http://www.water-switch-on.eu/sip-webclient/sip-beta/\' title=\'Find open data with the SIP BYOD Client\' target=\'_blank\'>SWITCH-ON Spatial Information Platform</a>!</strong> <br>Please provide some general information about the new dataset such as name, description, a (download) link and keywords. ';
+            $scope.message.icon='fa-info-circle';
             $scope.message.type = 'success';
+            
+            $scope.showInfoMessage = function(messageText) {
+                $scope.message.text=messageText;
+                $scope.message.icon='fa-info-circle';
+                $scope.message.type = 'success';
+            };
             
             /**
              * Wizard status, etc.
@@ -51,6 +55,7 @@ angular.module(
             $scope.wizard.currentStep = '';
             $scope.wizard.canProceed = true;
             $scope.wizard.canGoBack = false;
+            $scope.wizard.hasError = false;
             $scope.wizard.proceedButtonText = 'Next';
             $scope.wizard.isFinishStep = function () {
                 return $scope.wizard.currentStep === 'Summary';
@@ -58,6 +63,8 @@ angular.module(
             $scope.wizard.isFirstStep = function () {
                 return $scope.wizard.currentStep === 'Dataset Description';
             };
+            
+            $scope.mapData = {};
             
             $scope.$watch('wizard.currentStep', function (n) {
                 if (n) {
@@ -74,37 +81,7 @@ angular.module(
                 }
             });
             
-            
-            
-            $scope.person = {};
-            
-            
-  $scope.people = [
-    { name: 'Adam',      email: 'adam@email.com',      age: 12, country: 'United States' },
-    { name: 'Amalie',    email: 'amalie@email.com',    age: 12, country: 'Argentina' },
-    { name: 'Estefanía', email: 'estefania@email.com', age: 21, country: 'Argentina' },
-    { name: 'Adrian',    email: 'adrian@email.com',    age: 21, country: 'Ecuador' },
-    { name: 'Wladimir',  email: 'wladimir@email.com',  age: 30, country: 'Ecuador' },
-    { name: 'Samantha',  email: 'samantha@email.com',  age: 30, country: 'United States' },
-    { name: 'Nicole',    email: 'nicole@email.com',    age: 43, country: 'Colombia' },
-    { name: 'Natasha',   email: 'natasha@email.com',   age: 54, country: 'Ecuador' },
-    { name: 'Michael',   email: 'michael@email.com',   age: 15, country: 'Colombia' },
-    { name: 'Nicolás',   email: 'nicolas@email.com',    age: 43, country: 'Colombia' }
-  ];
-
-  $scope.availableColors = ['Red','Green','Blue','Yellow','Magenta','Maroon','Umbra','Turquoise'];
-
-  $scope.multipleDemo = {};
-  $scope.multipleDemo.colors = ['Blue','Red'];
-  $scope.multipleDemo.selectedPeople = [$scope.people[5], $scope.people[4]];
-  $scope.multipleDemo.selectedPeopleWithGroupBy = [$scope.people[8], $scope.people[6]];
-  $scope.multipleDemo.selectedPeopleSimple = ['samantha@email.com','wladimir@email.com'];
-            
-            
-            
-            
-            
-                       
+           
             //$scope.wzData.wizard.finish = function () {
             //    $scope.params.run = true;
             //    $scope.$hide();

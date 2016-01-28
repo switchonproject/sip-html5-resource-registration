@@ -1,12 +1,13 @@
 <div class="row" ng-controller="de.cismet.sip-html5-resource-registration.controllers.geoLocationController as geoController" >
     <div class="col-md-9">
         <leaflet id="mainmap" 
-            defaults="geoController.mapData.defaults" 
-            center="geoController.mapData.center"
-            height="600px" width="820px">   
+                 defaults="mapData.defaults" 
+                 center="mapData.center"
+                 height="600px" width="820px">   
         </leaflet>
     </div>
     <div class="col-md-3">
+        <!-- SWITCH DRAW -->
         <div class="row">
             <div class="col-md-3">
                 <switch id="switch-bbox" name="switch-bbox" 
@@ -17,6 +18,7 @@
                 <strong>Define bounding box or polygon</strong>
             </div>
         </div>
+        <!-- SWITCH SELECT EUROPE -->
         <div class="row">
             <div class="col-md-3">
                 <switch id="switch-europe" name="switch-europe"
@@ -27,6 +29,7 @@
                 <strong>Select European country or region</strong>
             </div>
         </div>
+        <!-- SWITCH SELECT WORLD -->
         <div class="row">
             <div class="col-md-3">
                 <switch id="switch-world" name="switch-world" 
@@ -37,6 +40,7 @@
                 <strong>Select World country or region</strong>
             </div>
         </div>
+        <!-- SWITCH ENTER COORDINATES -->
         <div class="row">
             <div class="col-md-3">
                 <switch id="switch-coordinates" name="switch-coordinates" 
@@ -47,17 +51,127 @@
                 <strong>Enter bounding box coordinates</strong>
             </div>
         </div>
-        
+
+        <!-- CONTROL SELECT EUROPE -->
         <div class="row" ng-show="geoController.mode.selectEC">
-            <strong>geo.mode.selectEC</strong>
+            <div class="col-md-12">
+                <hr>
+                <ui-select ng-model="geoController.contentLocation.name" 
+                           theme="bootstrap" 
+                           ng-disabled="disabled" 
+                           sortable="true"
+                           on-select="geoController.onSelectedCountry($item)">
+                    <ui-select-match>{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="country.name as country in geoController.countries['countries-europe'] | filter: {name: $select.search}"
+                                       position="down"
+                                       style="max-height:350px">
+                        <div ng-bind-html="country.name | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
         </div>
-        
+
+        <!-- CONTROL SELECT WORLD -->
         <div class="row" ng-show="geoController.mode.selectWC">
-            <strong>geo.mode.selectWC</strong>
+            <div class="col-md-12">
+                <hr>
+                <ui-select ng-model="geoController.contentLocation.name" 
+                           theme="bootstrap" 
+                           ng-disabled="disabled" 
+                           sortable="true"
+                           on-select="geoController.onSelectedCountry($item)">
+                    <ui-select-match>{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="country.name as country in geoController.countries['countries-world'] | filter: {name: $select.search}"
+                                       position="down"
+                                       style="max-height:350px">
+                        <div ng-bind-html="country.name | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
         </div>
         
+        <!-- CONTROL ENTER COORDINATES -->
         <div class="row" ng-show="geoController.mode.defineBBox">
-            <strong>geo.mode.defineBBox</strong>
+        <div class="col-md-10">
+                <hr>
+                <form class="form-horizontal" name="coordinatesForm" id="coordinatesForm" novalidate> 
+                    <!-- North Bound Latitude -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="control-label" for="north">North Bound Latitude</label>
+                        </div>
+                    </div>
+                    <div class="row form-group" 
+                         ng-class="{'has-error': !coordinatesForm.north.$error.required && coordinatesForm.north.$invalid,
+                                    'has-success': !coordinatesForm.north.$error.required && !coordinatesForm.north.$invalid}">
+                        <div class="col-md-12">
+                            <input type="number" class="form-control" id="north" name="north" 
+                                   ng-model="geoController.contentLocation.bounds.north" 
+                                   min="-90.00000000000000000" max="90.0000000000000000" required>
+                        </div>
+                    </div>
+                    
+                    <!-- East Bound Longitude -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="control-label" for="east">East Bound Longitude</label> 
+                        </div>
+                    </div>
+                    <div class="row form-group" 
+                         ng-class="{'has-error': !coordinatesForm.east.$error.required && coordinatesForm.east.$invalid,
+                                    'has-success': !coordinatesForm.east.$error.required && !coordinatesForm.east.$invalid}">
+                        <div class="col-md-12">
+                            <input class="form-control" type="number" id="east" name="east" 
+                                   ng-model="geoController.contentLocation.bounds.east" 
+                                   min="-180.0000000000000000" max="180.0000000000000000" required>
+                        </div>
+                    </div>
+
+                    <!-- South Bound Latitude -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="control-label" for="south">South Bound Latitude</label> 
+                        </div>
+                    </div>
+                    <div class="row form-group"  
+                         ng-class="{'has-error': !coordinatesForm.south.$error.required && coordinatesForm.south.$invalid,
+                                    'has-success': !coordinatesForm.south.$error.required && !coordinatesForm.south.$invalid}">
+                        <div class="col-md-12">
+                            <input type="number" class="form-control" id="south" name="south" 
+                                   ng-model="geoController.contentLocation.bounds.south" 
+                                   min="-90.00000000000000000" max="90.00000000000000000" required>
+                        </div>
+                    </div>
+
+                    <!-- West Bound Longitude -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="control-label" for="west">West Bound Longitude</label> 
+                        </div>
+                    </div>
+                    <div class="row form-group"  
+                         ng-class="{'has-error': !coordinatesForm.west.$error.required && coordinatesForm.west.$invalid,
+                                    'has-success': !coordinatesForm.west.$error.required && !coordinatesForm.west.$invalid}">
+                        <div class="col-md-12">
+                            <input type="number" class="form-control" id="west" name="west" 
+                                   ng-model="geoController.contentLocation.bounds.west" 
+                                   min="-180.0000000000000000" max="180.0000000000000000" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button title="Apply"
+                                name="applyButton"
+                                id="applyButton"
+                                class="btn btn-default"
+                                ng-click="geoController.applyBoundingBox()"
+                                ng-disabled="coordinatesForm.$error.required || coordinatesForm.$invalid">
+                              Apply
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>  
         </div>
     </div>
 </div>

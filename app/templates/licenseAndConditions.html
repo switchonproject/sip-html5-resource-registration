@@ -1,0 +1,82 @@
+<form class="form-horizontal"
+      id="licenseForm"
+      name="licenseForm"
+      ng-controller="de.cismet.sip-html5-resource-registration.controllers.licenseController as licenseController">
+
+    <!-- Access Conditions -->
+    <div class="row form-group"
+         ng-class="{'has-error':wizard.hasError === 'datasetAccessconditions'}">
+        <label for="datasetAccessconditions" class="col-md-2 form-control-label">Access Conditions</label>
+        <div class="col-md-3">
+            <select class="form-control" id="datasetAccessconditions" name="datasetAccessconditions" 
+                    ng-options="tag as tag.name for tag in tags['accessconditions'] track by tag.name"
+                    ng-model="dataset.accessconditions"
+                    ng-change="showInfoMessage(dataset.accessconditions.description);"
+                    required>
+            </select>
+        </div>
+    </div>
+     
+    <!-- License Statement -->
+    <div class="row form-group"
+         ng-class="{'has-error':wizard.hasError === 'datasetLicensestatement'}">
+        
+        <label for="datasetLicensestatement" class="col-md-2 form-control-label">License Statement</label>
+        <div class="col-md-8">
+            <textarea class="form-control" 
+                      id="datasetDescription" 
+                      name="datasetLicensestatement" 
+                      placeholder="Additional conditions for accessing and using the data."
+                      rows="6"
+                      ng-model="dataset.licensestatement" 
+                      ng-focus="showInfoMessage('Please provide a brief statement or URL to the license which applies to the usage of the dataset.')"
+                      ng-required="dataset.accessconditions && dataset.accessconditions.name === 'other'"></textarea>
+        </div>
+    </div>
+    
+    <!-- Contact Person -->
+    <div class="form-group row" 
+         ng-class="{'has-error':wizard.hasError === 'datasetContactperson'}">
+        <label for="datasetContactperson" 
+               class="col-md-2 form-control-label">Contact Person</label>
+        <div class="col-md-8">
+            <input type="text" class="form-control" 
+                   id="datasetContactperson" name="datasetContactperson" 
+                   placeholder="Optional point of contact information"
+                   ng-model="dataset.contact.name"
+                   ng-focus="showInfoMessage('Please provide a name and if possible an emal address of the contact person responsible for the establishment, management, maintenance and distribution of dataset.');">
+        </div>
+    </div>
+    
+    <!-- Citation / DOI -->
+    <div class="row form-group"
+         ng-class="{'has-error':wizard.hasError === 'datasetCitation'}">
+        <label for="datasetCitation" class="col-md-2 form-control-label">Citation / DOI</label>
+        <div class="col-md-8">
+            <textarea class="form-control" 
+                      id="datasetDescription" 
+                      name="datasetCitation" 
+                      placeholder="Optional citation information"
+                      rows="3"
+                      ng-model="dataset.contact.description" 
+                      ng-focus="showInfoMessage('Please provide bibliographic citation or a Digital Object Identifier (<a href=\'https://www.doi.org/\' target=\'_blank\'>DOI</a>).')">  
+            </textarea>
+        </div>
+    </div>
+    
+    <!-- Data Lineage -->
+    <div class="row form-group"
+         ng-class="{'has-error':wizard.hasError === 'datasetLineage'}">
+        <label for="datasetLineage" class="col-md-2 form-control-label">Data Lineage</label>
+        <div class="col-md-8">
+            <textarea class="form-control" 
+                      id="datasetDescription" 
+                      name="datasetLineage" 
+                      placeholder="Optional data lineage / data provenance information"
+                      rows="6"
+                      ng-model="dataset.metadata[0].description" 
+                      ng-focus="showInfoMessage('When appropriate, please provide a statement on the <a href=\'https://en.wikipedia.org/wiki/Data_lineage\' target=\'_blank\'>data lineage</a>  of the resource. That is, whether and how the dataset was derived (transformed, combined, repurposed, ...) from other datasets.')">  
+            </textarea>
+        </div>
+    </div> 
+</form>

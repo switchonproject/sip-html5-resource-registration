@@ -1,27 +1,96 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-         <ui-select multiple 
-                       ng-model="dataset.tags" 
-                       theme="bootstrap" 
-                       ng-disabled="disabled" 
-                       sortable="true" 
-                       style="width: 300px;">
-    <ui-select-match ui-lock-choice="true">{{$item.name}}</ui-select-match>
-    <ui-select-choices
-        repeat="tag in null" ui-disable-choice="true"> 
-    </ui-select-choices>
+<div ng-controller="de.cismet.sip-html5-resource-registration.controllers.summaryController as summaryController">
+    
+    
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Name -->
+            <div class="row">
+                <label class="col-md-3">Name</label>
+                <div class="col-md-9">{{dataset.name}}</div>
+            </div>
 
-    </ui-select>
-    </body>
-</html>
+            <!-- Link -->
+            <div class="row">
+                <label class="col-md-3" style="text-transform: capitalize;">{{dataset.representation[0].function.name}}-Link</label>
+                <div class="col-md-9">
+                    <a href="{{dataset.representation[0].contentlocation}}" target="_blank" title="{{dataset.name}}">{{dataset.representation[0].contentlocation}}</a>
+                </div>
+            </div>
+
+            <!-- Content-Type -->
+            <div class="row">
+                <label class="col-md-3">Content-Type</label>
+                <div class="col-md-9">
+                    <span class="label label-success" title="{{dataset.representation[0].contenttype.description}}">{{dataset.representation[0].contenttype.name}}</span>
+                </div>
+            </div>
+
+            <!-- Desciption -->
+            <div class="row">
+                <label class="col-md-3">Description</label>
+                <div class="col-md-9">
+                    <p>{{dataset.description}}</p>
+                </div>
+            </div>
+
+            <!-- Keywords -->
+            <div class="row">
+                <label class="col-md-3">Keywords</label>
+                <div class="col-md-9">
+                    <span ng-repeat="tag in dataset.tags">
+                        <span class="label label-primary">{{tag.name}}</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Access Conditions -->
+            <div class="row">
+                <label class="col-md-3">Conditions</label>
+                <div class="col-md-9">
+                    <span class="label label-warning" title="{{dataset.accessconditions.description}}">{{dataset.accessconditions.name}}</span>
+                </div>
+            </div>
+
+            <!-- License Statement -->
+            <div class="row" ng-if="dataset.licensestatement">
+                <label class="col-md-3">License</label>
+                <div class="col-md-9">
+                    <p>{{dataset.licensestatement}}</p>
+                </div>
+            </div>
+
+            <!-- Contact Person -->
+            <div class="row" ng-if="dataset.contact && dataset.contact.name">
+                <label class="col-md-3">Contact Person</label>
+                <div class="col-md-9">
+                    {{dataset.contact.name}}
+                </div>
+            </div>
+
+            <!-- Citation / DOI -->
+            <div class="row" ng-if="dataset.contact && dataset.contact.description">
+                <label class="col-md-3">Citation / DOI</label>
+                <div class="col-md-9">
+                    {{dataset.contact.description}}
+                </div>
+            </div>
+
+            <!-- Lineage -->
+
+            <div class="row" ng-if="dataset.metadata[0].description">
+                <label class="col-md-3">Data Lineage</label>
+                <div class="col-md-9">
+                    {{dataset.metadata[0].description}}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <leaflet id="summarymap" 
+                 defaults="mapData.defaults" 
+                 center="mapData.center"
+                 height="460px" width="540px">   
+             </leaflet>
+        </div>
+    </div>
+</div>
+

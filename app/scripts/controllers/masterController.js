@@ -7,13 +7,11 @@ angular.module(
         'AppConfig',
         'WizardHandler',
         'de.cismet.sip-html5-resource-registration.services.dataset',
-        'de.cismet.sip-html5-resource-registration.services.TagGroupService',
         function (
             $scope,
             AppConfig,
             WizardHandler, 
-            dataset,
-            tagGroupService
+            dataset
         ) {
             'use strict';
 
@@ -38,7 +36,7 @@ angular.module(
              * Message text
              */
             $scope.message = {};
-            $scope.message.text='Welcome to the SWITCH-ON tool for the registration of (hydrological) open-data in the <a href=\'http://www.water-switch-on.eu/sip-webclient/sip-beta/\' title=\'Find open data with the SIP BYOD Client\' target=\'_blank\'>SWITCH-ON Spatial Information Platform</a>. <br>Please provide some general information about the new dataset such as name, description, a (download) link and keywords. ';
+            $scope.message.text='<strong>Welcome to the SWITCH-ON tool for the registration of (hydrological) open-data in the <a href=\'http://www.water-switch-on.eu/sip-webclient/sip-beta/\' title=\'Find open data with the SIP BYOD Client\' target=\'_blank\'>SWITCH-ON Spatial Information Platform</a>!</strong> <br>Please provide some general information about the new dataset such as name, description, a (download) link and keywords. ';
             $scope.message.icon='fa-info-circle';
             $scope.message.type = 'success';
             
@@ -65,6 +63,8 @@ angular.module(
             $scope.wizard.isFirstStep = function () {
                 return $scope.wizard.currentStep === 'Dataset Description';
             };
+            
+            $scope.mapData = {};
             
             $scope.$watch('wizard.currentStep', function (n) {
                 if (n) {

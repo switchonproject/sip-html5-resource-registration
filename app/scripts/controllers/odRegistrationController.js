@@ -43,6 +43,7 @@ angular.module(
             _this.checkLink = function(url) {
               // TODO: check link
               console.log('checkLink not yet implemented: ' + url);
+              //var msg = 'This dataset is alredy registered in the SWITCH-ON Spatial Information Platform under the name *"Corine Land Cover 1990 - 2000 changes formation code in changed areas (change 1990-2000) in 100m resolution "*. Please click [here] to view the dataset meta-data.';
             };
             
             $scope.tags['function'] = tagGroupService.getTagList('function', 'download,order,information');
@@ -50,6 +51,13 @@ angular.module(
             $scope.tags['keywords - X-CUAHSI'] = tagGroupService.getTagList('keywords - X-CUAHSI');
 
             $scope.wizard.enterValidators['Dataset Description'] = function(){
+                
+                if(!$scope.wizard.hasError) {
+                    $scope.message.text='Please provide some general information about the new dataset such as name, description, a (download) link and keywords.';
+                    $scope.message.icon='fa-info-circle';
+                    $scope.message.type = 'success';
+                }
+                
                 return true;
             };
 

@@ -30,9 +30,7 @@ angular.module(
              * overall Form data
              */
             _this.dataset = dataset;
-            
-            $scope.scountry = {};
-            
+          
             _this.contentLocation = {};
             _this.contentLocation.name = '';
             //_this.contentLocation.type = null;
@@ -103,18 +101,19 @@ angular.module(
             };
                 
             
+            
             /**
              * Map init data
              */
-            _this.mapData = {};
-            _this.mapData.center = _this.config.mapView.home;
-            _this.mapData.defaults = {
+            $scope.mapData.center = _this.config.mapView.home;
+            $scope.mapData.defaults = {
                     tileLayer: _this.config.mapView.backgroundLayer,
                     //tileLayerOptions: {noWrap: true},
                     //maxZoom: 14,
                     minZoom: _this.config.minZoom,
                     path: defaultStyle
                 };
+            $scope.mapData.defaultDrawOptions = defaultDrawOptions;
             
             
             /**
@@ -123,7 +122,7 @@ angular.module(
             _this.mode = {};
             _this.mode.drawBBox = true;
             _this.mode.selectEC = false;
-            _this.mode.selectEC = false;
+            _this.mode.selectWC = false;
             _this.mode.defineBBox = false;
             
             _this.switchMode = function (selectedMode) {
@@ -138,8 +137,14 @@ angular.module(
                      }
                   }, _this.mode);
                   
+                // reset error messages
+                $scope.message.icon='fa-info-circle';
+                $scope.message.type = 'success';
+                  
                 // perform initialisation of widgets
                 if(_this.mode.drawBBox === true && !drawControlsEnabled) {
+                    $scope.message.text='Please use the map controls to draw a bounding box or a polygon that represents the spatial extent of the dataset.';
+                    
                     drawControls.setDrawingOptions(defaultDrawOptions);
                     leafletData.getMap('mainmap').then(function (map) {
                         map.addControl(drawControls);
@@ -153,13 +158,25 @@ angular.module(
                      drawControlsEnabled = false;
                 }
                 
-                if(_this.mode.defineBBox === true && layerGroup.getLayers().length >  0) {
-                    var bounds = layerGroup.getBounds();
-                    _this.contentLocation.bounds = {};
-                    _this.contentLocation.bounds.west = bounds.getWest();
-                    _this.contentLocation.bounds.south = bounds.getSouth();
-                    _this.contentLocation.bounds.east = bounds.getEast();
-                    _this.contentLocation.bounds.north = bounds.getNorth();
+                if(_this.mode.selectEC === true) {
+                    $scope.message.text='Select a European country or region that represents the spatial extent of the dataset.';
+                }
+                
+                if(this.mode.selectWC === true) {
+                    $scope.message.text='Select a World country or region that represents the spatial extent of the dataset.';
+                }
+                
+                if(_this.mode.defineBBox === true) {
+                    $scope.message.text='Please enter a bounding box with westbound and eastbound longitudes, and southbound and northbound latitudes in decimal degrees, with a precision of at least two decimals.'
+                    
+                    if(layerGroup.getLayers().length >  0) {
+                        var bounds = layerGroup.getBounds();
+                        _this.contentLocation.bounds = {};
+                        _this.contentLocation.bounds.west = bounds.getWest();
+                        _this.contentLocation.bounds.south = bounds.getSouth();
+                        _this.contentLocation.bounds.east = bounds.getEast();
+                        _this.contentLocation.bounds.north = bounds.getNorth();
+                    }
                 }
             };
             
@@ -191,26 +208,29 @@ angular.module(
             
             // resize the map on enter
             $scope.wizard.enterValidators['Geographic Location'] = function(){
-                 fireResize();
-                 
+                if(!$scope.wizard.hasError) {
+                    if(_this.mode.drawBBox === true) {
+                        $scope.message.text='Please specify the extent of the dataset in the geographic space. <br>Use use the map controls to draw a bounding box or a polygon that represents the spatial extent of the dataset.';
+                    } else {
+                        $scope.message.text='Please specify the extent of the dataset in the geographic space.';
+                    }
+                    
+                    $scope.message.icon='fa-info-circle';
+                    $scope.message.type = 'success';
+                }
+                fireResize();
                 var layer = readSpatialCoverage(_this.dataset);
                 if(layer !== undefined && layer !== null) {
                     layerGroup.clearLayers();
                     layerGroup.addLayer(layer);
-                    
                      leafletData.getMap('mainmap').then(function (map) {
-                        map.fitBounds(layer, {
-                            animate: true,
-                            pan: {animate: true, duration: 0.6},
-                            zoom: {animate: true}
-                        });
+                        setTimeout(function(){map.fitBounds(layer, {
+                                animate: true,
+                                pan: {animate: true, duration: 0.75},
+                                zoom: {animate: true}
+                            });}, 100);
                    });
                 }
-                
-               
-                
-              //  fireResize();
-                
                 
                 return true;
             };
@@ -218,11 +238,26 @@ angular.module(
             
             $scope.wizard.exitValidators['Geographic Location'] = function(){
                 
-                if(layerGroup.getLayers().length > 0) {
-                    return true;
-                } else {
+                if(_this.mode.defineBBox === true && $scope.coordinatesForm.$invalid) {
+                    $scope.message.text='Please specify a valid bounding box or use an other option to  specify the geographic location of the dataset!';
+                    $scope.message.icon='fa-warning';
+                    $scope.message.type = 'warning';
+                    
                     return false;
                 }
+                                
+                if(!layerGroup || layerGroup.getLayers().length === 0) {
+                    
+                    $scope.message.text='Please specify the geographic location of the dataset!';
+                    $scope.message.icon='fa-warning';
+                    $scope.message.type = 'warning';
+                    
+                    return false;
+                } 
+   
+                $scope.wizard.hasError = null;
+                $scope.mapData.layerGroup = layerGroup;
+                return true;
             };
             
             // local methods and variables
@@ -276,8 +311,6 @@ angular.module(
                 }
             });
             drawControlsEnabled = true;
-            
-            
             
             leafletData.getMap('mainmap').then(function (map) {
                 map.addLayer(layerGroup);

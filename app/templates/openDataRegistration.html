@@ -9,7 +9,8 @@
                class="col-md-1 form-control-label">Name</label>
         <div class="col-md-8">
             <input type="text" class="form-control" 
-                   id="datasetName" name="datasetName" placeholder="Name of the dataset"
+                   id="datasetName" name="datasetName" 
+                   placeholder="Name of the dataset"
                    ng-model="dataset.name"
                    required
                    ng-focus="showInfoMessage('Please provide a characteristic, and often unique, name by which the dataset is known.');">
@@ -42,7 +43,7 @@
         <div class="col-md-3">
             <select class="form-control" id="datasetContenttype" name="datasetContenttype" placeholder="Description of the dataset"
                     ng-options="tag as tag.description for tag in tags['content type'] track by tag.name"
-                    ng-model="dataset.representation[0].contentype"
+                    ng-model="dataset.representation[0].contenttype"
                     ng-change="showInfoMessage('The <a href=\'https://en.wikipedia.org/wiki/Media_type\' target=\'_blank\'>media type</a> of the dataset is <i>'+dataset.representation[0].contentype.name + '</i> (' + dataset.representation[0].contentype.description + ').');"
                     required>   
             </select>
@@ -52,11 +53,12 @@
     <!-- Description -->
     <div class="form-group row"
          ng-class="{'has-error':wizard.hasError === 'datasetDescription'}">
-        <label for="dataset-description" class="col-md-1 form-control-label">Description</label>
+        <label for="datasetDescription" class="col-md-1 form-control-label">Description</label>
         <div class="col-md-8">
             <textarea class="form-control" 
                       id="datasetDescription" 
                       name="datasetDescription" 
+                      placeholder="Description of the dataset"
                       rows="8"
                       ng-model="dataset.description" 
                       ng-focus="showInfoMessage('Please provide a brief narrative summary of the content of the dataset.')"
@@ -85,7 +87,8 @@
                         theme="bootstrap" 
                         ng-disabled="disabled" 
                         sortable="true" 
-                        on-select="showInfoMessage(' ')">
+                        on-select="showInfoMessage('Please select one or more keywords from the <strong>extended</strong> CUAHSI Hydrologic Ontology for Discovery (X-CUAHSI) that best characterize the dataset. <br>Please click <a href=\'http://his.cuahsi.org/ontologyfiles.html\' target=\'_blank\'>here</a> for more information about the CUAHSI ontology. Get in touch with the <a href=\'mailto:switchon.wm@gmail.com\'>SWITCH-ON Consortium</a> if you want to make a proposal for new keywords and thus an extension of the X-CUSHAI ontology!')">
+              
                 <ui-select-match 
                     placeholder="Please click here to open a list of selectable X-CUAHSI keywords."
                     >

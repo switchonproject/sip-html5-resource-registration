@@ -67,6 +67,15 @@ angular.module(
                 
                 
                 // CONTENT LOCATION                
+                if($scope.odRegistrationForm.datasetContentlocation.$error.url) {
+                    $scope.message.text='The link to the dataset you have provided is not a valid <a href=\'https://en.wikipedia.org/wiki/Uniform_Resource_Locator#Syntax\' target=\'_blank\' title=\'Uniform Resource Locator\'>URL</a> .' ;
+                    $scope.message.icon='fa-warning';
+                    $scope.message.type = 'warning';
+                    
+                    $scope.wizard.hasError = 'datasetContentlocation';
+                    return false;
+                }
+                
                 if(!dataset.representation[0].contentlocation) {
                     $scope.message.text='Please provide link to the dataset.';
                     $scope.message.icon='fa-warning';
@@ -75,16 +84,7 @@ angular.module(
                     $scope.wizard.hasError = 'datasetContentlocation';
                     return false;
                 }
-                
-                if($scope.odRegistrationForm.datasetContentlocation.$error.url) {
-                    $scope.message.text='The link to the dataset you have provided is not a valid URL.' ;
-                    $scope.message.icon='fa-warning';
-                    $scope.message.type = 'warning';
-                    
-                    $scope.wizard.hasError = 'datasetContentlocation';
-                    return false;
-                }
-                
+
                 // DESCRIPTION
                 if(!dataset.description) {
                     $scope.message.text='Please provide a description of the dataset.';

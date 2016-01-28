@@ -38,9 +38,15 @@ angular.module(
              * Message text
              */
             $scope.message = {};
-            $scope.message.text='Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!Welcome to the SWITCH-ON Spatial Information Platform!';
-            $scope.message.icon='glyphicon-info-sign';
+            $scope.message.text='Welcome to the SWITCH-ON tool for the registration of (hydrological) open-data in the <a href=\'http://www.water-switch-on.eu/sip-webclient/sip-beta/\' title=\'Find open data with the SIP BYOD Client\' target=\'_blank\'>SWITCH-ON Spatial Information Platform</a>. <br>Please provide some general information about the new dataset such as name, description, a (download) link and keywords. ';
+            $scope.message.icon='fa-info-circle';
             $scope.message.type = 'success';
+            
+            $scope.showInfoMessage = function(messageText) {
+                $scope.message.text=messageText;
+                $scope.message.icon='fa-info-circle';
+                $scope.message.type = 'success';
+            };
             
             /**
              * Wizard status, etc.

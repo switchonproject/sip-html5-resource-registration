@@ -34,7 +34,7 @@ angular.module(
             $scope.scountry = {};
             
             _this.contentLocation = {};
-            _this.contentLocation.name = 'Belarus';
+            _this.contentLocation.name = '';
             //_this.contentLocation.type = null;
             //_this.contentLocation.wkt = null;
             //_this.contentLocation.layer = null;

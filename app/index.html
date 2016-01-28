@@ -25,6 +25,7 @@
         <!-- Application related CSS -->
 
         <link href="bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+        <link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
         <link href="bower_components/leaflet/dist/leaflet.css" rel="stylesheet" type="text/css"/>
         <link href="bower_components/leaflet-draw/dist/leaflet.draw.css" rel="stylesheet" type="text/css"/>
         <link href="bower_components/angular-ui-switch/angular-ui-switch.css" rel="stylesheet" type="text/css"/>
@@ -52,10 +53,10 @@
                     <alert 
                         ng-hide="message === null" 
                         type="{{message.type}}">
-                        <span class="glyphicon glyphicon-align-left gi-3x" 
+                        <span class="fa fa-4x fa-fw fa-pull-left" 
                               ng-class="message.icon" 
                               aria-hidden="true"></span>
-                        <div>{{message.text}}</div>
+                        <div ng-bind-html="message.text"></div>
                     </alert>
 
                     <wizard on-finish="masterController.finishedWizard()" 

@@ -40,6 +40,11 @@ angular.module(
 
             };
             
+            _this.checkLink = function(url) {
+              // TODO: check link
+              console.log('checkLink not yet implemented: ' + url);
+            };
+            
             $scope.tags['function'] = tagGroupService.getTagList('function', 'download,order,information');
             $scope.tags['content type'] = tagGroupService.getTagList('content type');
             $scope.tags['keywords - X-CUAHSI'] = tagGroupService.getTagList('keywords - X-CUAHSI');
@@ -49,43 +54,53 @@ angular.module(
             };
 
             $scope.wizard.exitValidators['Dataset Description'] = function(){
-
+                
+                // NAME
                 if(!dataset.name) {
-                    $scope.message.text='Please provide the name of the dataset';
-                    $scope.message.icon='glyphicon-warning-sign';
+                    $scope.message.text='Please enter the name / title of the dataset.';
+                    $scope.message.icon='fa-warning';
                     $scope.message.type = 'warning';
                     
-                    $scope.wizard.hasError = 'dataset-name';
+                    $scope.wizard.hasError = 'datasetName';
                     return false;
                 }
                 
-                if(!dataset.description) {
-                    $scope.message.text='Please provide a description of the dataset';
-                    $scope.message.icon='glyphicon-warning-sign';
-                    $scope.message.type = 'warning';
-                    
-                    $scope.wizard.hasError = 'dataset-description';
-                    return false;
-                }
                 
-                console.log($scope.odRegistrationForm.datasetRepresentationContentlocation.$invalid);
-                console.log($scope.odRegistrationForm.datasetRepresentationContentlocation.$error);
-                
+                // CONTENT LOCATION                
                 if(!dataset.representation[0].contentlocation) {
-                    $scope.message.text='Please provide a description of the dataset';
-                    $scope.message.icon='glyphicon-warning-sign';
+                    $scope.message.text='Please provide link to the dataset.';
+                    $scope.message.icon='fa-warning';
                     $scope.message.type = 'warning';
                     
-                    $scope.wizard.hasError = 'dataset-description';
+                    $scope.wizard.hasError = 'datasetContentlocation';
                     return false;
                 }
                 
+                if($scope.odRegistrationForm.datasetContentlocation.$error.url) {
+                    $scope.message.text='The link to the dataset you have provided is not a valid URL.' ;
+                    $scope.message.icon='fa-warning';
+                    $scope.message.type = 'warning';
+                    
+                    $scope.wizard.hasError = 'datasetContentlocation';
+                    return false;
+                }
+                
+                // DESCRIPTION
+                if(!dataset.description) {
+                    $scope.message.text='Please provide a description of the dataset.';
+                    $scope.message.icon='fa-warning';
+                    $scope.message.type = 'warning';
+                    
+                    $scope.wizard.hasError = 'datasetDescription';
+                    return false;
+                }
+
                 if(!_this.dataset.tags || _this.dataset.tags.length === 0) {
                     $scope.message.text='Please assign at least one keyword to the Dataset.';
-                    $scope.message.icon='glyphicon-warning-sign';
+                    $scope.message.icon='fa-warning';
                     $scope.message.type = 'warning';
                     
-                    $scope.wizard.hasError = 'dataset-tags';
+                    $scope.wizard.hasError = 'datasetTags';
                     return false;
                 }
                 

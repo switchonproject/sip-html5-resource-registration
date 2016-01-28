@@ -4,38 +4,43 @@
       ng-controller="de.cismet.sip-html5-resource-registration.controllers.odRegistrationController as odRegistrationController">
     <!-- Name -->
     <div class="form-group row" 
-         ng-class="{'has-error':wizard.hasError === 'dataset-name'}">
-        <label for="dataset-name" 
+         ng-class="{'has-error':wizard.hasError === 'datasetName'}">
+        <label for="datasetName" 
                class="col-md-1 form-control-label">Name</label>
         <div class="col-md-8">
             <input type="text" class="form-control" 
-                   id="dataset-name" placeholder="Name of the Dataset"
+                   id="datasetName" name="datasetName" placeholder="Name of the dataset"
                    ng-model="dataset.name"
-                   required>
+                   required
+                   ng-focus="showInfoMessage('Please provide a characteristic, and often unique, name by which the dataset is known.');">
         </div>
     </div>
-
     <!-- Link -->
     <div class="row form-group"
-         ng-class="{'has-error':wizard.hasError === 'dataset-representation-contentlocation'}">
-        <label for="dataset-representation-contentlocation" class="col-md-1 form-control-label">Link</label>
+         ng-class="{'has-error':wizard.hasError === 'datasetContentlocation'}">
+        <!-- Content Location -->
+        <label for="datasetContentlocation" class="col-md-1 form-control-label">Link</label>
         <div class="col-md-2">
-            <select class="form-control" id="link-type" 
-                    ng-options="tag as tag.name for tag in tags['function'] track by tag.id"
+            <select class="form-control" id="datasetFunction" name="datasetFunction" 
+                    ng-options="tag as tag.name for tag in tags['function'] track by tag.name"
                     ng-model="dataset.representation[0].function"
+                    ng-change="showInfoMessage(dataset.representation[0].function.description + ' / dataset.');"
                     required>
             </select>
         </div>
         <div class="col-md-6">
             <input type="url" class="form-control" 
-                   name="datasetRepresentationContentlocation" id="datasetRepresentationContentlocation" placeholder=""
+                   name="datasetContentlocation" id="datasetContentlocation" placeholder="URL of the dataset"
                    ng-model="dataset.representation[0].contentlocation"
+                   ng-focus="showInfoMessage('Please provide a download link to the dataset or a link to additional information about the dataset.');"
+                   ng-change="odRegistrationController.checkLink(dataset.representation[0].contentlocation)"
                    required>
         </div>
         <div class="col-md-3">
-            <select class="form-control" id="data-type"
-                    ng-options="tag as tag.description for tag in tags['content type'] track by tag.id"
+            <select class="form-control" id="datasetContenttype" name="datasetContenttype" placeholder="Description of the dataset"
+                    ng-options="tag as tag.description for tag in tags['content type'] track by tag.name"
                     ng-model="dataset.representation[0].contentype"
+                    ng-change="showInfoMessage('The <a href=\'https://en.wikipedia.org/wiki/Media_type\' target=\'_blank\'>media type</a> of the dataset is <i>'+dataset.representation[0].contentype.name + '</i> (' + dataset.representation[0].contentype.description + ').');"
                     required>   
             </select>
         </div>
@@ -43,35 +48,46 @@
 
     <!-- Description -->
     <div class="form-group row"
-         ng-class="{'has-error':wizard.hasError === 'dataset-description'}">
+         ng-class="{'has-error':wizard.hasError === 'datasetDescription'}">
         <label for="dataset-description" class="col-md-1 form-control-label">Description</label>
         <div class="col-md-8">
-            <textarea class="form-control" id="dataset-description" rows="8"
-                      ng-model="dataset.description" required></textarea>
+            <textarea class="form-control" 
+                      id="datasetDescription" 
+                      name="datasetDescription" 
+                      rows="8"
+                      ng-model="dataset.description" 
+                      ng-focus="showInfoMessage('Please provide a brief narrative summary of the content of the dataset.')"
+                      required></textarea>
         </div>
     </div>
 
+    <!-- Keywords -->
     <div class="form-group row"
-         ng-class="{'has-error':wizard.hasError === 'dataset-tags'}">
-        <label for="dataset-tags" class="col-md-1 form-control-label">Keywords</label>
+         ng-class="{'has-error':wizard.hasError === 'datasetTags'}">
+        <label for="datasetTags" class="col-md-1 form-control-label">Keywords</label>
         <!--<div class="col-md-3">
             <select  ng-minlength="1" multiple size="8" class="form-control" id="keyword-list"
-                    ng-options="tag as tag.name for tag in tags['keywords - X-CUAHSI'] track by tag.id"
+                    ng-options="tag as tag.name for tag in tags['keywords - X-CUAHSI'] track by tag.name"
                     ng-model="dataset.tags">   
             </select>
 
         </div>-->
         <div class="col-md-8">
             <!--<textarea class="form-control" id="keyword-box" rows="7"></textarea>-->
-            <ui-select  id="dataset-tags"
-                        name="dataset-tags"
+            <ui-select  id="datasetTags"
+                        name="datasetTags"
                         class="form-control"
                         multiple limit="20"
-                           ng-model="dataset.tags" 
-                           theme="bootstrap" 
-                           ng-disabled="disabled" 
-                           sortable="true">
-                <ui-select-match placeholder="Select keywords...">{{$item.name}}</ui-select-match>
+                        ng-model="dataset.tags" 
+                        theme="bootstrap" 
+                        ng-disabled="disabled" 
+                        sortable="true" 
+                        on-select="showInfoMessage(' ')">
+                <ui-select-match 
+                    placeholder="Please click here to open a list of selectable X-CUAHSI keywords."
+                    >
+                    {{$item.name}}
+                </ui-select-match>
                 <ui-select-choices repeat="tag in tags['keywords - X-CUAHSI'] | filter: {name: $select.search}"
                                    group-by="odRegistrationController.groupBy">
                     <div ng-bind-html="tag.name | highlight: $select.search"></div>

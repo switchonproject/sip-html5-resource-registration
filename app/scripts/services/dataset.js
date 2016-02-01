@@ -11,9 +11,7 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                         isArray: false
                     }
                 }).query();
-            return datasetTemplate;
-            
-	    
+            return datasetTemplate;    
 	}]);
 
 

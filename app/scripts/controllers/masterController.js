@@ -7,14 +7,19 @@ angular.module(
         'AppConfig',
         'WizardHandler',
         'de.cismet.sip-html5-resource-registration.services.dataset',
+        '$uibModal',
         function (
             $scope,
             AppConfig,
             WizardHandler, 
-            dataset
+            dataset,
+            $uibModal
         ) {
             'use strict';
 
+            var _this;
+            
+            _this = this;
             
             // - dataset: the resource meta data, initilaized from a template and changed by the app
             // - tags: list of selectable tags
@@ -82,11 +87,14 @@ angular.module(
             });
             
            
-            //$scope.wzData.wizard.finish = function () {
-            //    $scope.params.run = true;
-            //    $scope.$hide();
-            //};
-
+            _this.finishedWizard = function () {
+                $uibModal.open({
+                    animation: true,
+                    templateUrl: 'templates/confirmation.html',
+                    size: 'lg'
+                });
+            };
+            
             // the wizard framework is not sufficient for user friendly display of states
             //$scope.wzData.wizard.validators = {noVal: function () { return true; }};
             //$scope.wzData.wizard.validators['Select Area'] = function () {

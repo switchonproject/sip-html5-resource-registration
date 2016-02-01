@@ -6,6 +6,7 @@ angular.module(
         '$scope',
         'AppConfig',
         'leafletData',
+        'de.cismet.sip-html5-resource-registration.services.geoTools',
         'de.cismet.sip-html5-resource-registration.services.dataset',
         'de.cismet.sip-html5-resource-registration.services.CountriesService',
         // Controller Constructor Function
@@ -13,6 +14,7 @@ angular.module(
             $scope,
             AppConfig,
             leafletData,
+            geoTools,
             dataset,
             countriesService
         ) {
@@ -22,6 +24,15 @@ angular.module(
                     drawControls, layerGroup, wicket, defaultStyle, defaultDrawOptions,
                     noDrawOptions, writeSpatialCoverage,
                     readSpatialCoverage, drawControlsEnabled;
+            
+            wicket = geoTools.wicket;
+            defaultStyle = geoTools.defaultStyle;
+            defaultDrawOptions = geoTools.defaultDrawOptions;
+            noDrawOptions = geoTools.noDrawOptions;
+            readSpatialCoverage = geoTools.readSpatialCoverage;
+            writeSpatialCoverage = geoTools.writeSpatialCoverage;
+            fireResize = geoTools.fireResize;
+            
             _this = this;
 
             _this.config = AppConfig;
@@ -67,41 +78,7 @@ angular.module(
                    //_this.contentLocation.wkt = item.wkt;
                    //_this.contentLocation.layer = layer;
            };
-            
-            wicket = new Wkt.Wkt();
-            defaultStyle = {color: '#0000FF', fillOpacity: 0.3, weight: 2, fill: true, fillColor: '#1589FF', riseOnHover: true, clickable: true};
-            
-            defaultDrawOptions = {
-                    polyline: false,
-                    polygon: {
-                        shapeOptions: defaultStyle,
-                        showArea: true,
-                        metric: true,
-                        allowIntersection: false,
-                        drawError: {
-                            color: '#e1e100', // Color the shape will turn when intersects
-                            message: '<strong>Oh snap!<strong> you can\'t draw that!</strong>' // Message that will show when intersect
-                        }       
-                    },
-                    rectangle: {
-                        shapeOptions: defaultStyle,
-                        metric: true
-                    },
-                    // no circles for starters as not compatible with WKT
-                    circle: false,
-                    marker: false
-                };
                 
-            noDrawOptions = { 
-                polyline: false,
-                polygon: false,
-                rectangle: false,
-                circle: false,
-                marker: false
-            };
-                
-            
-            
             /**
              * Map init data
              */
@@ -218,7 +195,7 @@ angular.module(
                     $scope.message.icon='fa-info-circle';
                     $scope.message.type = 'success';
                 }
-                fireResize();
+                fireResize('mainmap');
                 var layer = readSpatialCoverage(_this.dataset);
                 if(layer !== undefined && layer !== null) {
                     layerGroup.clearLayers();
@@ -256,37 +233,14 @@ angular.module(
                 } 
    
                 $scope.wizard.hasError = null;
-                $scope.mapData.layerGroup = layerGroup;
+                
+                
+                var wkt = wicket.fromObject(layerGroup.getLayers()[0]);
+                wkt.write();
+                
+                writeSpatialCoverage(_this.dataset, wkt);
+
                 return true;
-            };
-            
-            // local methods and variables
-            
-            readSpatialCoverage = function(dataset) {
-                if(dataset.spatialcoverage && dataset.spatialcoverage.geo_field) { // jshint ignore:line
-                    var wktString = dataset.spatialcoverage.geo_field; // jshint ignore:line
-                    wicket.read(wktString.substr(wktString.indexOf(';') + 1));
-
-                    var layer = wicket.toObject(defaultStyle);
-                    layer.setStyle(defaultStyle);
-                    return layer;
-                }
-
-                return undefined;
-            };
-            
-            writeSpatialCoverage = function(dataset, wktString) {
-                if(wktString && dataset.spatialcoverage) { // jshint ignore:line
-                    var wktStringWithSRS = 'SRID=4326;'+wktString;
-                    dataset.spatialcoverage.geo_field = wktStringWithSRS; // jshint ignore:line
-                    wicket.read(wktString.substr(wktString.indexOf(';') + 1));
-                }
-            };
-
-            fireResize = function () {
-                leafletData.getMap('mainmap').then(function (map) {
-                    setTimeout(function(){ map.invalidateSize();}, 50);
-                });
             };
             
             

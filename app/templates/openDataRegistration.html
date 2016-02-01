@@ -25,8 +25,7 @@
             <select class="form-control" id="datasetFunction" name="datasetFunction" 
                     ng-options="tag as tag.name for tag in tags['function'] track by tag.name"
                     ng-model="dataset.representation[0].function"
-                    ng-change="showInfoMessage(dataset.representation[0].function.description + ' / dataset.');"
-                    required>
+                    ng-change="showInfoMessage(dataset.representation[0].function.description + ' / dataset.');">
             </select>
         </div>
         <!-- Content Location -->

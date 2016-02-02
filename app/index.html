@@ -33,7 +33,7 @@
 
     </head>
     <body ng-app="de.cismet.sip-html5-resource-registration" 
-          ng-controller="de.cismet.sip-html5-resource-registration.controllers.masterController as master">
+          ng-controller="de.cismet.sip-html5-resource-registration.controllers.masterController as masterController">
         <!--[if lt IE 7]>
           <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
@@ -50,13 +50,13 @@
                         <h1>Open-Data Registration Tool</h1>
                     </div>
 
-                    <alert 
+                    <uib-alert 
                         ng-hide="message === null" 
                         type="{{message.type}}">
                         <span class="fa fa-4x fa-fw fa-pull-left" 
                               ng-class="message.icon"></span>
                         <div ng-bind-html="message.text"></div>
-                    </alert>
+                    </uib-alert>
 
                     <wizard on-finish="masterController.finishedWizard()" 
                             name="open-data-registration"
@@ -142,6 +142,7 @@
         <script src="scripts/directives/_module.js" type="text/javascript"></script>
         <script src="scripts/services/_module.js" type="text/javascript"></script>
         <script src="scripts/services/dataset.js" type="text/javascript"></script>
+        <script src="scripts/services/geoTools.js" type="text/javascript"></script>
         <script src="scripts/services/tagGroupService.js" type="text/javascript"></script>
         <script src="scripts/services/countriesService.js" type="text/javascript"></script>
         <script src="scripts/services/searchService.js" type="text/javascript"></script>

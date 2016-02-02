@@ -1,25 +1,10 @@
 {
-    "$self": "/SWITCHON.RESOURCE/50",
-    "id": 50,
-    "fromdate": 1159653600000,
-    "accessconditions": {
-        "$self": "/SWITCHON.TAG/1448",
-        "id": 1448,
-        "name": "for research only",
-        "taggroup": {
-            "$self": "/SWITCHON.TAGGROUP/145",
-            "id": 145,
-            "name": "access conditions",
-            "description": "License regulating the conditions for access and use of the data (open group with some predefined tags)."
-        },
-        "description": "These data are for use in research projects only."
-    },
-    "spatialcoverage": {
-        "$self": "/SWITCHON.GEOM/54",
-        "id": 54,
-        "geo_field": "SRID=4326;POLYGON ((-180 -90, 180 -90, 180 90, -180 90, -180 -90))"
-    },
-    "todate": 1404079200000,
+    "$self": "/SWITCHON.RESOURCE/-1",
+    "id": -1,
+    "fromdate": null,
+    "accessconditions": null,
+    "spatialcoverage": null,
+    "todate": null,
     "srid": {
         "$self": "/SWITCHON.TAG/226",
         "id": 226,
@@ -56,7 +41,7 @@
         },
         "description": "English"
     },
-    "description": "TIGGE, the THORPEX Interactive Grand Global Ensemble, is a key component of THORPEX: a World Weather Research Programme to accelerate the improvements in the accuracy of 1-day to 2 week high-impact weather forecasts for the benefit of humanity. The TIGGE archive consists of ensemble forecast data from ten global NWP centres, starting from October 2006, which has been made available for scientific research. TIGGE has become a focal point for a range of research projects, including research on ensemble forecasting, predictability and the development of products to improve the prediction of severe weather. The TIGGE project is overseen by the GIFS-TIGGE working group, which includes representative of the TIGGE data providers and the TIGGE archive centres.",
+    "description": null,
     "type": {
         "$self": "/SWITCHON.TAG/254",
         "id": 254,
@@ -69,18 +54,7 @@
         },
         "description": "This is data available as open data from any source on the Internet in a format, which can be directly used in experiments in the Laboratory."
     },
-    "location": {
-        "$self": "/SWITCHON.TAG/865",
-        "id": 865,
-        "name": "World",
-        "taggroup": {
-            "$self": "/SWITCHON.TAGGROUP/158",
-            "id": 158,
-            "name": "location",
-            "description": "Geographic Location of the resource (covered by the data). E.g. Continent, Country, Region, City, etc. Open Group. (open group with some predefined tags)."
-        },
-        "description": "n/a"
-    },
+    "location": null,
     "topiccategory": {
         "$self": "/SWITCHON.TAG/230",
         "id": 230,
@@ -94,324 +68,16 @@
         "description": "processes and phenomena of the atmosphere. Examples: cloud cover, weather, climate, atmospheric conditions, climate change, precipitation"
     },
     "creationdate": null,
-    "name": "TIGGE Data Retrieval",
-    "licensestatement": "The datasets available on this server are provided freely for Research and Education purposes. Before retrieving data please read the conditions below and acknowledge that you accept them. Registration will provide you with access to the TIGGE data with a delay of 48 hours after initial time of the forecasts. Conditions: Data available from this server may be used freely for research only. Commercial use of the data is not allowed. Research is understood as any project organised by a university, scientific institute or similar (private or institutional), for non-commercial research purposes only. A necessary condition for the recognition of non-commercial purposes is that all the results obtained are openly available at delivery costs only, without any delay linked to commercial objectives, and that the research itself is submitted for open publication. Although every care has been taken in preparing and testing the data, ECMWF cannot guarantee that the data are correct in all circumstances; neither does ECMWF accept any liability whatsoever for any error or omission in the data, or for any loss or damage arising from its use. Any person extracting data from this server will accept responsibility for informing all data users of these conditions. Data must not be supplied as a whole or in part to any third party outside your organisation. Articles, papers, or written scientific works of any form, based in whole or in part on TIGGE data, will contain an acknowledgement of TIGGE. You need to log in first in order to accept this license.",
-    "tags": [{
-            "$self": "/SWITCHON.TAG/878",
-            "id": 878,
-            "name": "wind",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/156",
-                "id": 156,
-                "name": "keywords - open",
-                "description": "User defined to describe the subject (open group with several predefined tags)."
-            },
-            "description": "n/a"
-        }, {
-            "$self": "/SWITCHON.TAG/879",
-            "id": 879,
-            "name": "dewpoint temperature",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/156",
-                "id": 156,
-                "name": "keywords - open",
-                "description": "User defined to describe the subject (open group with several predefined tags)."
-            },
-            "description": "n/a"
-        }, {
-            "$self": "/SWITCHON.TAG/914",
-            "id": 914,
-            "name": "temperature",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/156",
-                "id": 156,
-                "name": "keywords - open",
-                "description": "User defined to describe the subject (open group with several predefined tags)."
-            },
-            "description": "n/a"
-        }, {
-            "$self": "/SWITCHON.TAG/884",
-            "id": 884,
-            "name": "potential energy",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/156",
-                "id": 156,
-                "name": "keywords - open",
-                "description": "User defined to describe the subject (open group with several predefined tags)."
-            },
-            "description": "n/a"
-        }, {
-            "$self": "/SWITCHON.TAG/917",
-            "id": 917,
-            "name": "inhibition",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/156",
-                "id": 156,
-                "name": "keywords - open",
-                "description": "User defined to describe the subject (open group with several predefined tags)."
-            },
-            "description": "n/a"
-        }, {
-            "$self": "/SWITCHON.TAG/894",
-            "id": 894,
-            "name": "maximum temperature",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/156",
-                "id": 156,
-                "name": "keywords - open",
-                "description": "User defined to describe the subject (open group with several predefined tags)."
-            },
-            "description": "n/a"
-        }, {
-            "$self": "/SWITCHON.TAG/893",
-            "id": 893,
-            "name": "sea level pressure",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/156",
-                "id": 156,
-                "name": "keywords - open",
-                "description": "User defined to describe the subject (open group with several predefined tags)."
-            },
-            "description": "n/a"
-        }, {
-            "$self": "/SWITCHON.TAG/918",
-            "id": 918,
-            "name": "minimum",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/156",
-                "id": 156,
-                "name": "keywords - open",
-                "description": "User defined to describe the subject (open group with several predefined tags)."
-            },
-            "description": "n/a"
-        }, {
-            "$self": "/SWITCHON.TAG/919",
-            "id": 919,
-            "name": "orography",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/156",
-                "id": 156,
-                "name": "keywords - open",
-                "description": "User defined to describe the subject (open group with several predefined tags)."
-            },
-            "description": "n/a"
-        }, {
-            "$self": "/SWITCHON.TAG/920",
-            "id": 920,
-            "name": "snow fall",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/156",
-                "id": 156,
-                "name": "keywords - open",
-                "description": "User defined to describe the subject (open group with several predefined tags)."
-            },
-            "description": "n/a"
-        }, {
-            "$self": "/SWITCHON.TAG/900",
-            "id": 900,
-            "name": "snow depth",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/156",
-                "id": 156,
-                "name": "keywords - open",
-                "description": "User defined to describe the subject (open group with several predefined tags)."
-            },
-            "description": "n/a"
-        }, {
-            "$self": "/SWITCHON.TAG/901",
-            "id": 901,
-            "name": "soil temperature",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/156",
-                "id": 156,
-                "name": "keywords - open",
-                "description": "User defined to describe the subject (open group with several predefined tags)."
-            },
-            "description": "n/a"
-        }, {
-            "$self": "/SWITCHON.TAG/921",
-            "id": 921,
-            "name": "heat flux",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/156",
-                "id": 156,
-                "name": "keywords - open",
-                "description": "User defined to describe the subject (open group with several predefined tags)."
-            },
-            "description": "n/a"
-        }, {
-            "$self": "/SWITCHON.TAG/887",
-            "id": 887,
-            "name": "cloud cover",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/156",
-                "id": 156,
-                "name": "keywords - open",
-                "description": "User defined to describe the subject (open group with several predefined tags)."
-            },
-            "description": "n/a"
-        }, {
-            "$self": "/SWITCHON.TAG/906",
-            "id": 906,
-            "name": "solar radiation",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/156",
-                "id": 156,
-                "name": "keywords - open",
-                "description": "User defined to describe the subject (open group with several predefined tags)."
-            },
-            "description": "n/a"
-        }, {
-            "$self": "/SWITCHON.TAG/922",
-            "id": 922,
-            "name": "surface pressure",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/156",
-                "id": 156,
-                "name": "keywords - open",
-                "description": "User defined to describe the subject (open group with several predefined tags)."
-            },
-            "description": "n/a"
-        }, {
-            "$self": "/SWITCHON.TAG/907",
-            "id": 907,
-            "name": "thermal radiation",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/156",
-                "id": 156,
-                "name": "keywords - open",
-                "description": "User defined to describe the subject (open group with several predefined tags)."
-            },
-            "description": "n/a"
-        }, {
-            "$self": "/SWITCHON.TAG/869",
-            "id": 869,
-            "name": "precipitation",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/156",
-                "id": 156,
-                "name": "keywords - open",
-                "description": "User defined to describe the subject (open group with several predefined tags)."
-            },
-            "description": "n/a"
-        }, {
-            "$self": "/SWITCHON.TAG/923",
-            "id": 923,
-            "name": "wilting",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/156",
-                "id": 156,
-                "name": "keywords - open",
-                "description": "User defined to describe the subject (open group with several predefined tags)."
-            },
-            "description": "n/a"
-        }, {
-            "$self": "/SWITCHON.TAG/872",
-            "id": 872,
-            "name": "water",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/156",
-                "id": 156,
-                "name": "keywords - open",
-                "description": "User defined to describe the subject (open group with several predefined tags)."
-            },
-            "description": "n/a"
-        }, {
-            "$self": "/SWITCHON.TAG/905",
-            "id": 905,
-            "name": "sunshine",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/156",
-                "id": 156,
-                "name": "keywords - open",
-                "description": "User defined to describe the subject (open group with several predefined tags)."
-            },
-            "description": "n/a"
-        }, {
-            "$self": "/SWITCHON.TAG/924",
-            "id": 924,
-            "name": "soil moisture",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/156",
-                "id": 156,
-                "name": "keywords - open",
-                "description": "User defined to describe the subject (open group with several predefined tags)."
-            },
-            "description": "n/a"
-        }, {
-            "$self": "/SWITCHON.TAG/262",
-            "id": 262,
-            "name": "dataset",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/166",
-                "id": 166,
-                "name": "scope",
-                "description": "Scope of the resource. A codelist used in hierarchyLevel, DQ_Scope.level, and updateScope (fixed group with tags from a standard codelist)"
-            },
-            "description": "information applies to the dataset"
-        }, {
-            "$self": "/SWITCHON.TAG/1388",
-            "id": 1388,
-            "name": "Area, atmosphere",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/169",
-                "id": 169,
-                "name": "keywords - X-CUAHSI",
-                "description": "X-CUAHSI keywords build on a hierarchical keyword selection from the hydrologic ontology developed by CUAHSI, with additinal hierarchical keywords for relevant non-hydrosphere data."
-            },
-            "description": "n/a"
-        }, {
-            "$self": "/SWITCHON.TAG/1432",
-            "id": 1432,
-            "name": "Pressure, air",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/169",
-                "id": 169,
-                "name": "keywords - X-CUAHSI",
-                "description": "X-CUAHSI keywords build on a hierarchical keyword selection from the hydrologic ontology developed by CUAHSI, with additinal hierarchical keywords for relevant non-hydrosphere data."
-            },
-            "description": "n/a"
-        }, {
-            "$self": "/SWITCHON.TAG/1407",
-            "id": 1407,
-            "name": "Flux, precipitation",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/169",
-                "id": 169,
-                "name": "keywords - X-CUAHSI",
-                "description": "X-CUAHSI keywords build on a hierarchical keyword selection from the hydrologic ontology developed by CUAHSI, with additinal hierarchical keywords for relevant non-hydrosphere data."
-            },
-            "description": "n/a"
-        }, {
-            "$self": "/SWITCHON.TAG/1408",
-            "id": 1408,
-            "name": "Flux, wind",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/169",
-                "id": 169,
-                "name": "keywords - X-CUAHSI",
-                "description": "X-CUAHSI keywords build on a hierarchical keyword selection from the hydrologic ontology developed by CUAHSI, with additinal hierarchical keywords for relevant non-hydrosphere data."
-            },
-            "description": "n/a"
-        }, {
-            "$self": "/SWITCHON.TAG/1469",
-            "id": 1469,
-            "name": "Temperature, air",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/169",
-                "id": 169,
-                "name": "keywords - X-CUAHSI",
-                "description": "X-CUAHSI keywords build on a hierarchical keyword selection from the hydrologic ontology developed by CUAHSI, with additinal hierarchical keywords for relevant non-hydrosphere data."
-            },
-            "description": "n/a"
-        }],
+    "name": null,
+    "licensestatement": null,
+    "tags": [],
     "contact": {
-        "$self": "/SWITCHON.CONTACT/38",
-        "id": 38,
-        "organisation": "ECMWF",
+        "$self": "/SWITCHON.CONTACT/-1",
+        "id": -1,
+        "organisation": null,
         "name": null,
         "description": null,
-        "email": "calldesk@ecmwf.int webmaster@ecmwf.int Data.Services@ecmwf.int",
+        "email": null,
         "url": null,
         "role": {
             "$self": "/SWITCHON.TAG/220",
@@ -428,10 +94,10 @@
     },
     "geography": null,
     "representation": [{
-            "$self": "/SWITCHON.REPRESENTATION/48",
-            "id": 48,
-            "name": "TIGGE Data Retrieval Representation",
-            "description": "Representation of Resource TIGGE Data Retrieval",
+            "$self": "/SWITCHON.REPRESENTATION/-1",
+            "id": -1,
+            "name": null,
+            "description": null,
             "content": null,
             "type": {
                 "$self": "/SWITCHON.TAG/212",
@@ -445,18 +111,7 @@
                 },
                 "description": "The representation holds the original data of the resource"
             },
-            "function": {
-                "$self": "/SWITCHON.TAG/73",
-                "id": 73,
-                "name": "order",
-                "taggroup": {
-                    "$self": "/SWITCHON.TAGGROUP/152",
-                    "id": 152,
-                    "name": "function",
-                    "description": "Function that can be perfomred following the contentLocation link to the resource representation (fixed group, standard codelist)."
-                },
-                "description": "link value is URL of web application requiring user interaction to order/request access to the resource"
-            },
+            "function": null,
             "protocol": {
                 "$self": "/SWITCHON.TAG/197",
                 "id": 197,
@@ -474,30 +129,19 @@
             "temporalresolution": null,
             "spatialresolution": null,
             "spatialscale": null,
-            "contentlocation": "http://apps.ecmwf.int/datasets/data/tigge/",
+            "contentlocation": null,
             "tags": [],
-            "contenttype": {
-                "$self": "/SWITCHON.TAG/52",
-                "id": 52,
-                "name": "application/x-netcdf",
-                "taggroup": {
-                    "$self": "/SWITCHON.TAGGROUP/151",
-                    "id": 151,
-                    "name": "content type",
-                    "description": "MIME Type of the representation (open group which several predefined tags)."
-                },
-                "description": "Network Common Data Format"
-            },
+            "contenttype": null,
             "uploadstatus": null,
             "uploadmessage": null
         }],
     "lastmodificationdate": null,
     "metadata": [{
-            "$self": "/SWITCHON.METADATA/97",
-            "id": 97,
+            "$self": "/SWITCHON.METADATA/-1",
+            "id": -1,
             "name": "Basic Lineage Meta-Data",
             "tags": [],
-            "description": "THORPEX is an international research programme to accelerate improvements in the accuracy and utility of high-impact weather forecasts up to two weeks ahead. THORPEX â€“ THeObserving system Research and Predictability EXperiment â€“ was established in 2003 by the Fourteenth World Meteorological Congress. THORPEX is part of the World Weather Research Programme, under the auspices of the WMO Commission for Atmospheric Sciences (CAS), and is a key research component of the WMO Natural Disaster Reduction and Mitigation Programme. Ensemble forecasts are collected in near-real time using a common format at three data archive and distribution centres: China Meteorological Administration (CMA), European Centre for Medium-range Weather Forecasts (ECMWF) and US National Center for Atmospheric Research (NCAR).",
+            "description": null,
             "contact": null,
             "type": {
                 "$self": "/SWITCHON.TAG/180",
@@ -526,7 +170,7 @@
             "standard": null,
             "uuid": null,
             "contentlocation": null,
-            "creationdate": 1404338400000,
+            "creationdate": null,
             "contenttype": null,
             "content": null
         }],
@@ -542,18 +186,7 @@
         },
         "description": "otherRestrictions (limitation not listed)"
     },
-    "uuid": "urn:x-waterswitchon:dataset:ecmwf:tigge:dataretrieval:ela4",
-    "collection": {
-        "$self": "/SWITCHON.TAG/911",
-        "id": 911,
-        "name": "ECMWF - TIGGE",
-        "taggroup": {
-            "$self": "/SWITCHON.TAGGROUP/149",
-            "id": 149,
-            "name": "collection",
-            "description": "Assigns the resource to a collection of resources for cataloguing purposes, e.g. SWITCH-ON Experiment Results, etc. (open group with some predefined tags)."
-        },
-        "description": "n/a"
-    },
+    "uuid": null,
+    "collection": null,
     "publicationdate": null
 }

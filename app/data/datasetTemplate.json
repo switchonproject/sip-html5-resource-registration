@@ -111,9 +111,7 @@
                 },
                 "description": "The representation holds the original data of the resource"
             },
-            "function": {
-                "name": "download"
-            },
+            "function": null,
             "protocol": {
                 "$self": "/SWITCHON.TAG/197",
                 "id": 197,
@@ -133,7 +131,7 @@
             "spatialscale": null,
             "contentlocation": null,
             "tags": [],
-            "contenttype": {"name":"blahaaaaaaa"},
+            "contenttype": null,
             "uploadstatus": null,
             "uploadmessage": null
         }],

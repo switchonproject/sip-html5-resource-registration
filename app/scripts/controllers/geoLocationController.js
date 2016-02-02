@@ -93,7 +93,65 @@ angular.module(
                     minZoom: _this.config.minZoom,
                     path: defaultStyle
                 };
-            $scope.mapData.defaultDrawOptions = defaultDrawOptions;
+                
+            
+            // resize the map on enter
+            $scope.wizard.enterValidators['Geographic Location'] = function(context){
+                if(context.valid === true)
+                {
+                    if(_this.mode.drawBBox === true) {
+                        $scope.message.text='Please specify the extent of the dataset in the geographic space. <br>Use use the map controls to draw a bounding box or a polygon that represents the spatial extent of the dataset.';
+                    } else {
+                        $scope.message.text='Please specify the extent of the dataset in the geographic space.';
+                    }
+
+                    $scope.message.icon='fa-info-circle';
+                    $scope.message.type = 'success';
+                    
+                    fireResize('mainmap');
+                    var layer = readSpatialCoverage(_this.dataset);
+                    if(layer !== undefined && layer !== null) {
+                        layerGroup.clearLayers();
+                        layerGroup.addLayer(layer);
+                         leafletData.getMap('mainmap').then(function (map) {
+                            setTimeout(function(){map.fitBounds(layer, {
+                                    animate: true,
+                                    pan: {animate: true, duration: 0.75},
+                                    zoom: {animate: true}
+                                });}, 100);
+                       });
+                    }
+                }
+                
+                return context.valid;
+            };            
+            
+            $scope.wizard.exitValidators['Geographic Location'] = function(context){
+                context.valid = true;
+                if(_this.mode.defineBBox === true && $scope.coordinatesForm.$invalid) {
+                    $scope.message.text='Please specify a valid bounding box or use an other option to  specify the geographic location of the dataset!';
+                    $scope.message.icon='fa-warning';
+                    $scope.message.type = 'warning';
+                    
+                    context.valid = false;
+                } else if(!layerGroup || !layerGroup.getLayers() || layerGroup.getLayers().length === 0) {
+                    
+                    $scope.message.text='Please specify the geographic location of the dataset!';
+                    $scope.message.icon='fa-warning';
+                    $scope.message.type = 'warning';
+                    
+                    context.valid = false;
+                }
+                
+                if(context.valid === true) {
+                    $scope.wizard.hasError = null;
+                    var wkt = wicket.fromObject(layerGroup.getLayers()[0]);
+                    wkt.write();
+                    writeSpatialCoverage(_this.dataset, wkt);
+                }
+                
+                return context.valid;
+            };
             
             
             /**
@@ -185,69 +243,8 @@ angular.module(
                    //_this.contentLocation.wkt = null;
                    //_this.contentLocation.layer = layer;
             };
-            
-            // resize the map on enter
-            $scope.wizard.enterValidators['Geographic Location'] = function(){
-                if(!$scope.wizard.hasError) {
-                    if(_this.mode.drawBBox === true) {
-                        $scope.message.text='Please specify the extent of the dataset in the geographic space. <br>Use use the map controls to draw a bounding box or a polygon that represents the spatial extent of the dataset.';
-                    } else {
-                        $scope.message.text='Please specify the extent of the dataset in the geographic space.';
-                    }
-                    
-                    $scope.message.icon='fa-info-circle';
-                    $scope.message.type = 'success';
-                }
-                fireResize('mainmap');
-                var layer = readSpatialCoverage(_this.dataset);
-                if(layer !== undefined && layer !== null) {
-                    layerGroup.clearLayers();
-                    layerGroup.addLayer(layer);
-                     leafletData.getMap('mainmap').then(function (map) {
-                        setTimeout(function(){map.fitBounds(layer, {
-                                animate: true,
-                                pan: {animate: true, duration: 0.75},
-                                zoom: {animate: true}
-                            });}, 100);
-                   });
-                }
-                
-                return true;
-            };
-            
-            
-            $scope.wizard.exitValidators['Geographic Location'] = function(){
-                
-                if(_this.mode.defineBBox === true && $scope.coordinatesForm.$invalid) {
-                    $scope.message.text='Please specify a valid bounding box or use an other option to  specify the geographic location of the dataset!';
-                    $scope.message.icon='fa-warning';
-                    $scope.message.type = 'warning';
-                    
-                    return false;
-                }
-                                
-                if(!layerGroup || layerGroup.getLayers() || layerGroup.getLayers().length === 0) {
-                    
-                    $scope.message.text='Please specify the geographic location of the dataset!';
-                    $scope.message.icon='fa-warning';
-                    $scope.message.type = 'warning';
-                    
-                    return false;
-                } 
-   
-                // reset errors
-                $scope.wizard.hasError = null;
-
-                // save geom in the model
-               // var wkt = wicket.fromObject(layerGroup.getLayers()[0]);
-              //  wkt.write();
-              //  writeSpatialCoverage(_this.dataset, wkt);
-
-                return true;
-            };
-            
-            
-            // leafltet initiaisation
+       
+            // leaflet initialisation
             southWest = (_this.config.maxBounds && angular.isArray(_this.config.maxBounds.southWest)) ?
                             L.latLng(config.maxBounds.southWest[0], _this.config.maxBounds.southWest[1]) :
                             L.latLng(90, -180);

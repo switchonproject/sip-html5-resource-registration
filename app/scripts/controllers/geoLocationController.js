@@ -1,3 +1,6 @@
+/* global L */
+/*jshint sub:true*/
+
 angular.module(
     'de.cismet.sip-html5-resource-registration.controllers'
 ).controller(
@@ -144,7 +147,7 @@ angular.module(
                 }
                 
                 if(_this.mode.defineBBox === true) {
-                    $scope.message.text='Please enter a bounding box with westbound and eastbound longitudes, and southbound and northbound latitudes in decimal degrees, with a precision of at least two decimals.'
+                    $scope.message.text='Please enter a bounding box with westbound and eastbound longitudes, and southbound and northbound latitudes in decimal degrees, with a precision of at least two decimals.';
                     
                     if(layerGroup.getLayers().length >  0) {
                         var bounds = layerGroup.getBounds();
@@ -223,7 +226,7 @@ angular.module(
                     return false;
                 }
                                 
-                if(!layerGroup || layerGroup.getLayers().length === 0) {
+                if(!layerGroup || layerGroup.getLayers() || layerGroup.getLayers().length === 0) {
                     
                     $scope.message.text='Please specify the geographic location of the dataset!';
                     $scope.message.icon='fa-warning';
@@ -232,13 +235,13 @@ angular.module(
                     return false;
                 } 
    
+                // reset errors
                 $scope.wizard.hasError = null;
-                
-                
-                var wkt = wicket.fromObject(layerGroup.getLayers()[0]);
-                wkt.write();
-                
-                writeSpatialCoverage(_this.dataset, wkt);
+
+                // save geom in the model
+               // var wkt = wicket.fromObject(layerGroup.getLayers()[0]);
+              //  wkt.write();
+              //  writeSpatialCoverage(_this.dataset, wkt);
 
                 return true;
             };
@@ -283,7 +286,7 @@ angular.module(
                     
                 });
                 
-                map.on('draw:edited', function (event) {
+                map.on('draw:edited', function () {
                     //console.log(event.layers.getLayers().length + ' edited'); 
                     //layerGroup.addLayer(event.layers.getLayers()[0]);
                     

@@ -1,3 +1,5 @@
+/*jshint sub:true*/
+
 angular.module(
     'de.cismet.sip-html5-resource-registration.controllers'
 ).controller(
@@ -32,6 +34,26 @@ angular.module(
             };
 
             $scope.wizard.exitValidators['License and Conditions'] = function(){
+                
+                // ACCESS CONDITIONS
+                var isInvalidAccessconditions = $scope.tags['accessconditions'].every(function(element) {
+                    if (_this.dataset.accessconditions.name && 
+                            (element.name === _this.dataset.accessconditions.name)) {
+                        _this.dataset.accessconditions = element;
+                        return false;
+                    } else {
+                        return true;
+                    } 
+                });
+                
+                if(isInvalidAccessconditions) {
+                    $scope.message.text='Please select a valid access condition (e.g. no limitations).';
+                    $scope.message.icon='fa-warning';
+                    $scope.message.type = 'warning';
+                    
+                    $scope.wizard.hasError = 'datasetAccessconditions';
+                    return false;
+                }
                 
                 // NAME
                 if($scope.licenseForm.datasetLicensestatement.$error.required) {

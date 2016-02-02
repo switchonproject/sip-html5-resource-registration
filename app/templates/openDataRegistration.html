@@ -25,7 +25,8 @@
             <select class="form-control" id="datasetFunction" name="datasetFunction" 
                     ng-options="tag as tag.name for tag in tags['function'] track by tag.name"
                     ng-model="dataset.representation[0].function"
-                    ng-change="showInfoMessage(dataset.representation[0].function.description + ' / dataset.');">
+                    ng-change="showInfoMessage('The ' + dataset.representation[0].function.description + ' / dataset.');"
+                    required>
             </select>
         </div>
         <!-- Content Location -->
@@ -43,7 +44,7 @@
             <select class="form-control" id="datasetContenttype" name="datasetContenttype" placeholder="Description of the dataset"
                     ng-options="tag as tag.description for tag in tags['content type'] track by tag.name"
                     ng-model="dataset.representation[0].contenttype"
-                    ng-change="showInfoMessage('The <a href=\'https://en.wikipedia.org/wiki/Media_type\' target=\'_blank\'>media type</a> of the dataset is <i>'+dataset.representation[0].contentype.name + '</i> (' + dataset.representation[0].contentype.description + ').');"
+                    ng-change="showInfoMessage('The <a href=\'https://en.wikipedia.org/wiki/Media_type\' target=\'_blank\'>media type</a> of the dataset is <i>'+dataset.representation[0].contenttype.name + '</i> (' + dataset.representation[0].contenttype.description + ').');"
                     required>   
             </select>
         </div>

@@ -133,7 +133,7 @@
             "spatialscale": null,
             "contentlocation": null,
             "tags": [],
-            "contenttype": null,
+            "contenttype": {"name":"blahaaaaaaa"},
             "uploadstatus": null,
             "uploadmessage": null
         }],

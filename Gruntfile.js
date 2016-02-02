@@ -296,19 +296,19 @@ module.exports = function (grunt) {
                 options: {
                     cdn: {
                         angular: {
-                            versions: ['1.2.25'],
+                            versions: ['1.3.20'],
                             url: function (version) {
                                 return '//ajax.googleapis.com/ajax/libs/angularjs/' + version + '/angular.min.js';
                             }
                         },
                         'angular-resource': {
-                            versions: ['1.2.25'],
+                            versions: ['1.3.20'],
                             url: function (version) {
                                 return '//ajax.googleapis.com/ajax/libs/angularjs/' + version + '/angular-resource.min.js';
                             }
                         },
                         bootstrap : {
-                            versions: ['3.3.0', '3.2.0', '3.1.1'],
+                            versions: ['3.3.6', '3.2.0', '3.1.1'],
                             url: function (version) {
                                 return '//maxcdn.bootstrapcdn.com/bootstrap/' + version + '/js/bootstrap.min.js';
                             }

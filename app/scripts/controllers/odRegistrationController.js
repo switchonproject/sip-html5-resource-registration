@@ -1,3 +1,5 @@
+/*jshint sub:true*/
+
 angular.module(
     'de.cismet.sip-html5-resource-registration.controllers'
 ).controller(
@@ -23,13 +25,6 @@ angular.module(
             var _this = this;
             _this.dataset = dataset;
             
-            /**
-             * ui-select groupBy furnction for grouping selectable items by
-             * name.
-             * 
-             * @param {String} selected item
-             * @returns {String} group of the item
-             */
             _this.groupBy = function(item) {
                 
                 if(item.name.indexOf(',') > -1) {
@@ -73,6 +68,25 @@ angular.module(
                     return false;
                 }
                 
+                // FUNCTION
+                var isInvalidFunction = $scope.tags['function'].every(function(element) {
+                    if (_this.dataset.representation[0].function &&
+                            (element.name === _this.dataset.representation[0].function.name)) {
+                        _this.dataset.representation[0].function = element;
+                        return false;
+                    } else {
+                        return true;
+                    } 
+                });
+                
+                if(isInvalidFunction) {
+                    $scope.message.text='Please select a valid function (e.g. download) of the link.';
+                    $scope.message.icon='fa-warning';
+                    $scope.message.type = 'warning';
+                    
+                    $scope.wizard.hasError = 'datasetContentlocation';
+                    return false;
+                }
                 
                 // CONTENT LOCATION                
                 if($scope.odRegistrationForm.datasetContentlocation.$error.url) {
@@ -86,6 +100,26 @@ angular.module(
                 
                 if(!dataset.representation[0].contentlocation) {
                     $scope.message.text='Please provide link to the dataset.';
+                    $scope.message.icon='fa-warning';
+                    $scope.message.type = 'warning';
+                    
+                    $scope.wizard.hasError = 'datasetContentlocation';
+                    return false;
+                }
+                
+                // CONTENT TYPE
+                var isInvalidContenttype = $scope.tags['content type'].every(function(element) {
+                    if (_this.dataset.representation[0].contenttype &&
+                            (element.name === _this.dataset.representation[0].contenttype.name)) {
+                        _this.dataset.representation[0].contenttype = element;
+                        return false;
+                    }
+
+                    return true;
+                });
+                
+                if(isInvalidContenttype) {
+                    $scope.message.text='Please select a valid content type (e.g. ESRI Shapefile) of the link.';
                     $scope.message.icon='fa-warning';
                     $scope.message.type = 'warning';
                     
@@ -112,6 +146,7 @@ angular.module(
                     return false;
                 }
                 
+                // no error? -> reset
                 $scope.wizard.hasError = null;
                 return true;
                 

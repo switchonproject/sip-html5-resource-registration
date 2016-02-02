@@ -1,3 +1,5 @@
+/* global Wkt */
+
 angular.module('de.cismet.sip-html5-resource-registration.services')
         .factory('de.cismet.sip-html5-resource-registration.services.geoTools', 
         ['leafletData',

@@ -1,3 +1,6 @@
+/* global L */
+/*jshint sub:true*/
+
 angular.module(
     'de.cismet.sip-html5-resource-registration.controllers'
 ).controller(

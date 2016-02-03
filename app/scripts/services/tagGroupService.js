@@ -1,7 +1,7 @@
 angular.module(
     'de.cismet.sip-html5-resource-registration.services'
 ).factory('de.cismet.sip-html5-resource-registration.services.TagGroupService',
-    ['$resource', 'eu.water-switch-on.sip.services.Base64', 'AppConfig',
+    ['$resource', 'de.cismet.sip-html5-resource-registration.services.Base64', 'AppConfig',
         function ($resource, Base64, AppConfig) {
             'use strict';
 

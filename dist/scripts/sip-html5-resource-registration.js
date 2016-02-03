@@ -576,149 +576,187 @@ angular.module(
 /*jshint sub:true*/
 
 angular.module(
-    'de.cismet.sip-html5-resource-registration.controllers'
-).controller(
-    'de.cismet.sip-html5-resource-registration.controllers.odRegistrationController',
-    [
-        '$scope',
-        '$http',
-        'AppConfig',
-        'WizardHandler',
-        'de.cismet.sip-html5-resource-registration.services.dataset',
-        'de.cismet.sip-html5-resource-registration.services.TagGroupService',
-        // Controller Constructor Function
-        function (
-            $scope,
-            $http,
-            AppConfig,
-            WizardHandler,
-            dataset,
-            tagGroupService
-        ) {
-            'use strict';
+        'de.cismet.sip-html5-resource-registration.controllers'
+        ).controller(
+        'de.cismet.sip-html5-resource-registration.controllers.odRegistrationController',
+        [
+            '$scope',
+            '$http',
+            'AppConfig',
+            'WizardHandler',
+            'de.cismet.sip-html5-resource-registration.services.dataset',
+            'de.cismet.sip-html5-resource-registration.services.TagGroupService',
+            'de.cismet.sip-html5-resource-registration.services.searchService',
+            // Controller Constructor Function
+            function (
+                    $scope,
+                    $http,
+                    AppConfig,
+                    WizardHandler,
+                    dataset,
+                    tagGroupService,
+                    searchService
+                    ) {
+                'use strict';
 
-            var _this = this;
-            _this.dataset = dataset;
-            
-            _this.groupBy = function(item) {
-                
-                if(item.name.indexOf(',') > -1) {
-                    return item.name.split(',', 1)[0]; 
-                } else {
-                    return item.name.split(' ', 1)[0]; 
-                }
+                var _this, duplicateLink;
+                duplicateLink = undefined;
 
-            };
-            
-            _this.checkLink = function(url) {
-              // TODO: check link
-              console.log('checkLink not yet implemented: ' + url);
-              //var msg = 'This dataset is alredy registered in the SWITCH-ON Spatial Information Platform under the name *"Corine Land Cover 1990 - 2000 changes formation code in changed areas (change 1990-2000) in 100m resolution "*. Please click [here] to view the dataset meta-data.';
-            };
-            
-            $scope.tags['function'] = tagGroupService.getTagList('function', 'download,order,information');
-            $scope.tags['content type'] = tagGroupService.getTagList('content type');
-            $scope.tags['keywords - X-CUAHSI'] = tagGroupService.getTagList('keywords - X-CUAHSI');
+                _this = this;
+                _this.dataset = dataset;
 
-            $scope.wizard.enterValidators['Dataset Description'] = function(context) {
-                if(context.valid === true) {
-                    $scope.message.text='Please provide some general information about the new dataset such as name, description, a (download) link and keywords.';
-                    $scope.message.icon='fa-info-circle';
-                    $scope.message.type = 'success';
-                }
+                _this.groupBy = function (item) {
 
-                return context.valid;
-            };
-
-            $scope.wizard.exitValidators['Dataset Description'] = function(context){
-                context.valid = true;
-                
-                // CONTENT TYPE
-                var isInvalidContenttype = $scope.tags['content type'].every(function(element) {
-                    if (_this.dataset.representation[0] && _this.dataset.representation[0].contenttype &&
-                            (element.name === _this.dataset.representation[0].contenttype.name)) {
-                        _this.dataset.representation[0].contenttype = element;
-                        return false;
+                    if (item.name.indexOf(',') > -1) {
+                        return item.name.split(',', 1)[0];
+                    } else {
+                        return item.name.split(' ', 1)[0];
                     }
 
-                    return true;
-                });
-                
-                // FUNCTION
-                var isInvalidFunction = $scope.tags['function'].every(function(element) {
-                    if (_this.dataset.representation[0] && _this.dataset.representation[0].function &&
-                            (element.name === _this.dataset.representation[0].function.name)) {
-                        _this.dataset.representation[0].function = element;
-                        return false;
-                    } else {
-                        return true;
-                    } 
-                });
+                };
 
-                // NAME
-                if(!dataset.name) {
-                    $scope.message.text='Please enter the name / title of the dataset.';
-                    $scope.message.icon='fa-warning';
-                    $scope.message.type = 'warning';
-                    
-                    $scope.wizard.hasError = 'datasetName';
-                    context.valid = false;
-                } else if(isInvalidFunction) {
-                    $scope.message.text='Please select a valid function (e.g. download) of the link.';
-                    $scope.message.icon='fa-warning';
-                    $scope.message.type = 'warning';
-                    
-                    $scope.wizard.hasError = 'datasetContentlocation';
-                    context.valid = false;
-                } else if($scope.odRegistrationForm.datasetContentlocation.$error.url) {
-                    // CONTENT LOCATION       
-                    $scope.message.text='The link to the dataset you have provided is not a valid <a href=\'https://en.wikipedia.org/wiki/Uniform_Resource_Locator#Syntax\' target=\'_blank\' title=\'Uniform Resource Locator\'>URL</a> .' ;
-                    $scope.message.icon='fa-warning';
-                    $scope.message.type = 'warning';
-                    
-                    $scope.wizard.hasError = 'datasetContentlocation';
-                    context.valid = false;
-                } else if(!dataset.representation[0].contentlocation) {
-                    $scope.message.text='Please provide link to the dataset.';
-                    $scope.message.icon='fa-warning';
-                    $scope.message.type = 'warning';
-                    
-                    $scope.wizard.hasError = 'datasetContentlocation';
-                    context.valid = false;
-                } else if(isInvalidContenttype) {
-                    $scope.message.text='Please select a valid content type (e.g. ESRI Shapefile) of the link.';
-                    $scope.message.icon='fa-warning';
-                    $scope.message.type = 'warning';
-                    
-                    $scope.wizard.hasError = 'datasetContentlocation';
-                    context.valid = false;
-                } else if(!dataset.description) {
-                    // DESCRIPTION
-                    $scope.message.text='Please provide a description of the dataset.';
-                    $scope.message.icon='fa-warning';
-                    $scope.message.type = 'warning';
-                    
-                    $scope.wizard.hasError = 'datasetDescription';
-                    context.valid = false;
-                } else if(!_this.dataset.tags || _this.dataset.tags.length === 0) {
-                    $scope.message.text='Please assign at least one keyword to the Dataset.';
-                    $scope.message.icon='fa-warning';
-                    $scope.message.type = 'warning';
-                    
-                    $scope.wizard.hasError = 'datasetTags';
-                    context.valid = false;
-                }
-                
-                if(context.valid === true) {
-                    $scope.wizard.hasError = null;
-                }
-                // no error? -> reset
-                
-                return context.valid; 
-            };
-        }
-    ]
-);
+                _this.checkLink = function (url) {
+                    console.log(url);
+                    if (url) {
+                        var searchResultPromise, searchSuccess, searchError;
+                        searchSuccess = function (searchResult) {
+                            if (searchResult && searchResult.$collection && searchResult.$collection.length > 0) {
+                                duplicateLink = 'This dataset is alredy registered in the SWITCH-ON Spatial Information Platform under the name </strong>"' +
+                                        searchResult.$collection[0].name + '"</strong>. Click <a href="http://tl-243.xtr.deltares.nl/byod/#/resource/' +
+                                        searchResult.$collection[0].id + '" title="' +
+                                        searchResult.$collection[0].name + '" target="_blank">here</a> to view the dataset meta-data.';
+
+                                $scope.message.text = duplicateLink;
+                                $scope.message.icon = 'fa-warning';
+                                $scope.message.type = 'info';
+                                $scope.wizard.hasError = 'datasetContentlocation';
+                            } else {
+                                //console.log('resource ' + url + ' not in Meta-Data Repository');
+                                duplicateLink = undefined;
+                            }
+                        };
+
+                        searchError = function (data) {
+                            console.log('search error: ' + data);
+                            duplicateLink = undefined;
+                        };
+
+                        searchResultPromise = searchService.search(url).$promise.then(searchSuccess, searchError);
+                    }
+
+                    duplicateLink = undefined;
+                };
+
+                $scope.tags['function'] = tagGroupService.getTagList('function', 'download,order,information');
+                $scope.tags['content type'] = tagGroupService.getTagList('content type');
+                $scope.tags['keywords - X-CUAHSI'] = tagGroupService.getTagList('keywords - X-CUAHSI');
+
+                $scope.wizard.enterValidators['Dataset Description'] = function (context) {
+                    if (context.valid === true) {
+                        $scope.message.text = 'Please provide some general information about the new dataset such as name, description, a (download) link and keywords.';
+                        $scope.message.icon = 'fa-info-circle';
+                        $scope.message.type = 'success';
+                    }
+
+                    return context.valid;
+                };
+
+                $scope.wizard.exitValidators['Dataset Description'] = function (context) {
+                    context.valid = true;
+
+                    // CONTENT TYPE
+                    var isInvalidContenttype = $scope.tags['content type'].every(function (element) {
+                        if (_this.dataset.representation[0] && _this.dataset.representation[0].contenttype &&
+                                (element.name === _this.dataset.representation[0].contenttype.name)) {
+                            _this.dataset.representation[0].contenttype = element;
+                            return false;
+                        }
+
+                        return true;
+                    });
+
+                    // FUNCTION
+                    var isInvalidFunction = $scope.tags['function'].every(function (element) {
+                        if (_this.dataset.representation[0] && _this.dataset.representation[0].function &&
+                                (element.name === _this.dataset.representation[0].function.name)) {
+                            _this.dataset.representation[0].function = element;
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    });
+
+                    // NAME
+                    if (!dataset.name) {
+                        $scope.message.text = 'Please enter the name / title of the dataset.';
+                        $scope.message.icon = 'fa-warning';
+                        $scope.message.type = 'warning';
+
+                        $scope.wizard.hasError = 'datasetName';
+                        context.valid = false;
+                    } else if (isInvalidFunction) {
+                        $scope.message.text = 'Please select a valid function (e.g. download) of the link.';
+                        $scope.message.icon = 'fa-warning';
+                        $scope.message.type = 'warning';
+
+                        $scope.wizard.hasError = 'datasetContentlocation';
+                        context.valid = false;
+                    } else if ($scope.odRegistrationForm.datasetContentlocation.$error.url) {
+                        // CONTENT LOCATION       
+                        $scope.message.text = 'The link to the dataset you have provided is not a valid <a href=\'https://en.wikipedia.org/wiki/Uniform_Resource_Locator#Syntax\' target=\'_blank\' title=\'Uniform Resource Locator\'>URL</a> .';
+                        $scope.message.icon = 'fa-warning';
+                        $scope.message.type = 'warning';
+
+                        $scope.wizard.hasError = 'datasetContentlocation';
+                        context.valid = false;
+                    } else if (!dataset.representation[0].contentlocation) {
+                        $scope.message.text = 'Please provide link to the dataset.';
+                        $scope.message.icon = 'fa-warning';
+                        $scope.message.type = 'warning';
+
+                        $scope.wizard.hasError = 'datasetContentlocation';
+                        context.valid = false;
+                    } else if (duplicateLink) {
+                        $scope.message.text = duplicateLink;
+                        $scope.message.icon = 'fa-warning';
+                        $scope.message.type = 'warning';
+
+                        $scope.wizard.hasError = 'datasetContentlocation';
+                        context.valid = false;
+                    } else if (isInvalidContenttype) {
+                        $scope.message.text = 'Please select a valid content type (e.g. ESRI Shapefile) of the link.';
+                        $scope.message.icon = 'fa-warning';
+                        $scope.message.type = 'warning';
+
+                        $scope.wizard.hasError = 'datasetContentlocation';
+                        context.valid = false;
+                    } else if (!dataset.description) {
+                        // DESCRIPTION
+                        $scope.message.text = 'Please provide a description of the dataset.';
+                        $scope.message.icon = 'fa-warning';
+                        $scope.message.type = 'warning';
+
+                        $scope.wizard.hasError = 'datasetDescription';
+                        context.valid = false;
+                    } else if (!_this.dataset.tags || _this.dataset.tags.length === 0) {
+                        $scope.message.text = 'Please assign at least one keyword to the Dataset.';
+                        $scope.message.icon = 'fa-warning';
+                        $scope.message.type = 'warning';
+
+                        $scope.wizard.hasError = 'datasetTags';
+                        context.valid = false;
+                    }
+
+                    if (context.valid === true) {
+                        $scope.wizard.hasError = null;
+                    }
+                    // no error? -> reset
+
+                    return context.valid;
+                };
+            }
+        ]
+        );
 /* global L */
 /*jshint sub:true*/
 
@@ -842,8 +880,8 @@ angular.module(
         appConfig.searchService.password = 'cismet';
         appConfig.searchService.defautLimit = 10;
         appConfig.searchService.maxLimit = 50;
-        //appConfig.searchService.host = 'http://localhost:8890';
-        appConfig.searchService.host = 'http://switchon.cismet.de/legacy-rest1';
+        appConfig.searchService.host = 'http://localhost:8890';
+        //appConfig.searchService.host = 'http://switchon.cismet.de/legacy-rest1';
         //appConfig.searchService.host = 'http://tl-243.xtr.deltares.nl/switchon_server_rest';
 
         appConfig.mapView = {};
@@ -1040,22 +1078,19 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
 
 angular.module(
     'de.cismet.sip-html5-resource-registration.services'
-).factory('de.cismet.sip-html5-resource-registration.services.SearchService',
-    ['$resource', 'de.cismet.sip-html5-resource-registration.services.services.Base64',
-        '$q', '$interval', 'AppConfig',
-        function ($resource, Base64, $q, $interval, AppConfig) {
+).factory('de.cismet.sip-html5-resource-registration.services.searchService',
+    ['$resource', 'de.cismet.sip-html5-resource-registration.services.Base64',
+        'AppConfig',
+        function ($resource, Base64, AppConfig) {
             'use strict';
-            var config, authdata, entityResource, searchResource, searchFunction;
+            var config, authdata, searchResource, searchFunction;
 
             config = AppConfig.searchService;
             authdata = Base64.encode(config.username + ':' + config.password);
 
-            // remote legagy search core search
-            // FIXME: limit and offset not implemented in legacy search!
-            // currently, limit and offset are appended to the POST query parameter!
-            searchResource = $resource(config.host + '/searches/SWITCHON.de.cismet.cids.custom.switchon.search.server.MetaObjectUniversalSearchStatement/results',
+            searchResource = $resource(config.host + '/searches/SWITCHON.de.cismet.cids.custom.switchon.search.server.ResourceContentLocationSearch/results',
                 {
-                    limit: 20,
+                    limit: 1,
                     offset: 0,
                     omitNullValues: true,
                     deduplicate: true
@@ -1073,275 +1108,33 @@ angular.module(
                     }
                 });
 
-            // TODO: the deduplicate setting should be true by default
-            entityResource = $resource(
-                config.host + '/SWITCHON.:classname/:objId',
-                {
-                    omitNullValues: true,
-                    deduplicate: false
-                },
-                {
-                    get: {
-                        method: 'GET',
-                        isArray: false,
-                        headers: {
-                            'Authorization': 'Basic ' + authdata
-                        }
-                    }
-                }
-            );
-
-            searchFunction = function (universalSearchString, filterTagGroups, limit, offset, progressCallback) {
-                var deferred, noop, queryObject, result, searchError, searchResult, searchSuccess,
-                    timer, fakeProgress, filterTags, deferredFilterTags;
-
-                noop = angular.noop;
-
-                deferred = $q.defer();
-
+            searchFunction = function (url) {
+                var queryObject, searchResult;
                 queryObject = {
-                    'list': [{'key': 'Query', 'value': universalSearchString}]
-                };
-
-                // ensure that the mandatory $total group is requested
-                // FIXME: workaround till legacy search core returns $total
-                if (filterTagGroups && filterTagGroups.length > 0) {
-                    if (filterTagGroups.indexOf('$total') === -1) {
-                        filterTagGroups += ',$total';
-                    }
-                } else {
-                    filterTagGroups = '$total';
-                }
-
-                // current value, max value, type, max = -1 indicates indeterminate
-                (progressCallback || noop)(0, -1, 'success');
-
-                fakeProgress = 1;
-                timer = $interval(function () {
-                    (progressCallback || noop)(fakeProgress, -1, 'success');
-                    fakeProgress++;
-                }, 100, 100);
-
-                if (offset && limit && limit > 0 && offset > 0 && (offset %  limit !== 0)) {
-                    offset = 0;
-                }
-
-                // result of this search operation
-                // set a new promise 
-                result = {
-                    $promise: deferred.promise,
-                    $resolved: false,
-                    $offset: offset,
-                    $limit: limit,
-                    $length: 0
+                    'list': [{'key': 'url', 'value': url}]
                 };
 
                 // result of the remote search operation (promise)
                 // starting the search!
-                // FIXME:   limit an offset GET parameters currently not evaluated 
-                //          by the leagcy service. There we have to add them also
-                //          to the queryObject.
+
                 searchResult = searchResource.search(
                     {
-                        limit: limit,
-                        offset: offset
+                        limit: 1,
+                        offset: 0
                     },
                     queryObject
                 );
-
-                // called when both search promises have been resolved
-                searchSuccess = function (searchResultData) {
-                    var classesError, classesSuccess, nodes;
-
-                    // searchResult.$collection
-                    nodes = searchResultData[0].$collection;
-
-                    // classes resolved
-                    classesSuccess = function (data) {
-                        var allError, allSuccess, classCache, classname, i, objectId, objsQ,
-                            objPromise, singleProgressF, resolvedObjsCount, fakeProgressActive;
-
-                        classCache = [];
-                        for (i = 0; i < data.$collection.length; ++i) {
-                            classCache[data.$collection[i].key] = data.$collection[i].value;
-                        }
-
-                        objsQ = [];
-
-                        resolvedObjsCount = 0;
-                        // we stop fake progresss before 1st object has been resolved
-                        // to minimze delay between fake and real progress steps
-                        if (nodes.length > 0) {
-                            fakeProgressActive = true;
-                        } else {
-                            $interval.cancel(timer);
-                        }
-
-                        // real progress starts at 100 and this then scaled to 200 by callback
-                        (progressCallback || noop)(resolvedObjsCount, nodes.length, 'success');
-
-                        singleProgressF = function () {
-                            if (fakeProgressActive === true) {
-                                fakeProgressActive = !$interval.cancel(timer);
-                            }
-
-                            (progressCallback || noop)(++resolvedObjsCount, nodes.length, 'success');
-                        };
-
-                        for (i = 0; i < nodes.length; ++i) {
-                            classname = classCache[nodes[i].LEGACY_CLASS_ID];
-                            objectId = nodes[i].LEGACY_OBJECT_ID;
-
-                            objPromise = entityResource.get({
-                                classname: classname,
-                                objId: objectId
-                            }).$promise;
-                            objPromise['finally'](singleProgressF);
-
-                            objsQ[i] = objPromise;
-                        }
-
-                        // objects resolved
-                        allSuccess = function (objs) {
-
-                            var key, tagGroup, resultFilterTags;
-
-                            // update nodes in search result
-                            for (i = 0; i < nodes.length; ++i) {
-                                nodes[i].object = objs[i];
-                            }
-
-                            // doing the same as ngResource: copying the results in the already returned obj (shallow)
-                            for (key in searchResult) {
-                                if (searchResult.hasOwnProperty(key) &&
-                                        !(key.charAt(0) === '$' && key.charAt(1) === '$')) {
-                                    result[key] = searchResult[key];
-                                }
-                            }
-
-                            // FIXME: Currently the post filter search is used
-                            // to return the total number of search results as
-                            // a workaround till $total is set by the leagy core
-                            resultFilterTags = searchResultData[1].$collection;
-                            if (resultFilterTags && resultFilterTags.length > 0) {
-                                for (i = 0; i < resultFilterTags.length; i++) {
-                                    tagGroup = resultFilterTags[i];
-                                    if (tagGroup.key === '$total' && tagGroup.value && tagGroup.value.length === 1) {
-                                        // 
-                                        result.$total = parseInt(tagGroup.value[0].value, 10);
-                                        // $total is not valid filter tag. remove it.
-                                        resultFilterTags.splice(i, 1);
-                                        break;
-                                    }
-                                }
-                            }
-
-                            result.$length = nodes.length;
-                            if (!result.$total || result.$total === 0) {
-                                result.$total = nodes.length;
-                            }
-
-                            result.$filterTags =  searchResultData[1].$collection;
-                            deferred.resolve(result);
-                        };
-
-                        allError = function (data) {
-                            result.$error = 'cannot lookup objects';
-                            result.$response = data;
-                            result.$resolved = true;
-
-                            deferred.reject(result);
-                            $interval.cancel(timer);
-                            (progressCallback || noop)(1, 1, 'error');
-                        };
-
-                        // combine promises of all get objects calls
-                        $q.all(objsQ).then(allSuccess, allError);
-                    };
-
-                    classesError = function (data) {
-                        result.$error = 'cannot lookup class names';
-                        result.$response = data;
-                        result.$resolved = true;
-
-                        deferred.reject(result);
-                        $interval.cancel(timer);
-                        (progressCallback || noop)(1, 1, 'error');
-                    };
-
-                    $resource(
-                        config.host + '/searches/SWITCHON.de.cismet.cids.custom.switchon.search.server.ClassNameSearch/results',
-                        {},
-                        {
-                            exec: {
-                                method: 'POST',
-                                isArray: false,
-                                headers: {
-                                    'Authorization': 'Basic ' + authdata
-                                }
-                            }
-                        }
-                    ).exec(
-                        {
-                            'list': [{'key': 'Domain', 'value': 'SWITCHON'}]
-                        }
-                    ).$promise.then(classesSuccess, classesError);
-                };
-
-                searchError = function (data) {
-                    result.$error = 'cannot search for resources';
-                    result.$response = data;
-                    result.$resolved = true;
-                    deferred.reject(result);
-                    $interval.cancel(timer);
-                    (progressCallback || noop)(1, 1, 'error');
-                };
-
-                if (filterTagGroups && filterTagGroups.length > 0) {
-                    filterTags = $resource(
-                        config.host + '/searches/SWITCHON.de.cismet.cids.custom.switchon.search.server.PostFilterTagsSearch/results',
-                        {},
-                        {
-                            exec: {
-                                method: 'POST',
-                                isArray: false,
-                                headers: {
-                                    'Authorization': 'Basic ' + authdata
-                                }
-                            }
-                        }
-                    );
-
-                    filterTags = filterTags.exec(
-                        {
-                            'list': [{'key': 'Query', 'value': universalSearchString },
-                                {'key': 'FilterTagGroups', 'value': filterTagGroups}]
-                        }
-                    );
-                } else {
-                    // if no filter tags are requested, just return an empty collection
-                    deferredFilterTags = $q.defer();
-                    filterTags = {};
-                    filterTags.$collection = [];
-                    filterTags.$promise = deferredFilterTags.promise;
-                    filterTags.$resolved = true;
-                    deferredFilterTags.resolve(filterTags);
-                }
-
-                // combine search and filter tags promises
-                $q.all([searchResult.$promise, filterTags.$promise]).then(searchSuccess, searchError);
-
-                return result;
+        
+                return searchResult;
             };
 
             return {
-                search: searchFunction,
-                entityResource: entityResource
+                search: searchFunction
             };
         }
         ])
 
-    .factory('eu.water-switch-on.sip.services.Base64', function () {
+    .factory('de.cismet.sip-html5-resource-registration.services.Base64', function () {
         /* jshint ignore:start */
 
         var keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
@@ -1429,7 +1222,7 @@ angular.module(
 angular.module(
     'de.cismet.sip-html5-resource-registration.services'
 ).factory('de.cismet.sip-html5-resource-registration.services.TagGroupService',
-    ['$resource', 'eu.water-switch-on.sip.services.Base64', 'AppConfig',
+    ['$resource', 'de.cismet.sip-html5-resource-registration.services.Base64', 'AppConfig',
         function ($resource, Base64, AppConfig) {
             'use strict';
 

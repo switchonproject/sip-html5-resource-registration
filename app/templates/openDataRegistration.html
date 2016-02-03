@@ -36,7 +36,7 @@
                    ng-model="dataset.representation[0].contentlocation"
                    ng-focus="showInfoMessage('Please provide a download link to the dataset or a link to additional information about the dataset.');"
                    ng-change="odRegistrationController.checkLink(dataset.representation[0].contentlocation)"
-                   ng-model-options='{ debounce: 500 }'
+                   ng-model-options='{ debounce: 1000 }'
                    required>
         </div>
         <!-- Content Type -->

@@ -628,7 +628,7 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                   ng-change=\"odRegistrationController.checkLink(dataset.representation[0].contentlocation)\"\r" +
     "\n" +
-    "                   ng-model-options='{ debounce: 500 }'\r" +
+    "                   ng-model-options='{ debounce: 1000 }'\r" +
     "\n" +
     "                   required>\r" +
     "\n" +

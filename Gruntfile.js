@@ -184,8 +184,6 @@ module.exports = function (grunt) {
                 'ngtemplates:concat'
             ],
             min: [
-                'imagemin',
-                'svgmin',
                 'cssmin',
                 'uglify',
                 'htmlmin'

@@ -2,8 +2,14 @@
     "$self": "/SWITCHON.RESOURCE/-1",
     "id": -1,
     "fromdate": null,
-    "accessconditions": null,
-    "spatialcoverage": null,
+    "accessconditions": {
+        "name": "CC BY-NC-SA"
+    },
+    "spatialcoverage": {
+        "$self": "/SWITCHON.GEOM/-1",
+        "id": -1,
+        "geo_field": null
+    },
     "todate": null,
     "srid": {
         "$self": "/SWITCHON.TAG/226",
@@ -111,7 +117,9 @@
                 },
                 "description": "The representation holds the original data of the resource"
             },
-            "function": null,
+            "function": {
+                "name": "download"
+            },
             "protocol": {
                 "$self": "/SWITCHON.TAG/197",
                 "id": 197,
@@ -131,7 +139,9 @@
             "spatialscale": null,
             "contentlocation": null,
             "tags": [],
-            "contenttype": null,
+            "contenttype": {
+                "name": "application/shp"
+            },
             "uploadstatus": null,
             "uploadmessage": null
         }],

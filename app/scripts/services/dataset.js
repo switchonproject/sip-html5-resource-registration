@@ -1,7 +1,8 @@
 angular.module('de.cismet.sip-html5-resource-registration.services')
         .factory('de.cismet.sip-html5-resource-registration.services.dataset', 
         ['$resource',
-    function ($resource) {
+            '$location',
+    function ($resource, $location) {
             'use strict';
             var datasetTemplate = $resource('data/datasetTemplate.json', {}, {
                     query: {
@@ -11,7 +12,13 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                         isArray: false
                     }
                 }).query();
-            return datasetTemplate;    
+            
+            datasetTemplate.$promise.then(function(dataset) {
+                  dataset.name=($location.search()).name;
+                  dataset.representation[0].contentlocation=($location.search()).link;
+                });   
+                
+            return datasetTemplate;
 	}]);
 
 

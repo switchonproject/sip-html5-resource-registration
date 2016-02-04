@@ -7,12 +7,14 @@ angular.module(
         'AppConfig',
         'WizardHandler',
         'de.cismet.sip-html5-resource-registration.services.dataset',
+        'de.cismet.sip-html5-resource-registration.services.TagGroupService',
         '$uibModal',
         function (
             $scope,
             AppConfig,
             WizardHandler, 
             dataset,
+            tagGroupService,
             $uibModal
         ) {
             'use strict';
@@ -20,6 +22,7 @@ angular.module(
             var _this;
             
             _this = this;
+            _this.dataset = dataset;
             
             // - dataset: the resource meta data, initilaized from a template and changed by the app
             // - tags: list of selectable tags
@@ -91,9 +94,55 @@ angular.module(
                 $uibModal.open({
                     animation: true,
                     templateUrl: 'templates/confirmation.html',
+                    controller:'de.cismet.sip-html5-resource-registration.controllers.storageController',
                     size: 'lg'
                 });
             };
+            
+            tagGroupService.getTagList('srid', 'EPSG:4326').$promise.then(function (tags) {
+                    _this.dataset.srid = tags[0];
+                });
+
+                tagGroupService.getTagList('conformity', 'Not evaluated').$promise.then(function (tags) {
+                    _this.dataset.conformity = tags[0];
+                });
+
+                tagGroupService.getTagList('language', 'eng').$promise.then(function (tags) {
+                    _this.dataset.language = tags[0];
+                    _this.dataset.metadata[0].language = tags[0];
+                });
+
+                tagGroupService.getTagList('type', 'external data').$promise.then(function (tags) {
+                    _this.dataset.type = tags[0];
+                });
+
+                tagGroupService.getTagList('topic category', 'climatologyMeteorologyAtmosphere').$promise.then(function (tags) {
+                    _this.dataset.topiccategory = tags[0];
+                });
+
+                tagGroupService.getTagList('role', 'metadataProvider').$promise.then(function (tags) {
+                    _this.dataset.contact.role = tags[0];
+                });
+
+                tagGroupService.getTagList('representation type', 'original data').$promise.then(function (tags) {
+                    _this.dataset.contact.role = tags[0];
+                });
+
+                tagGroupService.getTagList('representation type', 'original data').$promise.then(function (tags) {
+                    _this.dataset.representation[0].type = tags[0];
+                });
+
+                tagGroupService.getTagList('protocol', 'WWW:LINK-1.0-http--link').$promise.then(function (tags) {
+                    _this.dataset.representation[0].protocol = tags[0];
+                });
+
+                tagGroupService.getTagList('meta-data type', 'lineage meta-data').$promise.then(function (tags) {
+                    _this.dataset.metadata[0].type = tags[0];
+                });
+
+                tagGroupService.getTagList('access limitations', 'limitation not listed').$promise.then(function (tags) {
+                    _this.dataset.accesslimitations = tags[0];
+                });
             
             // the wizard framework is not sufficient for user friendly display of states
             //$scope.wzData.wizard.validators = {noVal: function () { return true; }};

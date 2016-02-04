@@ -11,68 +11,13 @@
         "geo_field": null
     },
     "todate": null,
-    "srid": {
-        "$self": "/SWITCHON.TAG/226",
-        "id": 226,
-        "name": "EPSG:4326",
-        "taggroup": {
-            "$self": "/SWITCHON.TAGGROUP/167",
-            "id": 167,
-            "name": "srid",
-            "description": "The Spatial Reference System Identifier (SRID) of the spatial coverage of the resource EPSG format (open group with some predefined tags)."
-        },
-        "description": "WGS 84 / World Geodetic System 1984"
-    },
-    "conformity": {
-        "$self": "/SWITCHON.TAG/253",
-        "id": 253,
-        "name": "Not evaluated",
-        "taggroup": {
-            "$self": "/SWITCHON.TAGGROUP/150",
-            "id": 150,
-            "name": "conformity",
-            "description": "This is a citation of the implementing rules adopted under Article 7(1) of Directive 2007/2/EC or other specification to which a particular resource conforms. (fixed group)"
-        },
-        "description": "Not evaluated"
-    },
-    "language": {
-        "$self": "/SWITCHON.TAG/145",
-        "id": 145,
-        "name": "eng",
-        "taggroup": {
-            "$self": "/SWITCHON.TAGGROUP/157",
-            "id": 157,
-            "name": "language",
-            "description": "The language(s) used within the resource or in which the metadata elements are expressed.  The value domain of this tag is limited to the languages defined in ISO 639-2."
-        },
-        "description": "English"
-    },
+    "srid": null,
+    "conformity": null,
+    "language": null,
     "description": null,
-    "type": {
-        "$self": "/SWITCHON.TAG/254",
-        "id": 254,
-        "name": "external data",
-        "taggroup": {
-            "$self": "/SWITCHON.TAGGROUP/164",
-            "id": 164,
-            "name": "resource type",
-            "description": "SIP internal type of the resource (fixed group)."
-        },
-        "description": "This is data available as open data from any source on the Internet in a format, which can be directly used in experiments in the Laboratory."
-    },
+    "type": null,
     "location": null,
-    "topiccategory": {
-        "$self": "/SWITCHON.TAG/230",
-        "id": 230,
-        "name": "climatologyMeteorologyAtmosphere",
-        "taggroup": {
-            "$self": "/SWITCHON.TAGGROUP/168",
-            "id": 168,
-            "name": "topic category",
-            "description": "High-level classification of resources in accordance with ISO 19115 for grouping and topic-based search (fixed group)."
-        },
-        "description": "processes and phenomena of the atmosphere. Examples: cloud cover, weather, climate, atmospheric conditions, climate change, precipitation"
-    },
+    "topiccategory": null,
     "creationdate": null,
     "name": null,
     "licensestatement": null,
@@ -85,18 +30,7 @@
         "description": null,
         "email": null,
         "url": null,
-        "role": {
-            "$self": "/SWITCHON.TAG/220",
-            "id": 220,
-            "name": "originator",
-            "taggroup": {
-                "$self": "/SWITCHON.TAGGROUP/165",
-                "id": 165,
-                "name": "role",
-                "description": "Function performed by the responsible party (fixed group, standard codelist)."
-            },
-            "description": "Party that created the resource. Person of organization that created the data resource. Can be the same as author, but in cases when a data resource is based on other resources, the creator cannot be the author."
-        }
+        "role": null
     },
     "geography": null,
     "representation": [{
@@ -105,33 +39,11 @@
             "name": null,
             "description": null,
             "content": null,
-            "type": {
-                "$self": "/SWITCHON.TAG/212",
-                "id": 212,
-                "name": "original data",
-                "taggroup": {
-                    "$self": "/SWITCHON.TAGGROUP/163",
-                    "id": 163,
-                    "name": "representation type",
-                    "description": "SIP internal type of the representation of the resource (fixed group)."
-                },
-                "description": "The representation holds the original data of the resource"
-            },
+            "type": null,
             "function": {
                 "name": "download"
             },
-            "protocol": {
-                "$self": "/SWITCHON.TAG/197",
-                "id": 197,
-                "name": "WWW:LINK-1.0-http--link",
-                "taggroup": {
-                    "$self": "/SWITCHON.TAGGROUP/161",
-                    "id": 161,
-                    "name": "protocol",
-                    "description": "Protocol of the service that can be accessed at the contentLocation of the resource representation (open group with several predefined tags from standard codelists)."
-                },
-                "description": "Web Address (URL), should be used when no further information about the resource is available"
-            },
+            "protocol": null,
             "applicationprofile": null,
             "uuid": null,
             "temporalresolution": null,
@@ -153,30 +65,8 @@
             "tags": [],
             "description": null,
             "contact": null,
-            "type": {
-                "$self": "/SWITCHON.TAG/180",
-                "id": 180,
-                "name": "lineage meta-data",
-                "taggroup": {
-                    "$self": "/SWITCHON.TAGGROUP/160",
-                    "id": 160,
-                    "name": "meta-data type",
-                    "description": "SIP internal type of the Meta-Data Record (fixed group)."
-                },
-                "description": "Type of the Meta-Data Record. \"lineage meta-data\" refers to meta-data about the lineage of the resource, e.g. a protocol of an experiment."
-            },
-            "language": {
-                "$self": "/SWITCHON.TAG/145",
-                "id": 145,
-                "name": "eng",
-                "taggroup": {
-                    "$self": "/SWITCHON.TAGGROUP/157",
-                    "id": 157,
-                    "name": "language",
-                    "description": "The language(s) used within the resource or in which the metadata elements are expressed.  The value domain of this tag is limited to the languages defined in ISO 639-2."
-                },
-                "description": "English"
-            },
+            "type": null,
+            "language": null,
             "standard": null,
             "uuid": null,
             "contentlocation": null,
@@ -184,18 +74,7 @@
             "contenttype": null,
             "content": null
         }],
-    "accesslimitations": {
-        "$self": "/SWITCHON.TAG/1",
-        "id": 1,
-        "name": "limitation not listed",
-        "taggroup": {
-            "$self": "/SWITCHON.TAGGROUP/146",
-            "id": 146,
-            "name": "access limitations",
-            "description": "Limitations on public access in accordance to Article 13 of Directive 2007/2/EC (fixed group with tags from a standard codelist)."
-        },
-        "description": "otherRestrictions (limitation not listed)"
-    },
+    "accesslimitations": null,
     "uuid": null,
     "collection": null,
     "publicationdate": null

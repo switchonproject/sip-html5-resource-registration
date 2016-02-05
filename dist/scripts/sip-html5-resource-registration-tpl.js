@@ -4,23 +4,41 @@ angular.module('').run(['$templateCache', function($templateCache) {
   $templateCache.put('templates/confirmation.html',
     "<div class=\"modal-header\">\r" +
     "\n" +
-    "    <h3 class=\"modal-title\">Confirmation</h3>\r" +
+    "    <h3 class=\"modal-title\">SWITCH-ON Meta-Data Repository Upload</h3>\r" +
     "\n" +
     "</div>\r" +
     "\n" +
     "<div class=\"modal-body\">\r" +
     "\n" +
-    "    <p>This ia a preview of the Open-Data Registration Tool. <br>\r" +
+    "    <p class=\"danger\" ng-bind-html=\"storageController.progress.message\"></p>\r" +
     "\n" +
-    "        Your inputs are <strong>not saved</strong> in the SWITCH-ON Meta-Data Repository!</p>\r" +
+    "    \r" +
+    "\n" +
+    "    <progressbar class=\"progress-striped active\" \r" +
+    "\n" +
+    "                 ng-class=\"{active:storageController.progress.active}\"\r" +
+    "\n" +
+    "                 max=\"200\" \r" +
+    "\n" +
+    "                 value=\"storageController.progress.currval\"\r" +
+    "\n" +
+    "                 type=\"{{storageController.progress.type}}\">\r" +
+    "\n" +
+    "        <!--<span ng-show=\"storageController.progress.error\">{storageController.progress.error}</span>-->\r" +
+    "\n" +
+    "    </progressbar>\r" +
     "\n" +
     "</div>\r" +
     "\n" +
     "<div class=\"modal-footer\">\r" +
     "\n" +
-    "    <button class=\"btn btn-primary\" type=\"button\" ng-click=\"$close()\">OK</button>\r" +
+    "    <button class=\"btn btn-primary\" \r" +
     "\n" +
-    "    <!--<button class=\"btn btn-primary\" type=\"button\" ng-click=\"$dismiss()\">Cancel</button>-->\r" +
+    "            type=\"button\" \r" +
+    "\n" +
+    "            ng-disabled=\"!storageController.progress.finished\"\r" +
+    "\n" +
+    "            ng-click=\"storageController.close()\">Close</button>\r" +
     "\n" +
     "</div>"
   );

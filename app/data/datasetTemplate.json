@@ -40,9 +40,7 @@
             "description": null,
             "content": null,
             "type": null,
-            "function": {
-                "name": "download"
-            },
+            "function": null,
             "protocol": null,
             "applicationprofile": null,
             "uuid": null,
@@ -51,9 +49,7 @@
             "spatialscale": null,
             "contentlocation": null,
             "tags": [],
-            "contenttype": {
-                "name": "application/shp"
-            },
+            "contenttype": null,
             "uploadstatus": null,
             "uploadmessage": null
         }],

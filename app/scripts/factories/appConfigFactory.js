@@ -47,5 +47,9 @@ angular.module(
         appConfig.searchService.host.replace(/.*?:\/\//g, '');
         appConfig.objectInfo.resourceXmlUrl = 'http://tl-243.xtr.deltares.nl/csw?request=GetRecordById&service=CSW&version=2.0.2&namespace=xmlns%28csw=http://www.opengis.net/cat/csw/2.0.2%29&resultType=results&outputSchema=http://www.isotc211.org/2005/gmd&outputFormat=application/xml&ElementSetName=full&id=';
 
+        appConfig.byod = {};
+        //appConfig.byod.baseUrl = 'http://tl-243.xtr.deltares.nl/byod';
+        appConfig.byod.baseUrl = 'http://switchon.cismet.de/sip-snapshot';
+        
         return appConfig;
     }]);

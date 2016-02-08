@@ -371,9 +371,15 @@ angular.module(
             var _this = this;
             _this.dataset = dataset;
             
-            
+            // load taglist
             $scope.tags['accessconditions'] = tagGroupService.getTagList('access conditions', 'CC BY-NC-SA,for research only,no limitations,other');
 
+            // set default values
+            _this.dataset.representation[0].function = tagGroupService.getTag('access conditions', 'CC BY-NC-SA',
+                    function (tag) {
+                        _this.dataset.accessconditions = tag;
+                    });
+                    
             // validation functions
             $scope.wizard.enterValidators['License and Conditions'] = function(context){
                 if(context.valid === true){
@@ -426,121 +432,112 @@ angular.module(
     ]
 );
 angular.module(
-    'de.cismet.sip-html5-resource-registration.controllers'
-).controller(
-    'de.cismet.sip-html5-resource-registration.controllers.masterController',
-    [
-        '$scope',
-        'AppConfig',
-        'WizardHandler',
-        'de.cismet.sip-html5-resource-registration.services.dataset',
-        '$uibModal',
-        function (
-            $scope,
-            AppConfig,
-            WizardHandler, 
-            dataset,
-            $uibModal
-        ) {
-            'use strict';
+        'de.cismet.sip-html5-resource-registration.controllers'
+        ).controller(
+        'de.cismet.sip-html5-resource-registration.controllers.masterController',
+        [
+            '$scope',
+            'AppConfig',
+            'WizardHandler',
+            'de.cismet.sip-html5-resource-registration.services.dataset',
+            'de.cismet.sip-html5-resource-registration.services.TagGroupService',
+            '$modal',
+            function (
+                    $scope,
+                    AppConfig,
+                    WizardHandler,
+                    dataset,
+                    tagGroupService,
+                    $modal
+                    ) {
+                'use strict';
 
-            var _this;
-            
-            _this = this;
-            
-            // - dataset: the resource meta data, initilaized from a template and changed by the app
-            // - tags: list of selectable tags
-            // - wizard: the wizard status
+                var _this;
 
-            // init Scope Soup -------------------------------------------------
+                _this = this;
+                _this.dataset = dataset;
 
-            /**
-             * The resource meta data, initilaized from a template and changed by the app
-             */
-            $scope.dataset=dataset;
-            
-            /**
-             * list of selectable tags. Initilaized by the controllers
-             */
-            $scope.tags = [];
-            
-            /**
-             * Message text
-             */
-            $scope.message = {};
-            $scope.message.text='<strong>Welcome to the SWITCH-ON tool for the registration of (hydrological) open-data in the <a href=\'http://www.water-switch-on.eu/sip-webclient/sip-beta/\' title=\'Find open data with the SIP BYOD Client\' target=\'_blank\'>SWITCH-ON Spatial Information Platform</a>!</strong> <br>Please provide some general information about the new dataset such as name, description, a (download) link and keywords. ';
-            $scope.message.icon='fa-info-circle';
-            $scope.message.type = 'success';
-            
-            $scope.showInfoMessage = function(messageText) {
-                $scope.message.text=messageText;
-                $scope.message.icon='fa-info-circle';
+                // - dataset: the resource meta data, initilaized from a template and changed by the app
+                // - tags: list of selectable tags
+                // - wizard: the wizard status
+
+                // init Scope Soup -------------------------------------------------
+
+                /**
+                 * The resource meta data, initilaized from a template and changed by the app
+                 */
+                $scope.dataset = dataset;
+
+                /**
+                 * list of selectable tags. Initilaized by the controllers
+                 */
+                $scope.tags = [];
+
+                /**
+                 * Message text
+                 */
+                $scope.message = {};
+                $scope.message.text = '<strong>Welcome to the SWITCH-ON tool for the registration of (hydrological) open-data in the <a href=\'http://www.water-switch-on.eu/sip-webclient/sip-beta/\' title=\'Find open data with the SIP BYOD Client\' target=\'_blank\'>SWITCH-ON Spatial Information Platform</a>!</strong> <br>Please provide some general information about the new dataset such as name, description, a (download) link and keywords. ';
+                $scope.message.icon = 'fa-info-circle';
                 $scope.message.type = 'success';
-            };
-            
-            /**
-             * Wizard status, etc.
-             */
-            $scope.wizard = {};
-            $scope.wizard.enterValidators = [];
-            $scope.wizard.exitValidators = [];
-            $scope.wizard.currentStep = '';
-            $scope.wizard.canProceed = true;
-            $scope.wizard.canGoBack = false;
-            $scope.wizard.hasError = false;
-            $scope.wizard.proceedButtonText = 'Next';
-            $scope.wizard.isFinishStep = function () {
-                return $scope.wizard.currentStep === 'Summary';
-            };
-            $scope.wizard.isFirstStep = function () {
-                return $scope.wizard.currentStep === 'Dataset Description';
-            };
-            
-            $scope.mapData = {};
-            
-            $scope.$watch('wizard.currentStep', function (n) {
-                if (n) {
-                    if ($scope.wizard.isFinishStep()) {
-                        $scope.wizard.proceedButtonText = 'Finish';
+
+                $scope.showInfoMessage = function (messageText) {
+                    $scope.message.text = messageText;
+                    $scope.message.icon = 'fa-info-circle';
+                    $scope.message.type = 'success';
+                };
+
+                /**
+                 * Wizard status, etc.
+                 */
+                $scope.wizard = {};
+                $scope.wizard.enterValidators = [];
+                $scope.wizard.exitValidators = [];
+                $scope.wizard.currentStep = '';
+                $scope.wizard.canProceed = true;
+                $scope.wizard.canGoBack = false;
+                $scope.wizard.hasError = false;
+                $scope.wizard.proceedButtonText = 'Next';
+                $scope.wizard.isFinishStep = function () {
+                    return $scope.wizard.currentStep === 'Summary';
+                };
+                $scope.wizard.isFirstStep = function () {
+                    return $scope.wizard.currentStep === 'Dataset Description';
+                };
+
+                $scope.mapData = {};
+
+                $scope.$watch('wizard.currentStep', function (n) {
+                    if (n) {
+                        if ($scope.wizard.isFinishStep()) {
+                            $scope.wizard.proceedButtonText = 'Finish';
+                        } else {
+                            $scope.wizard.proceedButtonText = 'Next';
+                        }
+
+                        $scope.wizard.canGoBack = !$scope.wizard.isFirstStep();
+
                     } else {
                         $scope.wizard.proceedButtonText = 'Next';
                     }
-                    
-                    $scope.wizard.canGoBack = !$scope.wizard.isFirstStep();
-
-                } else {
-                    $scope.wizard.proceedButtonText = 'Next';
-                }
-            });
-            
-           
-            _this.finishedWizard = function () {
-                $uibModal.open({
-                    animation: true,
-                    templateUrl: 'templates/confirmation.html',
-                    size: 'lg'
                 });
-            };
-            
-            // the wizard framework is not sufficient for user friendly display of states
-            //$scope.wzData.wizard.validators = {noVal: function () { return true; }};
-            //$scope.wzData.wizard.validators['Select Area'] = function () {
-            //    if ($scope.params.area && $scope.params.area.geometry && $scope.params.area.geometry.coordinates) {
-            //        return true;
-            //    }
 
-                // TODO: proper validation, this should be false
-            //    return true;
-            //};
 
-            //$scope.wzData.params = {};
-            
-                     //$scope.getEnabledSteps = function() {
-            //  return WizardHandler.wizard('Open Data Registration').getEnabledSteps().length;
-            //};
-                       
-            
-            
+                _this.finishedWizard = function () {
+                    $modal.open({
+                        animation: true,
+                        templateUrl: 'templates/confirmation.html',
+                        controller: 'de.cismet.sip-html5-resource-registration.controllers.storageController',
+                        controllerAs: 'storageController',
+                        keyboard: 'false',
+                        size: 'lg',
+                        backdrop: 'static'
+                    });
+                };
+
+
+
+
 //            $scope.$watch('wzData.params', function () {
 //                // if currentstep is not set the wizard is just about to start
 //                if ($scope.wzData.wizard.currentStep && $scope.wzData.wizard.currentStep !== '') {
@@ -551,28 +548,28 @@ angular.module(
 //                    $scope.wzData.wizard.canProceed = true;
 //                }
 //            }, true);
-            
-            
-            /*
-            
-            
-            $scope.$watch('data.resultSet.$collection', function (n, o) {
-                var i, objs, message, pages, pageNumber;
 
-                if (n && n !== o && n.length > 0) {
-                    objs = [];
 
-                    for (i = 0; i < n.length; ++i) {
-                        objs.push(n[i].object);
-                    }
-
-                }
-            });
-            
-            */
-        }
-    ]
-);
+                /*
+                 
+                 
+                 $scope.$watch('data.resultSet.$collection', function (n, o) {
+                 var i, objs, message, pages, pageNumber;
+                 
+                 if (n && n !== o && n.length > 0) {
+                 objs = [];
+                 
+                 for (i = 0; i < n.length; ++i) {
+                 objs.push(n[i].object);
+                 }
+                 
+                 }
+                 });
+                 
+                 */
+            }
+        ]
+        );
 /*jshint sub:true*/
 
 angular.module(
@@ -622,7 +619,7 @@ angular.module(
                         searchSuccess = function (searchResult) {
                             if (searchResult && searchResult.$collection && searchResult.$collection.length > 0) {
                                 duplicateLink = 'This dataset is alredy registered in the SWITCH-ON Spatial Information Platform under the name </strong>"' +
-                                        searchResult.$collection[0].name + '"</strong>. Click <a href="http://tl-243.xtr.deltares.nl/byod/#/resource/' +
+                                        searchResult.$collection[0].name + '"</strong>. Click <a href="'+AppConfig.byod.baseUrl+'/#/resource/' +
                                         searchResult.$collection[0].id + '" title="' +
                                         searchResult.$collection[0].name + '" target="_blank">here</a> to view the dataset meta-data.';
 
@@ -647,9 +644,21 @@ angular.module(
                     duplicateLink = undefined;
                 };
 
+                // load list
                 $scope.tags['function'] = tagGroupService.getTagList('function', 'download,order,information');
                 $scope.tags['content type'] = tagGroupService.getTagList('content type');
                 $scope.tags['keywords - X-CUAHSI'] = tagGroupService.getTagList('keywords - X-CUAHSI');
+
+                // set default values
+                _this.dataset.representation[0].function = tagGroupService.getTag('function', 'download',
+                        function (tag) {
+                            _this.dataset.representation[0].function = tag;
+                        });
+                
+                _this.dataset.representation[0].contenttype = tagGroupService.getTag('content type', 'application/octet-stream',
+                        function (tag) {
+                            _this.dataset.representation[0].contenttype = tag;
+                        });
 
                 $scope.wizard.enterValidators['Dataset Description'] = function (context) {
                     if (context.valid === true) {
@@ -754,6 +763,162 @@ angular.module(
 
                     return context.valid;
                 };
+            }
+        ]
+        );
+/*jshint sub:true*/
+
+angular.module(
+        'de.cismet.sip-html5-resource-registration.controllers'
+        ).controller(
+        'de.cismet.sip-html5-resource-registration.controllers.storageController',
+        [
+            '$scope',
+            '$window',
+            '$interval',
+            '$modalInstance',
+            'AppConfig',
+            'de.cismet.sip-html5-resource-registration.services.dataset',
+            'de.cismet.sip-html5-resource-registration.services.TagGroupService',
+            'de.cismet.sip-html5-resource-registration.services.storageService',
+            // Controller Constructor Function
+            function (
+                    $scope,
+                    $window,
+                    $interval,
+                    $modalInstance,
+                    AppConfig,
+                    dataset,
+                    tagGroupService,
+                    storageService
+                    ) {
+                'use strict';
+                var _this;
+
+                _this = this;
+                _this.dataset = dataset;
+                _this.config = AppConfig;
+
+                _this.progress = {};
+                _this.progress.message = null;
+                _this.progress.currval = 0;
+                _this.progress.active = true;
+                _this.progress.finished = false;
+                _this.progress.error = null;
+                _this.progress.type = 'primary';
+                _this.progress.message = 'The dataset is now added to the SWITCH-ON Meta-Data Repository. <br>Please do not close this browser window until the uploaded has been completed';
+
+
+                $modalInstance.rendered.then(function () {
+                    tagGroupService.getTagList('srid', 'EPSG:4326').$promise.then(function (tags) {
+                        _this.dataset.srid = tags[0];
+                        _this.progress.currval += 10;
+                    });
+
+                    tagGroupService.getTagList('conformity', 'Not evaluated').$promise.then(function (tags) {
+                        _this.dataset.conformity = tags[0];
+                        _this.progress.currval += 10;
+                    });
+
+                    tagGroupService.getTagList('language', 'eng').$promise.then(function (tags) {
+                        _this.dataset.language = tags[0];
+                        _this.dataset.metadata[0].language = tags[0];
+                        _this.progress.currval += 20;
+                    });
+
+                    tagGroupService.getTagList('type', 'external data').$promise.then(function (tags) {
+                        _this.dataset.type = tags[0];
+                        _this.progress.currval += 10;
+                    });
+
+                    tagGroupService.getTagList('topic category', 'climatologyMeteorologyAtmosphere').$promise.then(function (tags) {
+                        _this.dataset.topiccategory = tags[0];
+                    });
+
+                    tagGroupService.getTagList('role', 'metadataProvider').$promise.then(function (tags) {
+                        _this.dataset.contact.role = tags[0];
+                        _this.progress.currval += 10;
+                    });
+
+                    tagGroupService.getTagList('representation type', 'original data').$promise.then(function (tags) {
+                        _this.dataset.contact.role = tags[0];
+                        _this.progress.currval += 10;
+                    });
+
+                    tagGroupService.getTagList('representation type', 'original data').$promise.then(function (tags) {
+                        _this.dataset.representation[0].type = tags[0];
+                        _this.progress.currval += 10;
+                    });
+
+                    tagGroupService.getTagList('protocol', 'WWW:LINK-1.0-http--link').$promise.then(function (tags) {
+                        _this.dataset.representation[0].protocol = tags[0];
+                        _this.progress.currval += 10;
+                    });
+
+                    tagGroupService.getTagList('meta-data type', 'lineage meta-data').$promise.then(function (tags) {
+                        _this.dataset.metadata[0].type = tags[0];
+                        _this.progress.currval += 10;
+                    });
+
+                    tagGroupService.getTagList('access limitations', 'limitation not listed').$promise.then(function (tags) {
+                        _this.dataset.accesslimitations = tags[0];
+                        _this.progress.currval += 10;
+                    });
+
+                    tagGroupService.getTagList('collection', 'SWITCH-ON - Open Data').$promise.then(function (tags) {
+                        _this.dataset.collection = tags[0];
+                        _this.progress.currval += 10;
+                    });
+                });
+
+                _this.close = function () {
+                    $modalInstance.close();
+                    $window.location.reload();
+                };
+
+                $scope.$watch(function () {
+                    // Return the "result" of the watch expression.
+                    return(_this.progress.currval);
+                }, function (newProgress) {
+                    if (newProgress && newProgress === 120) {
+
+                        var timer = $interval(function () {
+                            if (_this.progress.currval < 190) {
+                                _this.progress.currval += 1;
+                            }
+                        }, 200, 70);
+
+                        storageService.store(dataset).$promise.then(
+                                function (storedDataset) {
+                                    $interval.cancel(timer);
+
+                                    _this.progress.message = 'Your dataset has been successfully registered in the SWITCH-ON Spatial Information Platform. Please click <a href="' + AppConfig.byod.baseUrl + '/#/resource/' +
+                                            storedDataset.id + '" title="' + storedDataset.name + '>here</a> to view the dataset in the SWITCH-ON BYOD Client.';
+
+                                    _this.progress.active = false;
+                                    _this.progress.finished = true;
+                                    _this.progress.type = 'success';
+                                    _this.progress.currval = 200;
+
+                                },
+                                function (error) {
+                                    $interval.cancel(timer);
+
+                                    if (error.data.userMessage) {
+                                        _this.progress.message = 'The dataset could not be saved in the Meta-Data Repository: <br>' +
+                                                error.data.userMessage;
+                                    } else {
+                                        this.progress.message = 'The dataset could not be saved in the Meta-Data Repository.';
+                                    }
+
+                                    _this.progress.active = false;
+                                    _this.progress.finished = true;
+                                    _this.progress.type = 'danger';
+                                    _this.progress.currval = 200;
+                                });
+
+                    }
+                });
             }
         ]
         );
@@ -906,6 +1071,10 @@ angular.module(
         appConfig.searchService.host.replace(/.*?:\/\//g, '');
         appConfig.objectInfo.resourceXmlUrl = 'http://tl-243.xtr.deltares.nl/csw?request=GetRecordById&service=CSW&version=2.0.2&namespace=xmlns%28csw=http://www.opengis.net/cat/csw/2.0.2%29&resultType=results&outputSchema=http://www.isotc211.org/2005/gmd&outputFormat=application/xml&ElementSetName=full&id=';
 
+        appConfig.byod = {};
+        //appConfig.byod.baseUrl = 'http://tl-243.xtr.deltares.nl/byod';
+        appConfig.byod.baseUrl = 'http://switchon.cismet.de/sip-snapshot';
+        
         return appConfig;
     }]);
 // module initialiser for the services, shall always be named like that so that concat will pick it up first!
@@ -1227,36 +1396,81 @@ angular.module(
     });
 
 angular.module(
-    'de.cismet.sip-html5-resource-registration.services'
-).factory('de.cismet.sip-html5-resource-registration.services.TagGroupService',
-    ['$resource', 'de.cismet.sip-html5-resource-registration.services.Base64', 'AppConfig',
-        function ($resource, Base64, AppConfig) {
-            'use strict';
+        'de.cismet.sip-html5-resource-registration.services'
+        ).factory('de.cismet.sip-html5-resource-registration.services.storageService',
+        [
+            '$resource',
+            'de.cismet.sip-html5-resource-registration.services.Base64',
+            'AppConfig',
+            function ($resource, Base64, AppConfig) {
+                'use strict';
+                var config, authdata, storeResource, storeFunction;
 
-            var tagGroups, lazyLoadTagLists, config, authdata,
-                tagSearches, searchResource, searchTags, getTagListFunction;
+                config = AppConfig.searchService;
+                authdata = Base64.encode(config.username + ':' + config.password);
+
+                storeResource = $resource(config.host + '/SWITCHON.resource',
+                        {
+                            requestResultingInstance: true,
+                            role: 'all'
+                        }, {
+                    store: {
+                        method: 'POST',
+                        isArray: false,
+                        headers: {
+                            'Authorization': 'Basic ' + authdata
+                        }
+                    }
+                });
+
+                storeFunction = function (dataset) {
+                    var storeResult;
 
 
-            tagSearches = {
-                'keyword-x-cuahsi': 'X-CUAHSI'
-            };
+                    // result of the remote store operation (promise)
+                    // starting the store!
 
-            // cached tag group lists
-            tagGroups = [];
+                    storeResult = storeResource.store(dataset);
 
-            config = AppConfig.searchService;
-            authdata = Base64.encode(config.username + ':' + config.password);
+                    return storeResult;
+                };
 
-            // remote legagy search core search
-            // FIXME: limit and offset not implemented in legacy search!
-            // currently, limit and offset are appended to the POST query parameter!
-            searchResource = $resource(config.host + '/searches/SWITCHON.de.cismet.cids.custom.switchon.search.server.TagsSearch/results',
-                {
-                    limit: 100,
-                    offset: 0,
-                    omitNullValues: true,
-                    deduplicate: true
-                }, {
+                return {
+                    store: storeFunction
+                };
+            }
+        ]);
+angular.module(
+        'de.cismet.sip-html5-resource-registration.services'
+        ).factory('de.cismet.sip-html5-resource-registration.services.TagGroupService',
+        ['$resource', 'de.cismet.sip-html5-resource-registration.services.Base64', 'AppConfig',
+            function ($resource, Base64, AppConfig) {
+                'use strict';
+
+                var tagGroups, lazyLoadTagLists, config, authdata,
+                        tagSearches, searchResource, searchTags, getTagListFunction, getTagFunction;
+
+
+                tagSearches = {
+                    'keyword-x-cuahsi': 'X-CUAHSI'
+                };
+
+                // cached tag group lists
+                tagGroups = [];
+
+                config = AppConfig.searchService;
+                authdata = Base64.encode(config.username + ':' + config.password);
+
+                // remote legagy search core search
+                // FIXME: limit and offset not implemented in legacy search!
+                // currently, limit and offset are appended to the POST query parameter!
+                searchResource = $resource(config.host + '/searches/SWITCHON.de.cismet.cids.custom.switchon.search.server.TagsSearch/results',
+                        {
+                            limit: 100,
+                            offset: 0,
+                            omitNullValues: true,
+                            deduplicate: true
+                        }, {
                     search: {
                         method: 'POST',
                         params: {
@@ -1268,34 +1482,34 @@ angular.module(
                     }
                 });
 
-            searchTags = function (taggroup, tags) {
-                var queryObject, searchResult;
+                searchTags = function (taggroup, tags) {
+                    var queryObject, searchResult;
 
-                if(!tags) {
-                    queryObject = {
-                    'list': [{'key': 'taggroup', 'value': taggroup}]
+                    if (!tags) {
+                        queryObject = {
+                            'list': [{'key': 'taggroup', 'value': taggroup}]
+                        };
+                    } else {
+                        queryObject = {
+                            'list': [{'key': 'taggroup', 'value': taggroup},
+                                {'key': 'tags', 'value': tags}]
+                        };
+                    }
+
+
+                    searchResult = searchResource.search(
+                            {},
+                            queryObject
+                            );
+                    return searchResult;
                 };
-                } else {
-                    queryObject = {
-                    'list': [{'key': 'taggroup', 'value': taggroup},
-                    {'key': 'tags', 'value': tags}]
-                };
-                }
 
-                
-                searchResult = searchResource.search(
-                    {},
-                    queryObject
-                );
-                return searchResult;
-            };
-
-            lazyLoadTagLists = function (taggroup, tags) {
-                var intermediateResult, resultTags, i;
-                // cached list does exist
-                if (tagGroups.hasOwnProperty(taggroup)) {
-                    return tagGroups[taggroup];
-                }
+                lazyLoadTagLists = function (taggroup, tags) {
+                    var intermediateResult, resultTags, i;
+                    // cached list does exist
+                    if (tagGroups.hasOwnProperty(taggroup)) {
+                        return tagGroups[taggroup];
+                    }
 
 
                     intermediateResult = searchTags(taggroup, tags);
@@ -1310,17 +1524,40 @@ angular.module(
                     });
                     tagGroups[taggroup] = resultTags;
                     return tagGroups[taggroup];
-                
-            };
 
-            getTagListFunction =
-                function (taggroup, tags) {
-                    return lazyLoadTagLists(taggroup, tags);
                 };
 
+                getTagListFunction =
+                        function (taggroup, tags) {
+                            return lazyLoadTagLists(taggroup, tags);
+                        };
 
-            return {
-                getTagList: getTagListFunction
-            };
-        }]
-    );
+                getTagFunction =
+                        function (taggroup, tag, callbackFunction) {
+                            if (tagGroups.hasOwnProperty(taggroup)) {
+                                if (tagGroups[taggroup].$resolved === true) {
+                                    for (var i = 0; i < tagGroups[tagGroups].length; i++) {
+                                        if (tagGroups[tagGroups][i].name && tagGroups[tagGroups][i].name === tag) {
+                                            return tagGroups[tagGroups][i];
+                                        }
+                                    }
+                                } else if (callbackFunction) {
+                                    tagGroups[taggroup].$promise.then(function (resolvedTaggroup) {
+                                        for (var i = 0; i < resolvedTaggroup.length; i++) {
+                                            if (resolvedTaggroup[i].name && resolvedTaggroup[i].name === tag) {
+                                                callbackFunction(resolvedTaggroup[i]);
+                                                return resolvedTaggroup[i];
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                            return null;
+                        };
+
+                return {
+                    getTagList: getTagListFunction,
+                    getTag: getTagFunction
+                };
+            }]
+        );

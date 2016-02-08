@@ -47,7 +47,7 @@ angular.module(
                         searchSuccess = function (searchResult) {
                             if (searchResult && searchResult.$collection && searchResult.$collection.length > 0) {
                                 duplicateLink = 'This dataset is alredy registered in the SWITCH-ON Spatial Information Platform under the name </strong>"' +
-                                        searchResult.$collection[0].name + '"</strong>. Click <a href="http://tl-243.xtr.deltares.nl/byod/#/resource/' +
+                                        searchResult.$collection[0].name + '"</strong>. Click <a href="'+AppConfig.byod.baseUrl+'/#/resource/' +
                                         searchResult.$collection[0].id + '" title="' +
                                         searchResult.$collection[0].name + '" target="_blank">here</a> to view the dataset meta-data.';
 
@@ -72,9 +72,21 @@ angular.module(
                     duplicateLink = undefined;
                 };
 
+                // load list
                 $scope.tags['function'] = tagGroupService.getTagList('function', 'download,order,information');
                 $scope.tags['content type'] = tagGroupService.getTagList('content type');
                 $scope.tags['keywords - X-CUAHSI'] = tagGroupService.getTagList('keywords - X-CUAHSI');
+
+                // set default values
+                _this.dataset.representation[0].function = tagGroupService.getTag('function', 'download',
+                        function (tag) {
+                            _this.dataset.representation[0].function = tag;
+                        });
+                
+                _this.dataset.representation[0].contenttype = tagGroupService.getTag('content type', 'application/octet-stream',
+                        function (tag) {
+                            _this.dataset.representation[0].contenttype = tag;
+                        });
 
                 $scope.wizard.enterValidators['Dataset Description'] = function (context) {
                     if (context.valid === true) {

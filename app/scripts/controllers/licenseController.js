@@ -18,9 +18,15 @@ angular.module(
             var _this = this;
             _this.dataset = dataset;
             
-            
+            // load taglist
             $scope.tags['accessconditions'] = tagGroupService.getTagList('access conditions', 'CC BY-NC-SA,for research only,no limitations,other');
 
+            // set default values
+            _this.dataset.representation[0].function = tagGroupService.getTag('access conditions', 'CC BY-NC-SA',
+                    function (tag) {
+                        _this.dataset.accessconditions = tag;
+                    });
+                    
             // validation functions
             $scope.wizard.enterValidators['License and Conditions'] = function(context){
                 if(context.valid === true){

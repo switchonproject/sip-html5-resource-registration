@@ -2,9 +2,7 @@
     "$self": "/SWITCHON.RESOURCE/-1",
     "id": -1,
     "fromdate": null,
-    "accessconditions": {
-        "name": "CC BY-NC-SA"
-    },
+    "accessconditions": null,
     "spatialcoverage": {
         "$self": "/SWITCHON.GEOM/-1",
         "id": -1,
@@ -40,7 +38,7 @@
             "description": null,
             "content": null,
             "type": null,
-            "function": null,
+            "function":null,
             "protocol": null,
             "applicationprofile": null,
             "uuid": null,
@@ -49,7 +47,7 @@
             "spatialscale": null,
             "contentlocation": null,
             "tags": [],
-            "contenttype": null,
+            "contenttype":null,
             "uploadstatus": null,
             "uploadmessage": null
         }],

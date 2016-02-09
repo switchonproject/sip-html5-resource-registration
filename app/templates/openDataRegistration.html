@@ -19,20 +19,28 @@
     <!-- Link -->
     <div class="row form-group"
          ng-class="{'has-error':wizard.hasError === 'datasetContentlocation'}">
-        <label for="datasetContentlocation" class="col-md-1 form-control-label">Link</label>
+        <label for="datasetContentlocation" class="col-md-1 form-control-label">Link to Data</label>
         <!-- Function -->
         <div class="col-md-2">
-            <select class="form-control" id="datasetFunction" name="datasetFunction" 
-                    ng-options="tag as tag.name for tag in tags['function'] track by tag.name"
+            <select class="form-control" 
+                    ng-style="(!dataset.representation[0].function 
+                                && !odRegistrationForm.datasetFunction.$touched) && {'color':'#999999'}" 
+                    id="datasetFunction" 
+                    name="datasetFunction" 
+                    placeholder="Type of Link"
+                    ng-options="tag as tag.name for tag in tags['function'] | orderBy:'name' track by tag.name"
                     ng-model="dataset.representation[0].function"
-                    ng-change="showInfoMessage('The ' + dataset.representation[0].function.description + ' / dataset.');"
+                    ng-change="showInfoMessage(dataset.representation[0].function.description);"
                     required>
+                    <option style="color:#999999" ng-show="!dataset.representation[0].function" value="">Type of Link</option>
             </select>
         </div>
         <!-- Content Location -->
         <div class="col-md-6">
             <input type="url" class="form-control" 
-                   name="datasetContentlocation" id="datasetContentlocation" placeholder="URL of the dataset"
+                   name="datasetContentlocation" 
+                   id="datasetContentlocation" 
+                   placeholder="URL of the dataset"
                    ng-model="dataset.representation[0].contentlocation"
                    ng-focus="showInfoMessage('Please provide a download link to the dataset or a link to additional information about the dataset.');"
                    ng-change="odRegistrationController.checkLink(dataset.representation[0].contentlocation)"
@@ -41,11 +49,17 @@
         </div>
         <!-- Content Type -->
         <div class="col-md-3">
-            <select class="form-control" id="datasetContenttype" name="datasetContenttype" placeholder="Description of the dataset"
-                    ng-options="tag as tag.description for tag in tags['content type'] track by tag.name"
+            <select class="form-control" 
+                    ng-style="(!dataset.representation[0].contenttype 
+                                && !odRegistrationForm.datasetContenttype.$touched) && {'color':'#999999'}" 
+                    id="datasetContenttype" 
+                    name="datasetContenttype" 
+                    placeholder="Choose file format"
+                    ng-options="tag as tag.description for tag in tags['content type'] | contenttype:'description' track by tag.name"
                     ng-model="dataset.representation[0].contenttype"
-                    ng-change="showInfoMessage('The <a href=\'https://en.wikipedia.org/wiki/Media_type\' target=\'_blank\'>media type</a> of the dataset is <i>'+dataset.representation[0].contenttype.name + '</i> (' + dataset.representation[0].contenttype.description + ').');"
-                    required>   
+                    ng-change="showInfoMessage('The <a href=\'https://en.wikipedia.org/wiki/Media_type\' target=\'_blank\'>media type</a> of the ' + dataset.representation[0].contenttype.description +  ' dataset file is <i>'+dataset.representation[0].contenttype.name + '</i>.');"
+                    required>
+                <option style="color:#999999" ng-show="!dataset.representation[0].contenttype" value="">Choose file format</option>
             </select>
         </div>
     </div>
@@ -90,10 +104,11 @@
                         on-select="showInfoMessage('Please select one or more keywords from the <strong>extended</strong> CUAHSI Hydrologic Ontology for Discovery (X-CUAHSI) that best characterize the dataset. <br>Please click <a href=\'http://his.cuahsi.org/ontologyfiles.html\' target=\'_blank\'>here</a> for more information about the CUAHSI ontology. Get in touch with the <a href=\'mailto:switchon.wm@gmail.com\'>SWITCH-ON Consortium</a> if you want to make a proposal for new keywords and thus an extension of the X-CUSHAI ontology!')">
               
                 <ui-select-match 
-                    placeholder="Please click here to open a list of selectable X-CUAHSI keywords."
+                    placeholder="Please click here to open a list of selectable CUAHSI keywords."
                     >
                     {{$item.name}}
                 </ui-select-match>
+                <!-- disabled as requested in https://github.com/switchonproject/switchon-tools/issues/1#issuecomment-180390096-->
                 <ui-select-choices repeat="tag in tags['keywords - X-CUAHSI'] | filter: {name: $select.search}"
                                    group-by="odRegistrationController.groupBy">
                     <div ng-bind-html="tag.name | highlight: $select.search"></div>

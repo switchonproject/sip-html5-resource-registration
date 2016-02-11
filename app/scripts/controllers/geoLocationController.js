@@ -100,9 +100,9 @@ angular.module(
                 if(context.valid === true)
                 {
                     if(_this.mode.drawBBox === true) {
-                        $scope.message.text='Please specify the extent of the dataset in the geographic space. <br>Use use the map controls to draw a bounding box or a polygon that represents the spatial extent of the dataset.';
+                        $scope.message.text='Please specify the extent of the dataset in the map <br>Use the map controls to draw a bounding box or a polygon that represents the spatial extent of the dataset.';
                     } else {
-                        $scope.message.text='Please specify the extent of the dataset in the geographic space.';
+                        $scope.message.text='Please specify the extent of the dataset in the map.';
                     }
 
                     $scope.message.icon='fa-info-circle';
@@ -219,29 +219,36 @@ angular.module(
             };
             
             _this.applyBoundingBox = function() {
-                var bounds = [[_this.contentLocation.bounds.south, 
-                        _this.contentLocation.bounds.west], 
-                    [_this.contentLocation.bounds.north, 
-                        _this.contentLocation.bounds.east]];
-
-
-                var layer = L.rectangle(bounds, defaultStyle);
-
-                layerGroup.clearLayers();
-                layerGroup.addLayer(layer);
                 
-                leafletData.getMap('mainmap').then(function (map) {
-                        map.fitBounds(layer, {
-                            animate: true,
-                            pan: {animate: true, duration: 0.6},
-                            zoom: {animate: true}
-                        });
-                   });
-                   
-                   _this.contentLocation.name = 'New user-defined Bounding Box';
-                   //_this.contentLocation.type = 'rectangle';
-                   //_this.contentLocation.wkt = null;
-                   //_this.contentLocation.layer = layer;
+                if(_this.contentLocation.bounds.south !== undefined 
+                        && _this.contentLocation.bounds.west !== undefined 
+                        && _this.contentLocation.bounds.north !== undefined 
+                        && _this.contentLocation.bounds.east !== undefined ) {
+                
+                    var bounds = [[_this.contentLocation.bounds.south, 
+                            _this.contentLocation.bounds.west], 
+                        [_this.contentLocation.bounds.north, 
+                            _this.contentLocation.bounds.east]];
+
+
+                    var layer = L.rectangle(bounds, defaultStyle);
+
+                    layerGroup.clearLayers();
+                    layerGroup.addLayer(layer);
+
+                    leafletData.getMap('mainmap').then(function (map) {
+                            map.fitBounds(layer, {
+                                animate: true,
+                                pan: {animate: true, duration: 0.6},
+                                zoom: {animate: true}
+                            });
+                       });
+
+                       _this.contentLocation.name = 'New user-defined Bounding Box';
+                       //_this.contentLocation.type = 'rectangle';
+                       //_this.contentLocation.wkt = null;
+                       //_this.contentLocation.layer = layer;
+               }
             };
        
             // leaflet initialisation

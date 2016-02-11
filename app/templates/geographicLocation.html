@@ -6,56 +6,47 @@
                  height="600px" width="820px">   
         </leaflet>
     </div>
+    
     <div class="col-md-3">
-        <!-- SWITCH DRAW -->
+        
         <div class="row">
-            <div class="col-md-3">
-                <switch id="switch-bbox" name="switch-bbox" 
-                        ng-model="geoController.mode.drawBBox"
-                        ng-change="geoController.switchMode('drawBBox')"></switch> 
-            </div>
-            <div class="col-xs-8">
-                <strong>Define bounding box or polygon</strong>
+            <div class="col-md-12">
+                <label>Please select one</label>
             </div>
         </div>
-        <!-- SWITCH SELECT EUROPE -->
+        
         <div class="row">
-            <div class="col-md-3">
-                <switch id="switch-europe" name="switch-europe"
-                        ng-model="geoController.mode.selectEC"
-                        ng-change="geoController.switchMode('selectEC')"></switch> 
-            </div>
-            <div class="col-xs-9">
-                <strong>Select European country or region</strong>
-            </div>
-        </div>
-        <!-- SWITCH SELECT WORLD -->
-        <div class="row">
-            <div class="col-md-3">
-                <switch id="switch-world" name="switch-world" 
-                        ng-model="geoController.mode.selectWC"
-                        ng-change="geoController.switchMode('selectWC')"></switch> 
-            </div>
-            <div class="col-xs-9">
-                <strong>Select World country or region</strong>
-            </div>
-        </div>
-        <!-- SWITCH ENTER COORDINATES -->
-        <div class="row">
-            <div class="col-md-3">
-                <switch id="switch-coordinates" name="switch-coordinates" 
-                        ng-model="geoController.mode.defineBBox"
-                        ng-change="geoController.switchMode('defineBBox')"></switch> 
-            </div>
-            <div class="col-xs-9">
-                <strong>Enter bounding box coordinates</strong>
-            </div>
+             <div class="col-md-12">
+                <div class="btn-group-vertical">
+                    <label class="btn btn-primary" 
+                           ng-model="geoController.mode.drawBBox" 
+                           ng-click="geoController.switchMode('drawBBox')"
+                           btn-radio="true">Define bounding box or polygon
+                           
+                    </label>
+                    <label class="btn btn-primary" 
+                           ng-model="geoController.mode.selectEC" 
+                           ng-click="geoController.switchMode('selectEC')"
+                           btn-radio="true">Select European country or region</label>
+                    
+                    <label class="btn btn-primary" 
+                           ng-model="geoController.mode.selectWC" 
+                           ng-click="geoController.switchMode('selectWC')"
+                           btn-radio="true">Select World country or region</label>
+                    
+                    <label class="btn btn-primary" 
+                           ng-model="geoController.mode.defineBBox" 
+                           ng-click="geoController.switchMode('defineBBox')"
+                           btn-radio="true">Enter bounding box coordinates</label>
+                </div>
+             <div class="col-md-12">
         </div>
 
         <!-- CONTROL SELECT EUROPE -->
         <div class="row" ng-show="geoController.mode.selectEC">
             <div class="col-md-12">
                 <hr>
+                <label>European countries</label>
                 <ui-select ng-model="geoController.contentLocation.name" 
                            theme="bootstrap" 
                            ng-disabled="disabled" 
@@ -75,6 +66,7 @@
         <div class="row" ng-show="geoController.mode.selectWC">
             <div class="col-md-12">
                 <hr>
+                <label>World countries</label>
                 <ui-select ng-model="geoController.contentLocation.name" 
                            theme="bootstrap" 
                            ng-disabled="disabled" 
@@ -107,6 +99,7 @@
                         <div class="col-md-12">
                             <input type="number" class="form-control" id="north" name="north" 
                                    ng-model="geoController.contentLocation.bounds.north" 
+                                   ng-change="geoController.applyBoundingBox()"
                                    min="-90.00000000000000000" max="90.0000000000000000" required>
                         </div>
                     </div>
@@ -123,6 +116,7 @@
                         <div class="col-md-12">
                             <input class="form-control" type="number" id="east" name="east" 
                                    ng-model="geoController.contentLocation.bounds.east" 
+                                   ng-change="geoController.applyBoundingBox()"
                                    min="-180.0000000000000000" max="180.0000000000000000" required>
                         </div>
                     </div>
@@ -139,6 +133,7 @@
                         <div class="col-md-12">
                             <input type="number" class="form-control" id="south" name="south" 
                                    ng-model="geoController.contentLocation.bounds.south" 
+                                   ng-change="geoController.applyBoundingBox()"
                                    min="-90.00000000000000000" max="90.00000000000000000" required>
                         </div>
                     </div>
@@ -155,19 +150,8 @@
                         <div class="col-md-12">
                             <input type="number" class="form-control" id="west" name="west" 
                                    ng-model="geoController.contentLocation.bounds.west" 
+                                   ng-change="geoController.applyBoundingBox()"
                                    min="-180.0000000000000000" max="180.0000000000000000" required>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <button title="Apply"
-                                name="applyButton"
-                                id="applyButton"
-                                class="btn btn-default"
-                                ng-click="geoController.applyBoundingBox()"
-                                ng-disabled="coordinatesForm.$error.required || coordinatesForm.$invalid">
-                              Apply
-                            </button>
                         </div>
                     </div>
                 </form>

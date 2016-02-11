@@ -63,6 +63,17 @@
                             template="templates/wizard-tpl.html"
                             current-step="wizard.currentStep"> 
 
+                        <!-- Geographic Location -->
+                        <wz-step wz-title="Geographic Location"
+                                 template="templates/wizard-step-tpl.html"
+                                 wz-data="wizard"
+                                 canenter="wizard.enterValidators['Geographic Location']"
+                                 canexit="wizard.exitValidators['Geographic Location']">
+                            <ng-include src="'templates/geographicLocation.html'"> 
+                            </ng-include>
+                        </wz-step>
+                        
+                        
                         <!-- Dataset Description -->
                         <wz-step wz-title="Dataset Description" 
                                  template="templates/wizard-step-tpl.html"
@@ -73,15 +84,7 @@
                             </ng-include>
                         </wz-step>
                         
-                        <!-- Geographic Location -->
-                        <wz-step wz-title="Geographic Location"
-                                 template="templates/wizard-step-tpl.html"
-                                 wz-data="wizard"
-                                 canenter="wizard.enterValidators['Geographic Location']"
-                                 canexit="wizard.exitValidators['Geographic Location']">
-                            <ng-include src="'templates/geographicLocation.html'"> 
-                            </ng-include>
-                        </wz-step>
+                        
                         
                         <!-- License and Conditions -->
                         <wz-step wz-title="License and Conditions"
@@ -127,7 +130,6 @@
         <script src="bower_components/Wicket/wicket.js" type="text/javascript"></script>
         <script src="bower_components/Wicket/wicket-leaflet.js" type="text/javascript"></script>
         <script src="bower_components/angular-wizard/dist/angular-wizard.js" type="text/javascript"></script>
-        <script src="bower_components/angular-ui-switch/angular-ui-switch.js" type="text/javascript"></script>
         <script src="bower_components/ui-select/dist/select.js" type="text/javascript"></script>
         <!-- endbower -->
 

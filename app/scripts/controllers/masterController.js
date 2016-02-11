@@ -101,39 +101,6 @@ angular.module(
                         backdrop: 'static'
                     });
                 };
-
-
-
-
-//            $scope.$watch('wzData.params', function () {
-//                // if currentstep is not set the wizard is just about to start
-//                if ($scope.wzData.wizard.currentStep && $scope.wzData.wizard.currentStep !== '') {
-//                    $scope.wzData.wizard.canProceed =
-//                        ($scope.wzData.wizard.validators[$scope.wzData.wizard.currentStep] || $scope.wzData.wizard.validators.noVal)();
-//                } else {
-//                    // TODO: proper validation, this should be false instead
-//                    $scope.wzData.wizard.canProceed = true;
-//                }
-//            }, true);
-
-
-                /*
-                 
-                 
-                 $scope.$watch('data.resultSet.$collection', function (n, o) {
-                 var i, objs, message, pages, pageNumber;
-                 
-                 if (n && n !== o && n.length > 0) {
-                 objs = [];
-                 
-                 for (i = 0; i < n.length; ++i) {
-                 objs.push(n[i].object);
-                 }
-                 
-                 }
-                 });
-                 
-                 */
             }
         ]
         );

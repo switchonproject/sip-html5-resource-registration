@@ -7,6 +7,7 @@ angular.module(
         [
             '$scope',
             '$http',
+            '$modal',
             'AppConfig',
             'WizardHandler',
             'de.cismet.sip-html5-resource-registration.services.dataset',
@@ -16,6 +17,7 @@ angular.module(
             function (
                     $scope,
                     $http,
+                    $modal,
                     AppConfig,
                     WizardHandler,
                     dataset,
@@ -70,6 +72,18 @@ angular.module(
                     }
 
                     duplicateLink = undefined;
+                };
+                
+                _this.selectKeywords = function () {
+                    $modal.open({
+                        animation: true,
+                        templateUrl: 'templates/keywordSelection.html',
+                        controller: 'de.cismet.sip-html5-resource-registration.controllers.keywordsController',
+                        controllerAs: 'keywordsController',
+                        keyboard: 'true',
+                        size: 'lg',
+                        scope: $scope
+                    });
                 };
 
                 // load list

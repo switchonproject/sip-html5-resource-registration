@@ -79,20 +79,26 @@
                       required></textarea>
         </div>
     </div>
-
+    
     <!-- Keywords -->
-    <div class="form-group row"
+    <div class="form-group row">
+        <label  class="col-md-1 form-control-label">Keywords</label>
+        <div class="col-md-8">
+            <div class="form-control switchon-keywords-form"
+                 ng-click="showInfoMessage('Please select one or more keywords from the <strong>extended</strong> CUAHSI Hydrologic Ontology for Discovery that best characterize the dataset. <br>Please click <a href=\'http://his.cuahsi.org/ontologyfiles.html\' target=\'_blank\'>here</a> for more information about the CUAHSI ontology. Get in touch with the <a href=\'mailto:switchon.wm@gmail.com\'>SWITCH-ON Consortium</a> if you want to make a proposal for new keywords.'); odRegistrationController.selectKeywords();">
+                <span ng-repeat="tag in dataset.tags">
+                        <span class="label label-primary">{{tag.name}}</span>
+                </span>
+            </div>
+         </div>
+    </div>
+
+    <!-- disabled as requested in https://github.com/switchonproject/switchon-tools/issues/1#issuecomment-180390096-->
+    <!--<div class="form-group row"
          ng-class="{'has-error':wizard.hasError === 'datasetTags'}">
         <label for="datasetTags" class="col-md-1 form-control-label">Keywords</label>
-        <!--<div class="col-md-3">
-            <select  ng-minlength="1" multiple size="8" class="form-control" id="keyword-list"
-                    ng-options="tag as tag.name for tag in tags['keywords - X-CUAHSI'] track by tag.name"
-                    ng-model="dataset.tags">   
-            </select>
-
-        </div>-->
         <div class="col-md-8">
-            <!--<textarea class="form-control" id="keyword-box" rows="7"></textarea>-->
+            <textarea class="form-control" id="keyword-box" rows="7"></textarea>
             <ui-select  id="datasetTags"
                         name="datasetTags"
                         class="form-control"
@@ -104,17 +110,16 @@
                         on-select="showInfoMessage('Please select one or more keywords from the <strong>extended</strong> CUAHSI Hydrologic Ontology for Discovery (X-CUAHSI) that best characterize the dataset. <br>Please click <a href=\'http://his.cuahsi.org/ontologyfiles.html\' target=\'_blank\'>here</a> for more information about the CUAHSI ontology. Get in touch with the <a href=\'mailto:switchon.wm@gmail.com\'>SWITCH-ON Consortium</a> if you want to make a proposal for new keywords and thus an extension of the X-CUSHAI ontology!')">
               
                 <ui-select-match 
-                    placeholder="Please click here to open a list of selectable CUAHSI keywords."
-                    >
+                    placeholder="Please click here to open a list of selectable CUAHSI keywords.">
                     {{$item.name}}
                 </ui-select-match>
-                <!-- disabled as requested in https://github.com/switchonproject/switchon-tools/issues/1#issuecomment-180390096-->
-                <ui-select-choices repeat="tag in tags['keywords - X-CUAHSI'] | filter: {name: $select.search}"
+
+                <ui-select-choices ng-show="false" repeat="tag in tags['keywords - X-CUAHSI'] | filter: {name: $select.search}"
                                    group-by="odRegistrationController.groupBy">
                     <div ng-bind-html="tag.name | highlight: $select.search"></div>
                 </ui-select-choices>
             </ui-select>
         </div>
-    </div>
+    </div>-->
 </form>
 

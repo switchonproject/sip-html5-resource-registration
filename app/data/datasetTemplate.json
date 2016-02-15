@@ -2,7 +2,9 @@
     "$self": "/SWITCHON.RESOURCE/-1",
     "id": -1,
     "fromdate": null,
-    "accessconditions": null,
+    "accessconditions": {
+        "name": "Creative Commons (CC BY)"
+    },
     "spatialcoverage": {
         "$self": "/SWITCHON.GEOM/-1",
         "id": -1,

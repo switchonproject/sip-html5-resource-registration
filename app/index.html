@@ -10,7 +10,7 @@
         <title></title>
         <meta name="description" content="">
         <meta name="content-language" content="en-GB">     
-        <meta name="author" content="cismet GmbH, http://www.cismet.de">	
+        <meta name="author" content="Pascal Dihé, cismet GmbH, http://www.cismet.de">	
         <meta name="date" content="2015-04-07T00:00:00+02:00">
         <meta http-equiv="imagetoolbar" content="no">     
         <meta http-equiv="window-target" content="_top">  
@@ -23,19 +23,17 @@
         <!-- endbuild -->
 
         <!-- Application related CSS -->
-
         <link href="bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet" type="text/css"/>
         <link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
         <link href="bower_components/leaflet/dist/leaflet.css" rel="stylesheet" type="text/css"/>
         <link href="bower_components/leaflet-draw/dist/leaflet.draw.css" rel="stylesheet" type="text/css"/>
-        <link href="bower_components/angular-ui-switch/angular-ui-switch.css" rel="stylesheet" type="text/css"/>
         <link href="bower_components/ui-select/dist/select.css" rel="stylesheet" type="text/css"/>
 
     </head>
     <body ng-app="de.cismet.sip-html5-resource-registration" 
           ng-controller="de.cismet.sip-html5-resource-registration.controllers.masterController as masterController">
-        <!--[if lt IE 7]>
-          <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <!--[if lt IE 11]>
+          <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/" rel="nofollow">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
         <!-- Add your site or application content here -->
@@ -63,17 +61,6 @@
                             template="templates/wizard-tpl.html"
                             current-step="wizard.currentStep"> 
 
-                        <!-- Geographic Location -->
-                        <wz-step wz-title="Geographic Location"
-                                 template="templates/wizard-step-tpl.html"
-                                 wz-data="wizard"
-                                 canenter="wizard.enterValidators['Geographic Location']"
-                                 canexit="wizard.exitValidators['Geographic Location']">
-                            <ng-include src="'templates/geographicLocation.html'"> 
-                            </ng-include>
-                        </wz-step>
-                        
-                        
                         <!-- Dataset Description -->
                         <wz-step wz-title="Dataset Description" 
                                  template="templates/wizard-step-tpl.html"
@@ -84,8 +71,16 @@
                             </ng-include>
                         </wz-step>
                         
-                        
-                        
+                        <!-- Geographic Location -->
+                        <wz-step wz-title="Geographic Location"
+                                 template="templates/wizard-step-tpl.html"
+                                 wz-data="wizard"
+                                 canenter="wizard.enterValidators['Geographic Location']"
+                                 canexit="wizard.exitValidators['Geographic Location']">
+                            <ng-include src="'templates/geographicLocation.html'"> 
+                            </ng-include>
+                        </wz-step>
+
                         <!-- License and Conditions -->
                         <wz-step wz-title="License and Conditions"
                                  template="templates/wizard-step-tpl.html"

@@ -19,13 +19,7 @@ angular.module(
             _this.dataset = dataset;
             
             // load taglist
-            $scope.tags['accessconditions'] = tagGroupService.getTagList('access conditions', 'CC BY-NC-SA,for research only,no limitations,other');
-
-            // set default values
-            _this.dataset.representation[0].function = tagGroupService.getTag('access conditions', 'CC BY-NC-SA',
-                    function (tag) {
-                        _this.dataset.accessconditions = tag;
-                    });
+            $scope.tags['accessconditions'] = tagGroupService.getTagList('access conditions', 'Creative Commons (CC BY),Creative Commons (CC BY-NC),Creative Commons (CC BY-NC-ND),Creative Commons (CC BY-NC-SA),Creative Commons (CC BY-ND),Creative Commons (CC BY-SA),for research only,no limitations,other');
                     
             // validation functions
             $scope.wizard.enterValidators['License and Conditions'] = function(context){
@@ -66,6 +60,22 @@ angular.module(
                     
                     $scope.wizard.hasError = 'datasetLicensestatement';
                     context.valid =  false;
+                } else if ($scope.licenseForm.datasetContactemail.$error.email) {
+                    // CONTENT LOCATION       
+                    $scope.message.text = 'The email address to the contact person is not a valid.';
+                    $scope.message.icon = 'fa-warning';
+                    $scope.message.type = 'warning';
+
+                    $scope.wizard.hasError = 'datasetContactperson';
+                    context.valid = false;
+                } else if ($scope.licenseForm.datasetOrganisationurl.$error.url) {
+                    // CONTENT LOCATION       
+                    $scope.message.text = 'The website url of the orgaisation is not a valid <a href=\'https://en.wikipedia.org/wiki/Uniform_Resource_Locator#Syntax\' target=\'_blank\' title=\'Uniform Resource Locator\'>URL</a>.';
+                    $scope.message.icon = 'fa-warning';
+                    $scope.message.type = 'warning';
+
+                    $scope.wizard.hasError = 'datasetOrganisation';
+                    context.valid = false;
                 }
                 
                 if(context.valid === true) {

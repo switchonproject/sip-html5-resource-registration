@@ -44,62 +44,73 @@ angular.module(
                 $modalInstance.rendered.then(function () {
                     tagGroupService.getTagList('srid', 'EPSG:4326').$promise.then(function (tags) {
                         _this.dataset.srid = tags[0];
-                        _this.progress.currval += 10;
+                        _this.progress.currval += 10; // 10
                     });
 
                     tagGroupService.getTagList('conformity', 'Not evaluated').$promise.then(function (tags) {
                         _this.dataset.conformity = tags[0];
-                        _this.progress.currval += 10;
+                        _this.progress.currval += 10; // 20
                     });
 
                     tagGroupService.getTagList('language', 'eng').$promise.then(function (tags) {
                         _this.dataset.language = tags[0];
-                        _this.dataset.metadata[0].language = tags[0];
-                        _this.progress.currval += 20;
+                        if(_this.dataset.metadata[0].description) {
+                            _this.dataset.metadata[0].language = tags[0];
+                        }
+                        _this.progress.currval += 10; // 30
                     });
 
-                    tagGroupService.getTagList('type', 'external data').$promise.then(function (tags) {
+                    tagGroupService.getTagList('resource type', 'external data').$promise.then(function (tags) {
                         _this.dataset.type = tags[0];
-                        _this.progress.currval += 10;
+                        _this.progress.currval += 10; // 40
                     });
 
                     tagGroupService.getTagList('topic category', 'climatologyMeteorologyAtmosphere').$promise.then(function (tags) {
                         _this.dataset.topiccategory = tags[0];
+                        _this.progress.currval += 10;  // 50
                     });
 
-                    tagGroupService.getTagList('role', 'metadataProvider').$promise.then(function (tags) {
-                        _this.dataset.contact.role = tags[0];
-                        _this.progress.currval += 10;
-                    });
-
-                    tagGroupService.getTagList('representation type', 'original data').$promise.then(function (tags) {
-                        _this.dataset.contact.role = tags[0];
-                        _this.progress.currval += 10;
+                    tagGroupService.getTagList('role', 'pointOfContact').$promise.then(function (tags) {
+                        if(_this.dataset.contact.organisation 
+                                || _this.dataset.contact.name
+                                || _this.dataset.contact.description
+                                || _this.dataset.contact.email
+                                || _this.dataset.contact.url) {
+                            _this.dataset.contact.role = tags[0];
+                        } else {
+                            _this.dataset.contact = null;
+                        }
+                        _this.progress.currval += 10; // 60
                     });
 
                     tagGroupService.getTagList('representation type', 'original data').$promise.then(function (tags) {
                         _this.dataset.representation[0].type = tags[0];
-                        _this.progress.currval += 10;
+                        _this.progress.currval += 10; // 70
                     });
 
                     tagGroupService.getTagList('protocol', 'WWW:LINK-1.0-http--link').$promise.then(function (tags) {
                         _this.dataset.representation[0].protocol = tags[0];
-                        _this.progress.currval += 10;
+                        _this.progress.currval += 10; // 80
                     });
 
                     tagGroupService.getTagList('meta-data type', 'lineage meta-data').$promise.then(function (tags) {
-                        _this.dataset.metadata[0].type = tags[0];
-                        _this.progress.currval += 10;
+                        if(_this.dataset.metadata[0].description) {
+                            _this.dataset.metadata[0].type = tags[0];
+                        } else {
+                            _this.dataset.metadata = [];
+                        }
+                        _this.progress.currval += 10; // 90
                     });
 
                     tagGroupService.getTagList('access limitations', 'limitation not listed').$promise.then(function (tags) {
                         _this.dataset.accesslimitations = tags[0];
-                        _this.progress.currval += 10;
+                        _this.progress.currval += 10; // 100
                     });
 
+                    // FIXME: define group for resource registration meta-data
                     tagGroupService.getTagList('collection', 'SWITCH-ON - Open Data').$promise.then(function (tags) {
                         _this.dataset.collection = tags[0];
-                        _this.progress.currval += 10;
+                        _this.progress.currval += 10; // 110
                     });
                 });
 
@@ -112,20 +123,20 @@ angular.module(
                     // Return the "result" of the watch expression.
                     return(_this.progress.currval);
                 }, function (newProgress) {
-                    if (newProgress && newProgress === 120) {
+                    if (newProgress && newProgress === 110) {
 
                         var timer = $interval(function () {
                             if (_this.progress.currval < 190) {
                                 _this.progress.currval += 1;
                             }
-                        }, 200, 70);
+                        }, 200, 80);
 
                         storageService.store(dataset).$promise.then(
                                 function (storedDataset) {
                                     $interval.cancel(timer);
 
-                                    _this.progress.message = 'Your dataset has been successfully registered in the SWITCH-ON Spatial Information Platform. Please click <a href="' + AppConfig.byod.baseUrl + '/#/resource/' +
-                                            storedDataset.id + '" title="' + storedDataset.name + '>here</a> to view the dataset in the SWITCH-ON BYOD Client.';
+                                    _this.progress.message = 'Your dataset has been successfully registered in the SWITCH-ON Spatial Information Platform. Please click <a href=\'' + AppConfig.byod.baseUrl + '/#/resource/' +
+                                            storedDataset.id + '\' title=\'' + storedDataset.name + '\'>here</a> to view the dataset in the SWITCH-ON BYOD Client.';
 
                                     _this.progress.active = false;
                                     _this.progress.finished = true;

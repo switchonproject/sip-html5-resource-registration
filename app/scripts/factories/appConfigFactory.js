@@ -54,5 +54,8 @@ angular.module(
         //appConfig.byod.baseUrl = 'http://tl-243.xtr.deltares.nl/byod';
         appConfig.byod.baseUrl = 'http://switchon.cismet.de/sip-snapshot';
         
+        appConfig.uploadtool = {};
+        appConfig.uploadtool.baseUrl = 'http://dl-ng003.xtr.deltares.nl';
+        
         return appConfig;
     }]);

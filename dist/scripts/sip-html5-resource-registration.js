@@ -521,6 +521,8 @@ angular.module(
                  * The resource meta data, initilaized from a template and changed by the app
                  */
                 $scope.dataset = dataset;
+                
+                $scope.config = AppConfig;
 
                 /**
                  * list of selectable tags. Initilaized by the controllers
@@ -1182,6 +1184,9 @@ angular.module(
         //appConfig.byod.baseUrl = 'http://tl-243.xtr.deltares.nl/byod';
         appConfig.byod.baseUrl = 'http://switchon.cismet.de/sip-snapshot';
         
+        appConfig.uploadtool = {};
+        appConfig.uploadtool.baseUrl = 'http://dl-ng003.xtr.deltares.nl';
+        
         return appConfig;
     }]);
 angular.module(
@@ -1197,27 +1202,23 @@ angular.module(
         function () {
             'use strict';
 
-            function customOrder(description) {
-                if(description.indexOf('unknown') !== -1) {
-                    return 0;
-                }
-                
-                return 1;
-            }
 
             return function (items) {
                 var filtered = [];
                 angular.forEach(items, function (item) {
-//                    var name = item.description.split(' (', 1);
-//                    if(name.length === 1) {
-//                        item.description = name[0];
-//                    } 
-                    
                     filtered.push(item);
                 });
-                
+
                 filtered.sort(function (a, b) {
-                    return (customOrder(a.description) > customOrder(b.description) ? 1 : -1);
+
+                    if (a.description.indexOf('unknown') !== -1) {
+
+                        return -1;
+                    } else if (b.description.indexOf('unknown') !== -1) {
+                        return 1;
+                    } else {
+                        return a.description.localeCompare(b.description);
+                    }
                 });
                 return filtered;
             };

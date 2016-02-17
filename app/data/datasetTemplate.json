@@ -57,6 +57,21 @@
     "metadata": [{
             "$self": "/SWITCHON.METADATA/-1",
             "id": -1,
+            "name": "OpenData Registration Meta-Data",
+            "tags": [],
+            "description": null,
+            "contact": null,
+            "type": null,
+            "language": null,
+            "standard": null,
+            "uuid": null,
+            "contentlocation": null,
+            "creationdate": null,
+            "contenttype": null,
+            "content": null
+        }, {
+            "$self": "/SWITCHON.METADATA/-1",
+            "id": -1,
             "name": "Basic Lineage Meta-Data",
             "tags": [],
             "description": null,

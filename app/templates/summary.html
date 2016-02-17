@@ -9,17 +9,32 @@
 
             <!-- Link -->
             <div class="row">
-                <label class="col-md-3" style="text-transform: capitalize;">{{dataset.representation[0].function.name}}-Link</label>
+                <label class="col-md-3">Link to data</label>
                 <div class="col-md-9">
                     <a href="{{dataset.representation[0].contentlocation}}" target="_blank" title="{{dataset.name}}">{{dataset.representation[0].contentlocation}}</a>
+                </div>
+            </div>
+            
+            <!-- Function -->
+            <div class="row">
+                <label class="col-md-3">Type of Link</label>
+                <div class="col-md-9">
+                    <span class="label label-success" 
+                          style="text-transform: capitalize;" 
+                          title="{{dataset.representation[0].function.description}}">
+                        {{dataset.representation[0].function.name}}
+                    </span>
                 </div>
             </div>
 
             <!-- Content-Type -->
             <div class="row">
-                <label class="col-md-3">Content-Type</label>
+                <label class="col-md-3">Format</label>
                 <div class="col-md-9">
-                    <span class="label label-success" title="{{dataset.representation[0].contenttype.description}}">{{dataset.representation[0].contenttype.name}}</span>
+                    <span class="label label-success" 
+                          title="{{dataset.representation[0].contenttype.description}}">
+                        {{dataset.representation[0].contenttype.name}}
+                    </span>
                 </div>
             </div>
 
@@ -43,9 +58,10 @@
 
             <!-- Access Conditions -->
             <div class="row">
-                <label class="col-md-3">Conditions</label>
+                <label class="col-md-3">License</label>
                 <div class="col-md-9">
-                    <span class="label label-warning" title="{{dataset.accessconditions.description}}">{{dataset.accessconditions.name}}</span>
+                    <span class="label label-warning" 
+                          title="{{dataset.accessconditions.description | htmlToPlaintext}}">{{dataset.accessconditions.name}}</span>
                 </div>
             </div>
 
@@ -61,10 +77,27 @@
             <div class="row" ng-if="dataset.contact && dataset.contact.name">
                 <label class="col-md-3">Contact Person</label>
                 <div class="col-md-9">
-                    {{dataset.contact.name}}
+                    <span ng-if="dataset.contact.name">{{dataset.contact.name}} </span>
+                    <span ng-if="dataset.contact.email">
+                        &lt;
+                        <a ng-if="dataset.contact.email.indexOf(' ') === -1" href="mailto:{{dataset.contact.email}}">{{dataset.contact.email}}</a>
+                        <span ng-if="dataset.contact.email.indexOf(' ') !== -1">{{dataset.contact.email}}</span>
+                        &gt; 
+                    </span>
                 </div>
             </div>
-
+            
+            <!-- Organisation (Institute) -->
+            <div class="row" ng-if="dataset.contact && dataset.contact.organisation">
+                <label class="col-md-3">Institute</label>
+                <div class="col-md-9">
+                    <span ng-if="dataset.contact.organisation && !dataset.contact.url"> {{dataset.contact.organisation}}</span>
+                    <span ng-if="dataset.contact.organisation && dataset.contact.url"> 
+                        <a href="{{dataset.contact.url}}" target="_blank" rel="nofollow">{{dataset.contact.organisation}}</a>)
+                    </span>
+                </div>
+            </div>
+            
             <!-- Citation / DOI -->
             <div class="row" ng-if="dataset.contact && dataset.contact.description">
                 <label class="col-md-3">Citation / DOI</label>
@@ -74,11 +107,10 @@
             </div>
 
             <!-- Lineage -->
-
-            <div class="row" ng-if="dataset.metadata[0].description">
+            <div class="row" ng-if="dataset.metadata[1].description">
                 <label class="col-md-3">Data Lineage</label>
                 <div class="col-md-9">
-                    {{dataset.metadata[0].description}}
+                    {{dataset.metadata[1].description}}
                 </div>
             </div>
         </div>

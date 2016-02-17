@@ -94,9 +94,9 @@ angular.module(
                         function (taggroup, tag, callbackFunction) {
                             if (tagGroups.hasOwnProperty(taggroup)) {
                                 if (tagGroups[taggroup].$resolved === true) {
-                                    for (var i = 0; i < tagGroups[tagGroups].length; i++) {
-                                        if (tagGroups[tagGroups][i].name && tagGroups[tagGroups][i].name === tag) {
-                                            return tagGroups[tagGroups][i];
+                                    for (var i = 0; i < tagGroups[taggroup].length; i++) {
+                                        if (tagGroups[taggroup][i].name && tagGroups[taggroup][i].name === tag) {
+                                            return tagGroups[taggroup][i];
                                         }
                                     }
                                 } else if (callbackFunction) {

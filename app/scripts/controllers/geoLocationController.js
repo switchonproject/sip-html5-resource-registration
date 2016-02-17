@@ -220,10 +220,10 @@ angular.module(
             
             _this.applyBoundingBox = function() {
                 
-                if(_this.contentLocation.bounds.south !== undefined 
-                        && _this.contentLocation.bounds.west !== undefined 
-                        && _this.contentLocation.bounds.north !== undefined 
-                        && _this.contentLocation.bounds.east !== undefined ) {
+                if(_this.contentLocation.bounds.south !== undefined && 
+                        _this.contentLocation.bounds.west !== undefined && 
+                        _this.contentLocation.bounds.north !== undefined && 
+                        _this.contentLocation.bounds.east !== undefined ) {
                 
                     var bounds = [[_this.contentLocation.bounds.south, 
                             _this.contentLocation.bounds.west], 

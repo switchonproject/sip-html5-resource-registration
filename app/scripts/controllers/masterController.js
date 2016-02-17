@@ -20,9 +20,10 @@ angular.module(
                 'use strict';
 
                 var _this;
-
+                
                 _this = this;
-                _this.dataset = dataset;
+                _this.config = AppConfig;
+                _this.dataset = dataset;            
 
                 // - dataset: the resource meta data, initilaized from a template and changed by the app
                 // - tags: list of selectable tags

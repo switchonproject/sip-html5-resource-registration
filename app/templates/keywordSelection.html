@@ -1,6 +1,20 @@
 <div class="modal-header">
-    <h3 class="modal-title">Keyword Selection</h3>
-    <p>Please chose one or more <a href="https://www.cuahsi.org/" target="_blank">CUAHSI</a> Keywords from the extended <a href="http://his.cuahsi.org/ontologyfiles.html" title="" target="_blank">Hydrologic Ontology for Discovery</a>.</p>
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="modal-title">Keyword Selection</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <p>Please chose one or more <a href="https://www.cuahsi.org/" target="_blank">CUAHSI</a> Keywords from the extended <a href="http://his.cuahsi.org/ontologyfiles.html" title="" target="_blank">Hydrologic Ontology for Discovery</a>.</p>
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-primary pull-right" 
+            type="button" 
+            ng-disabled="dataset.tags.length === 0"
+            ng-click="$dismiss()">Close</button>
+        </div>
+    </div>
 </div>
 <div class="modal-body">
 
@@ -80,5 +94,6 @@
 <div class="modal-footer">
     <button class="btn btn-primary" 
             type="button" 
+            ng-disabled="dataset.tags.length === 0"
             ng-click="$dismiss()">Close</button>
 </div>

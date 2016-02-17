@@ -5,7 +5,7 @@ angular.module(
         function () {
             'use strict';
 
-            function CustomOrder(description) {
+            function customOrder(description) {
                 if(description.indexOf('unknown') !== -1) {
                     return 0;
                 }
@@ -13,7 +13,7 @@ angular.module(
                 return 1;
             }
 
-            return function (items, field) {
+            return function (items) {
                 var filtered = [];
                 angular.forEach(items, function (item) {
 //                    var name = item.description.split(' (', 1);
@@ -25,7 +25,7 @@ angular.module(
                 });
                 
                 filtered.sort(function (a, b) {
-                    return (CustomOrder(a.description) > CustomOrder(b.description) ? 1 : -1);
+                    return (customOrder(a.description) > customOrder(b.description) ? 1 : -1);
                 });
                 return filtered;
             };

@@ -3,11 +3,12 @@ var app = angular.module(
     'de.cismet.sip-html5-resource-registration',
     [
         'ngAnimate', 'ngSanitize', 'ui.bootstrap', 'leaflet-directive',
-        'uiSwitch', 'mgo-angular-wizard','ui.select',
+        'mgo-angular-wizard','ui.select', 'uuid',
         'de.cismet.sip-html5-resource-registration.controllers',
         'de.cismet.sip-html5-resource-registration.directives',
         'de.cismet.sip-html5-resource-registration.services',
-        'de.cismet.sip-html5-resource-registration.factories'  
+        'de.cismet.sip-html5-resource-registration.factories',
+        'de.cismet.sip-html5-resource-registration.filters' 
     ]
 );
 
@@ -124,9 +125,9 @@ angular.module(
                 if(context.valid === true)
                 {
                     if(_this.mode.drawBBox === true) {
-                        $scope.message.text='Please specify the extent of the dataset in the geographic space. <br>Use use the map controls to draw a bounding box or a polygon that represents the spatial extent of the dataset.';
+                        $scope.message.text='Please specify the extent of the dataset in the map <br>Use the map controls to draw a bounding box or a polygon that represents the spatial extent of the dataset.';
                     } else {
-                        $scope.message.text='Please specify the extent of the dataset in the geographic space.';
+                        $scope.message.text='Please specify the extent of the dataset in the map.';
                     }
 
                     $scope.message.icon='fa-info-circle';
@@ -243,29 +244,36 @@ angular.module(
             };
             
             _this.applyBoundingBox = function() {
-                var bounds = [[_this.contentLocation.bounds.south, 
-                        _this.contentLocation.bounds.west], 
-                    [_this.contentLocation.bounds.north, 
-                        _this.contentLocation.bounds.east]];
-
-
-                var layer = L.rectangle(bounds, defaultStyle);
-
-                layerGroup.clearLayers();
-                layerGroup.addLayer(layer);
                 
-                leafletData.getMap('mainmap').then(function (map) {
-                        map.fitBounds(layer, {
-                            animate: true,
-                            pan: {animate: true, duration: 0.6},
-                            zoom: {animate: true}
-                        });
-                   });
-                   
-                   _this.contentLocation.name = 'New user-defined Bounding Box';
-                   //_this.contentLocation.type = 'rectangle';
-                   //_this.contentLocation.wkt = null;
-                   //_this.contentLocation.layer = layer;
+                if(_this.contentLocation.bounds.south !== undefined && 
+                        _this.contentLocation.bounds.west !== undefined && 
+                        _this.contentLocation.bounds.north !== undefined && 
+                        _this.contentLocation.bounds.east !== undefined ) {
+                
+                    var bounds = [[_this.contentLocation.bounds.south, 
+                            _this.contentLocation.bounds.west], 
+                        [_this.contentLocation.bounds.north, 
+                            _this.contentLocation.bounds.east]];
+
+
+                    var layer = L.rectangle(bounds, defaultStyle);
+
+                    layerGroup.clearLayers();
+                    layerGroup.addLayer(layer);
+
+                    leafletData.getMap('mainmap').then(function (map) {
+                            map.fitBounds(layer, {
+                                animate: true,
+                                pan: {animate: true, duration: 0.6},
+                                zoom: {animate: true}
+                            });
+                       });
+
+                       _this.contentLocation.name = 'New user-defined Bounding Box';
+                       //_this.contentLocation.type = 'rectangle';
+                       //_this.contentLocation.wkt = null;
+                       //_this.contentLocation.layer = layer;
+               }
             };
        
             // leaflet initialisation
@@ -354,6 +362,41 @@ angular.module(
 /*jshint sub:true*/
 
 angular.module(
+        'de.cismet.sip-html5-resource-registration.controllers'
+        ).controller(
+        'de.cismet.sip-html5-resource-registration.controllers.keywordsController',
+        [
+            '$scope',
+            'de.cismet.sip-html5-resource-registration.services.dataset',
+            // Controller Constructor Function
+            function (
+                    $scope,
+                    dataset
+                    ) {
+                'use strict';
+                var _this;
+
+                _this = this;
+                _this.dataset = dataset;
+                //$scope.dataset = dataset;
+
+                _this.toggleSelection = function (tag) {
+                    var idx = _this.dataset.tags.indexOf(tag);
+
+                    if (idx > -1) {
+                        $scope.dataset.tags.splice(idx, 1);
+                    }
+
+                    else {
+                        $scope.dataset.tags.push(tag);
+                    }
+                };
+            }
+        ]
+        );
+/*jshint sub:true*/
+
+angular.module(
     'de.cismet.sip-html5-resource-registration.controllers'
 ).controller(
     'de.cismet.sip-html5-resource-registration.controllers.licenseController',
@@ -372,13 +415,7 @@ angular.module(
             _this.dataset = dataset;
             
             // load taglist
-            $scope.tags['accessconditions'] = tagGroupService.getTagList('access conditions', 'CC BY-NC-SA,for research only,no limitations,other');
-
-            // set default values
-            _this.dataset.representation[0].function = tagGroupService.getTag('access conditions', 'CC BY-NC-SA',
-                    function (tag) {
-                        _this.dataset.accessconditions = tag;
-                    });
+            $scope.tags['accessconditions'] = tagGroupService.getTagList('access conditions', 'Creative Commons (CC BY),Creative Commons (CC BY-NC),Creative Commons (CC BY-NC-ND),Creative Commons (CC BY-NC-SA),Creative Commons (CC BY-ND),Creative Commons (CC BY-SA),for research only,no limitations,other');
                     
             // validation functions
             $scope.wizard.enterValidators['License and Conditions'] = function(context){
@@ -419,6 +456,22 @@ angular.module(
                     
                     $scope.wizard.hasError = 'datasetLicensestatement';
                     context.valid =  false;
+                } else if ($scope.licenseForm.datasetContactemail.$error.email) {
+                    // CONTENT LOCATION       
+                    $scope.message.text = 'The email address to the contact person is not a valid.';
+                    $scope.message.icon = 'fa-warning';
+                    $scope.message.type = 'warning';
+
+                    $scope.wizard.hasError = 'datasetContactperson';
+                    context.valid = false;
+                } else if ($scope.licenseForm.datasetOrganisationurl.$error.url) {
+                    // CONTENT LOCATION       
+                    $scope.message.text = 'The website url of the orgaisation is not a valid <a href=\'https://en.wikipedia.org/wiki/Uniform_Resource_Locator#Syntax\' target=\'_blank\' title=\'Uniform Resource Locator\'>URL</a>.';
+                    $scope.message.icon = 'fa-warning';
+                    $scope.message.type = 'warning';
+
+                    $scope.wizard.hasError = 'datasetOrganisation';
+                    context.valid = false;
                 }
                 
                 if(context.valid === true) {
@@ -453,9 +506,10 @@ angular.module(
                 'use strict';
 
                 var _this;
-
+                
                 _this = this;
-                _this.dataset = dataset;
+                _this.config = AppConfig;
+                _this.dataset = dataset;            
 
                 // - dataset: the resource meta data, initilaized from a template and changed by the app
                 // - tags: list of selectable tags
@@ -534,39 +588,6 @@ angular.module(
                         backdrop: 'static'
                     });
                 };
-
-
-
-
-//            $scope.$watch('wzData.params', function () {
-//                // if currentstep is not set the wizard is just about to start
-//                if ($scope.wzData.wizard.currentStep && $scope.wzData.wizard.currentStep !== '') {
-//                    $scope.wzData.wizard.canProceed =
-//                        ($scope.wzData.wizard.validators[$scope.wzData.wizard.currentStep] || $scope.wzData.wizard.validators.noVal)();
-//                } else {
-//                    // TODO: proper validation, this should be false instead
-//                    $scope.wzData.wizard.canProceed = true;
-//                }
-//            }, true);
-
-
-                /*
-                 
-                 
-                 $scope.$watch('data.resultSet.$collection', function (n, o) {
-                 var i, objs, message, pages, pageNumber;
-                 
-                 if (n && n !== o && n.length > 0) {
-                 objs = [];
-                 
-                 for (i = 0; i < n.length; ++i) {
-                 objs.push(n[i].object);
-                 }
-                 
-                 }
-                 });
-                 
-                 */
             }
         ]
         );
@@ -579,6 +600,7 @@ angular.module(
         [
             '$scope',
             '$http',
+            '$modal',
             'AppConfig',
             'WizardHandler',
             'de.cismet.sip-html5-resource-registration.services.dataset',
@@ -588,6 +610,7 @@ angular.module(
             function (
                     $scope,
                     $http,
+                    $modal,
                     AppConfig,
                     WizardHandler,
                     dataset,
@@ -643,22 +666,34 @@ angular.module(
 
                     duplicateLink = undefined;
                 };
+                
+                _this.selectKeywords = function () {
+                    $modal.open({
+                        animation: true,
+                        templateUrl: 'templates/keywordSelection.html',
+                        controller: 'de.cismet.sip-html5-resource-registration.controllers.keywordsController',
+                        controllerAs: 'keywordsController',
+                        keyboard: 'true',
+                        size: 'lg',
+                        scope: $scope
+                    });
+                };
 
                 // load list
-                $scope.tags['function'] = tagGroupService.getTagList('function', 'download,order,information');
+                $scope.tags['function'] = tagGroupService.getTagList('function', 'download,information,link to order data');
                 $scope.tags['content type'] = tagGroupService.getTagList('content type');
                 $scope.tags['keywords - X-CUAHSI'] = tagGroupService.getTagList('keywords - X-CUAHSI');
 
                 // set default values
-                _this.dataset.representation[0].function = tagGroupService.getTag('function', 'download',
-                        function (tag) {
-                            _this.dataset.representation[0].function = tag;
-                        });
-                
-                _this.dataset.representation[0].contenttype = tagGroupService.getTag('content type', 'application/octet-stream',
-                        function (tag) {
-                            _this.dataset.representation[0].contenttype = tag;
-                        });
+//                _this.dataset.representation[0].function = tagGroupService.getTag('function', 'download',
+//                        function (tag) {
+//                            _this.dataset.representation[0].function = tag;
+//                        });
+//                
+//                _this.dataset.representation[0].contenttype = tagGroupService.getTag('content type', 'application/octet-stream',
+//                        function (tag) {
+//                            _this.dataset.representation[0].contenttype = tag;
+//                        });
 
                 $scope.wizard.enterValidators['Dataset Description'] = function (context) {
                     if (context.valid === true) {
@@ -710,7 +745,14 @@ angular.module(
 
                         $scope.wizard.hasError = 'datasetContentlocation';
                         context.valid = false;
-                    } else if ($scope.odRegistrationForm.datasetContentlocation.$error.url) {
+                    } else if (!dataset.representation[0].function) {
+                        $scope.message.text = 'Please select a function (e.g. download) of the link.';
+                        $scope.message.icon = 'fa-warning';
+                        $scope.message.type = 'warning';
+
+                        $scope.wizard.hasError = 'datasetContentlocation';
+                        context.valid = false;
+                    }  else if ($scope.odRegistrationForm.datasetContentlocation.$error.url) {
                         // CONTENT LOCATION       
                         $scope.message.text = 'The link to the dataset you have provided is not a valid <a href=\'https://en.wikipedia.org/wiki/Uniform_Resource_Locator#Syntax\' target=\'_blank\' title=\'Uniform Resource Locator\'>URL</a> .';
                         $scope.message.icon = 'fa-warning';
@@ -733,6 +775,13 @@ angular.module(
                         $scope.wizard.hasError = 'datasetContentlocation';
                         context.valid = false;
                     } else if (isInvalidContenttype) {
+                        $scope.message.text = 'Please select a valid content type (e.g. ESRI Shapefile) of the link.';
+                        $scope.message.icon = 'fa-warning';
+                        $scope.message.type = 'warning';
+
+                        $scope.wizard.hasError = 'datasetContentlocation';
+                        context.valid = false;
+                    } else if (!dataset.representation[0].contenttype) {
                         $scope.message.text = 'Please select a valid content type (e.g. ESRI Shapefile) of the link.';
                         $scope.message.icon = 'fa-warning';
                         $scope.message.type = 'warning';
@@ -774,9 +823,11 @@ angular.module(
         'de.cismet.sip-html5-resource-registration.controllers.storageController',
         [
             '$scope',
+            '$http',
             '$window',
             '$interval',
             '$modalInstance',
+            'rfc4122',
             'AppConfig',
             'de.cismet.sip-html5-resource-registration.services.dataset',
             'de.cismet.sip-html5-resource-registration.services.TagGroupService',
@@ -784,17 +835,22 @@ angular.module(
             // Controller Constructor Function
             function (
                     $scope,
+                    $http,
                     $window,
                     $interval,
                     $modalInstance,
+                    rfc4122,
                     AppConfig,
                     dataset,
                     tagGroupService,
                     storageService
                     ) {
                 'use strict';
-                var _this;
-
+                var _this, currentdate, userAgent;
+                
+                currentdate = new Date().getTime();
+                userAgent = $window.navigator.userAgent;
+                
                 _this = this;
                 _this.dataset = dataset;
                 _this.config = AppConfig;
@@ -812,63 +868,111 @@ angular.module(
                 $modalInstance.rendered.then(function () {
                     tagGroupService.getTagList('srid', 'EPSG:4326').$promise.then(function (tags) {
                         _this.dataset.srid = tags[0];
-                        _this.progress.currval += 10;
+                        _this.progress.currval += 10; // 10
                     });
 
                     tagGroupService.getTagList('conformity', 'Not evaluated').$promise.then(function (tags) {
                         _this.dataset.conformity = tags[0];
-                        _this.progress.currval += 10;
+                        _this.progress.currval += 10; // 20
                     });
 
                     tagGroupService.getTagList('language', 'eng').$promise.then(function (tags) {
                         _this.dataset.language = tags[0];
                         _this.dataset.metadata[0].language = tags[0];
-                        _this.progress.currval += 20;
+                        if(_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
+                            _this.dataset.metadata[1].language = tags[0];
+                        } else {
+                            _this.dataset.metadata[1] = null;
+                        }
+                        _this.progress.currval += 10; // 30
                     });
 
-                    tagGroupService.getTagList('type', 'external data').$promise.then(function (tags) {
+                    tagGroupService.getTagList('resource type', 'open data').$promise.then(function (tags) {
                         _this.dataset.type = tags[0];
-                        _this.progress.currval += 10;
+                        _this.progress.currval += 10; // 40
                     });
 
                     tagGroupService.getTagList('topic category', 'climatologyMeteorologyAtmosphere').$promise.then(function (tags) {
                         _this.dataset.topiccategory = tags[0];
+                        _this.progress.currval += 10;  // 50
                     });
 
-                    tagGroupService.getTagList('role', 'metadataProvider').$promise.then(function (tags) {
-                        _this.dataset.contact.role = tags[0];
-                        _this.progress.currval += 10;
-                    });
-
-                    tagGroupService.getTagList('representation type', 'original data').$promise.then(function (tags) {
-                        _this.dataset.contact.role = tags[0];
-                        _this.progress.currval += 10;
+                    tagGroupService.getTagList('role', 'pointOfContact').$promise.then(function (tags) {
+                        if(_this.dataset.contact.organisation || 
+                                _this.dataset.contact.name || 
+                                _this.dataset.contact.description || 
+                                _this.dataset.contact.email || 
+                                _this.dataset.contact.url) {
+                            _this.dataset.contact.role = tags[0];
+                        } else {
+                            _this.dataset.contact = null;
+                        }
+                        _this.progress.currval += 10; // 60
                     });
 
                     tagGroupService.getTagList('representation type', 'original data').$promise.then(function (tags) {
                         _this.dataset.representation[0].type = tags[0];
-                        _this.progress.currval += 10;
+                        _this.progress.currval += 10; // 70
                     });
 
                     tagGroupService.getTagList('protocol', 'WWW:LINK-1.0-http--link').$promise.then(function (tags) {
                         _this.dataset.representation[0].protocol = tags[0];
-                        _this.progress.currval += 10;
+                        _this.progress.currval += 10; // 80
                     });
-
-                    tagGroupService.getTagList('meta-data type', 'lineage meta-data').$promise.then(function (tags) {
+                    
+                    tagGroupService.getTagList('meta-data type', 'basic meta-data,lineage meta-data').$promise.then(function (tags) {
                         _this.dataset.metadata[0].type = tags[0];
-                        _this.progress.currval += 10;
+                        if(_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
+                            _this.dataset.metadata[1].type = tags[1];
+                        } else {
+                            _this.dataset.metadata[1] = null;
+                        }
+                        _this.progress.currval += 10; // 90
                     });
 
                     tagGroupService.getTagList('access limitations', 'limitation not listed').$promise.then(function (tags) {
                         _this.dataset.accesslimitations = tags[0];
-                        _this.progress.currval += 10;
+                        _this.progress.currval += 10; // 100
                     });
 
-                    tagGroupService.getTagList('collection', 'SWITCH-ON - Open Data').$promise.then(function (tags) {
+                    // FIXME: define group for resource registration meta-data
+                    tagGroupService.getTagList('collection', 'Open Datasets').$promise.then(function (tags) {
                         _this.dataset.collection = tags[0];
-                        _this.progress.currval += 10;
+                        _this.progress.currval += 10; // 110
                     });
+                });
+                
+                 tagGroupService.getTagList('meta-data standard', 'SWITCH-ON SIM').$promise.then(function (tags) {
+                        _this.dataset.metadata[0].standard = tags[0];
+                        if(_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
+                            _this.dataset.metadata[1].standard = tags[0];
+                        } else {
+                            _this.dataset.metadata[1] = null;
+                        }
+                        _this.progress.currval += 10; // 120
+                    });
+                
+                _this.dataset.representation[0].name = _this.dataset.name;
+                _this.dataset.uuid = rfc4122.v4();
+                _this.dataset.metadata[0].creationdate = currentdate;
+                _this.dataset.metadata[0].description = userAgent;
+                if(_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
+                    _this.dataset.metadata[1].creationdate = currentdate;
+                } else {
+                    _this.dataset.metadata[1] = null;
+                }
+                
+                _this.dataset.metadata[0].contenttype = tagGroupService.getTag('content type', 'application/json', function (tag) {
+                    _this.dataset.metadata[0].contenttype = tag;
+                });
+                _this.progress.currval += 10; // 130
+                
+                $http({
+                    method: 'GET',
+                    url: _this.config.cidsRestApi.host + '/service/status'
+                  }).then(function (response) {
+                      _this.dataset.metadata[0].content = JSON.stringify(response.data.$collection);
+                      _this.progress.currval += 10; // 140
                 });
 
                 _this.close = function () {
@@ -880,20 +984,20 @@ angular.module(
                     // Return the "result" of the watch expression.
                     return(_this.progress.currval);
                 }, function (newProgress) {
-                    if (newProgress && newProgress === 120) {
+                    if (newProgress && newProgress === 140) {
 
                         var timer = $interval(function () {
                             if (_this.progress.currval < 190) {
                                 _this.progress.currval += 1;
                             }
-                        }, 200, 70);
+                        }, 200, 50);
 
                         storageService.store(dataset).$promise.then(
                                 function (storedDataset) {
                                     $interval.cancel(timer);
 
-                                    _this.progress.message = 'Your dataset has been successfully registered in the SWITCH-ON Spatial Information Platform. Please click <a href="' + AppConfig.byod.baseUrl + '/#/resource/' +
-                                            storedDataset.id + '" title="' + storedDataset.name + '>here</a> to view the dataset in the SWITCH-ON BYOD Client.';
+                                    _this.progress.message = 'Your dataset has been successfully registered in the SWITCH-ON Spatial Information Platform. Please click <a href=\'' + AppConfig.byod.baseUrl + '/#/resource/' +
+                                            storedDataset.id + '\' title=\'' + storedDataset.name + '\'>here</a> to view the dataset in the SWITCH-ON BYOD Client.';
 
                                     _this.progress.active = false;
                                     _this.progress.finished = true;
@@ -1040,15 +1144,18 @@ angular.module(
 
         var appConfig = {};
         
+        appConfig.cidsRestApi = {};
+        //appConfig.cidsRestApi.host = 'http://localhost:8890';
+        appConfig.cidsRestApi.host = 'http://switchon.cismet.de/legacy-rest1';
+        //appConfig.cidsRestApi.host = 'http://tl-243.xtr.deltares.nl/switchon_server_rest';
+        
         appConfig.searchService = {};
         appConfig.searchService.username = 'admin@SWITCHON';
         appConfig.searchService.password = 'cismet';
         appConfig.searchService.defautLimit = 10;
         appConfig.searchService.maxLimit = 50;
-        appConfig.searchService.host = 'http://localhost:8890';
-        //appConfig.searchService.host = 'http://switchon.cismet.de/legacy-rest1';
-        //appConfig.searchService.host = 'http://tl-243.xtr.deltares.nl/switchon_server_rest';
-
+        appConfig.searchService.host = appConfig.cidsRestApi.host;
+        
         appConfig.mapView = {};
         appConfig.mapView.backgroundLayer = 'http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png';
         appConfig.mapView.home = {};
@@ -1077,6 +1184,64 @@ angular.module(
         
         return appConfig;
     }]);
+angular.module(
+    'de.cismet.sip-html5-resource-registration.filters',
+    [
+    ]
+);
+
+angular.module(
+        'de.cismet.sip-html5-resource-registration.filters'
+        ).filter(
+        'contenttype',
+        function () {
+            'use strict';
+
+            function customOrder(description) {
+                if(description.indexOf('unknown') !== -1) {
+                    return 0;
+                }
+                
+                return 1;
+            }
+
+            return function (items) {
+                var filtered = [];
+                angular.forEach(items, function (item) {
+//                    var name = item.description.split(' (', 1);
+//                    if(name.length === 1) {
+//                        item.description = name[0];
+//                    } 
+                    
+                    filtered.push(item);
+                });
+                
+                filtered.sort(function (a, b) {
+                    return (customOrder(a.description) > customOrder(b.description) ? 1 : -1);
+                });
+                return filtered;
+            };
+        });
+
+angular.module(
+        'de.cismet.sip-html5-resource-registration.filters'
+        ).filter(
+        'limit',
+        function () {
+            'use strict';
+            return function (items, begin, end) {
+                return items.slice(begin, end);
+            };
+        });
+
+angular.module('de.cismet.sip-html5-resource-registration.filters').
+        filter('htmlToPlaintext', function () {
+            'use strict';
+            return function (text) {
+                return  text ? String(text).replace(/<[^>]+>/gm, '') : '';
+            };
+        }
+        );
 // module initialiser for the services, shall always be named like that so that concat will pick it up first!
 // however, the actual service implementations shall be put in their own files
 angular.module(
@@ -1536,9 +1701,9 @@ angular.module(
                         function (taggroup, tag, callbackFunction) {
                             if (tagGroups.hasOwnProperty(taggroup)) {
                                 if (tagGroups[taggroup].$resolved === true) {
-                                    for (var i = 0; i < tagGroups[tagGroups].length; i++) {
-                                        if (tagGroups[tagGroups][i].name && tagGroups[tagGroups][i].name === tag) {
-                                            return tagGroups[tagGroups][i];
+                                    for (var i = 0; i < tagGroups[taggroup].length; i++) {
+                                        if (tagGroups[taggroup][i].name && tagGroups[taggroup][i].name === tag) {
+                                            return tagGroups[taggroup][i];
                                         }
                                     }
                                 } else if (callbackFunction) {

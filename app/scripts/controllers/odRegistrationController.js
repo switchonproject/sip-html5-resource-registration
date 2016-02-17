@@ -7,6 +7,7 @@ angular.module(
         [
             '$scope',
             '$http',
+            '$modal',
             'AppConfig',
             'WizardHandler',
             'de.cismet.sip-html5-resource-registration.services.dataset',
@@ -16,6 +17,7 @@ angular.module(
             function (
                     $scope,
                     $http,
+                    $modal,
                     AppConfig,
                     WizardHandler,
                     dataset,
@@ -71,22 +73,34 @@ angular.module(
 
                     duplicateLink = undefined;
                 };
+                
+                _this.selectKeywords = function () {
+                    $modal.open({
+                        animation: true,
+                        templateUrl: 'templates/keywordSelection.html',
+                        controller: 'de.cismet.sip-html5-resource-registration.controllers.keywordsController',
+                        controllerAs: 'keywordsController',
+                        keyboard: 'true',
+                        size: 'lg',
+                        scope: $scope
+                    });
+                };
 
                 // load list
-                $scope.tags['function'] = tagGroupService.getTagList('function', 'download,order,information');
+                $scope.tags['function'] = tagGroupService.getTagList('function', 'download,information,link to order data');
                 $scope.tags['content type'] = tagGroupService.getTagList('content type');
                 $scope.tags['keywords - X-CUAHSI'] = tagGroupService.getTagList('keywords - X-CUAHSI');
 
                 // set default values
-                _this.dataset.representation[0].function = tagGroupService.getTag('function', 'download',
-                        function (tag) {
-                            _this.dataset.representation[0].function = tag;
-                        });
-                
-                _this.dataset.representation[0].contenttype = tagGroupService.getTag('content type', 'application/octet-stream',
-                        function (tag) {
-                            _this.dataset.representation[0].contenttype = tag;
-                        });
+//                _this.dataset.representation[0].function = tagGroupService.getTag('function', 'download',
+//                        function (tag) {
+//                            _this.dataset.representation[0].function = tag;
+//                        });
+//                
+//                _this.dataset.representation[0].contenttype = tagGroupService.getTag('content type', 'application/octet-stream',
+//                        function (tag) {
+//                            _this.dataset.representation[0].contenttype = tag;
+//                        });
 
                 $scope.wizard.enterValidators['Dataset Description'] = function (context) {
                     if (context.valid === true) {
@@ -138,7 +152,14 @@ angular.module(
 
                         $scope.wizard.hasError = 'datasetContentlocation';
                         context.valid = false;
-                    } else if ($scope.odRegistrationForm.datasetContentlocation.$error.url) {
+                    } else if (!dataset.representation[0].function) {
+                        $scope.message.text = 'Please select a function (e.g. download) of the link.';
+                        $scope.message.icon = 'fa-warning';
+                        $scope.message.type = 'warning';
+
+                        $scope.wizard.hasError = 'datasetContentlocation';
+                        context.valid = false;
+                    }  else if ($scope.odRegistrationForm.datasetContentlocation.$error.url) {
                         // CONTENT LOCATION       
                         $scope.message.text = 'The link to the dataset you have provided is not a valid <a href=\'https://en.wikipedia.org/wiki/Uniform_Resource_Locator#Syntax\' target=\'_blank\' title=\'Uniform Resource Locator\'>URL</a> .';
                         $scope.message.icon = 'fa-warning';
@@ -161,6 +182,13 @@ angular.module(
                         $scope.wizard.hasError = 'datasetContentlocation';
                         context.valid = false;
                     } else if (isInvalidContenttype) {
+                        $scope.message.text = 'Please select a valid content type (e.g. ESRI Shapefile) of the link.';
+                        $scope.message.icon = 'fa-warning';
+                        $scope.message.type = 'warning';
+
+                        $scope.wizard.hasError = 'datasetContentlocation';
+                        context.valid = false;
+                    } else if (!dataset.representation[0].contenttype) {
                         $scope.message.text = 'Please select a valid content type (e.g. ESRI Shapefile) of the link.';
                         $scope.message.icon = 'fa-warning';
                         $scope.message.type = 'warning';

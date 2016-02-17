@@ -16,15 +16,18 @@ angular.module(
 
         var appConfig = {};
         
+        appConfig.cidsRestApi = {};
+        //appConfig.cidsRestApi.host = 'http://localhost:8890';
+        appConfig.cidsRestApi.host = 'http://switchon.cismet.de/legacy-rest1';
+        //appConfig.cidsRestApi.host = 'http://tl-243.xtr.deltares.nl/switchon_server_rest';
+        
         appConfig.searchService = {};
         appConfig.searchService.username = 'admin@SWITCHON';
         appConfig.searchService.password = 'cismet';
         appConfig.searchService.defautLimit = 10;
         appConfig.searchService.maxLimit = 50;
-        appConfig.searchService.host = 'http://localhost:8890';
-        //appConfig.searchService.host = 'http://switchon.cismet.de/legacy-rest1';
-        //appConfig.searchService.host = 'http://tl-243.xtr.deltares.nl/switchon_server_rest';
-
+        appConfig.searchService.host = appConfig.cidsRestApi.host;
+        
         appConfig.mapView = {};
         appConfig.mapView.backgroundLayer = 'http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png';
         appConfig.mapView.home = {};

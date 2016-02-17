@@ -9,7 +9,7 @@
         <label for="datasetAccessconditions" class="col-md-2 form-control-label">Access Conditions</label>
         <div class="col-md-3">
             <select class="form-control" id="datasetAccessconditions" name="datasetAccessconditions" 
-                    ng-options="tag as tag.name for tag in tags['accessconditions'] track by tag.name"
+                    ng-options="tag as tag.name for tag in tags['accessconditions'] | orderBy:'name' track by tag.name"
                     ng-model="dataset.accessconditions"
                     ng-change="showInfoMessage(dataset.accessconditions.description);"
                     required>
@@ -30,7 +30,11 @@
                       rows="6"
                       ng-model="dataset.licensestatement" 
                       ng-focus="showInfoMessage('Please provide a brief statement or URL to the license which applies to the usage of the dataset.')"
-                      ng-required="dataset.accessconditions && dataset.accessconditions.name === 'other'"></textarea>
+                      ng-required="dataset.accessconditions && dataset.accessconditions.name === 'other'"
+                      ng-disabled="(dataset.accessconditions.name !== 'other') 
+                                  && (dataset.accessconditions.name !== 'no limitations')
+                                  && (dataset.accessconditions.name !== 'for research only')"
+                      ></textarea>
         </div>
     </div>
     
@@ -39,12 +43,40 @@
          ng-class="{'has-error':wizard.hasError === 'datasetContactperson'}">
         <label for="datasetContactperson" 
                class="col-md-2 form-control-label">Contact Person</label>
-        <div class="col-md-8">
+        <div class="col-md-5">
             <input type="text" class="form-control" 
                    id="datasetContactperson" name="datasetContactperson" 
                    placeholder="Optional point of contact information"
                    ng-model="dataset.contact.name"
-                   ng-focus="showInfoMessage('Please provide a name and if possible an emal address of the contact person responsible for the establishment, management, maintenance and distribution of dataset.');">
+                   ng-focus="showInfoMessage('Please provide a name of the contact person responsible for the establishment, management, maintenance and distribution of dataset.');">
+        </div>
+        <div class="col-md-3">
+            <input type="email" class="form-control" 
+                   id="datasetContactperson" name="datasetContactemail" 
+                   placeholder="Optional email address"
+                   ng-model="dataset.contact.email"
+                   ng-focus="showInfoMessage('Please provide an emal address of the contact person.');">
+        </div>
+    </div>
+    
+    <!-- Contact Organisation -->
+    <div class="form-group row" 
+         ng-class="{'has-error':wizard.hasError === 'datasetOrganisation'}">
+        <label for="datasetOrganisation" 
+               class="col-md-2 form-control-label">Institution</label>
+        <div class="col-md-4">
+            <input type="text" class="form-control" 
+                   id="datasetOrganisation" name="datasetOrganisation" 
+                   placeholder="Optional name of the institution providing the dataset "
+                   ng-model="dataset.contact.organisation"
+                   ng-focus="showInfoMessage('Please provide a name of the organisation responsible for the establishment, management, maintenance and distribution of dataset.');">
+        </div>
+        <div class="col-md-4">
+            <input type="url" class="form-control" 
+                   id="datasetOrganisationurl" name="datasetOrganisationurl" 
+                   placeholder="Optional Website of the organisation"
+                   ng-model="dataset.contact.url"
+                   ng-focus="showInfoMessage('Please provide the url of the website of the name of the organisation.');">
         </div>
     </div>
     
@@ -74,8 +106,8 @@
                       name="datasetLineage" 
                       placeholder="Optional data lineage / data provenance information"
                       rows="6"
-                      ng-model="dataset.metadata[0].description" 
-                      ng-focus="showInfoMessage('When appropriate, please provide a statement on the <a href=\'https://en.wikipedia.org/wiki/Data_lineage\' target=\'_blank\'>data lineage</a>  of the resource. That is, whether and how the dataset was derived (transformed, combined, repurposed, ...) from other datasets.')">  
+                      ng-model="dataset.metadata[1].description" 
+                      ng-focus="showInfoMessage('Provide information on the sources used to create datasets. Links and citations can be included.')">  
             </textarea>
         </div>
     </div> 

@@ -1,0 +1,99 @@
+<div class="modal-header">
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="modal-title">Keyword Selection</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <p>Please chose one or more <a href="https://www.cuahsi.org/" target="_blank">CUAHSI</a> Keywords from the extended <a href="http://his.cuahsi.org/ontologyfiles.html" title="" target="_blank">Hydrologic Ontology for Discovery</a>.</p>
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-primary pull-right" 
+            type="button" 
+            ng-disabled="dataset.tags.length === 0"
+            ng-click="$dismiss()">Close</button>
+        </div>
+    </div>
+</div>
+<div class="modal-body">
+
+    <div class="form-group row" ng-show="tags['keywords - X-CUAHSI'].length === 0">
+        <div class="col-md-2">
+            <!-- empty -->
+        </div>
+        <div class="col-md-8">
+            <p>Please wait while the list of keywords is loaded.</p>
+            <progressbar class="progress-striped active" 
+                         max="100" 
+                         value="storageController.progress.currval">
+            </progressbar>
+        </div>
+        <div class="col-md-2">
+            <!-- empty -->
+        </div>
+    </div>
+
+    <div class="form-group row" ng-show="tags['keywords - X-CUAHSI'].length > 0">
+        <div class="col-md-3">
+            <div class="checkbox" ng-repeat="tag in tags['keywords - X-CUAHSI']| limit:0:30">
+                <label>
+                    <input
+                        type="checkbox"
+                        name="selectedKeywords"
+                        value="tag"
+                        ng-checked="dataset.tags.indexOf(tag) > -1"
+                        ng-click="keywordsController.toggleSelection(tag)"> 
+                    {{tag.name}}
+                </label>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="checkbox" ng-repeat="tag in tags['keywords - X-CUAHSI']| limit:30:60">
+                <label>
+                    <input
+                        type="checkbox"
+                        name="selectedKeywords"
+                        value="tag"
+                        ng-checked="dataset.tags.indexOf(tag) > -1"
+                        ng-click="keywordsController.toggleSelection(tag)"> 
+                    {{tag.name}}
+                </label>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="checkbox" ng-repeat="tag in tags['keywords - X-CUAHSI']| limit:60:90">
+                <label>
+                    <input
+                        type="checkbox"
+                        name="selectedKeywords"
+                        value="tag"
+                        ng-checked="dataset.tags.indexOf(tag) > -1"
+                        ng-click="keywordsController.toggleSelection(tag)"> 
+                    {{tag.name}}
+                </label>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="checkbox" ng-repeat="tag in tags['keywords - X-CUAHSI']| limit:90:120">
+                <label>
+                    <input
+                        type="checkbox"
+                        name="selectedKeywords"
+                        value="tag"
+                        ng-checked="dataset.tags.indexOf(tag) > -1"
+                        ng-click="keywordsController.toggleSelection(tag)"> 
+                    {{tag.name}}
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" 
+            type="button" 
+            ng-disabled="dataset.tags.length === 0"
+            ng-click="$dismiss()">Close</button>
+</div>

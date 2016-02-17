@@ -3,7 +3,7 @@
     "id": -1,
     "fromdate": null,
     "accessconditions": {
-        "name": "CC BY-NC-SA"
+        "name": "Creative Commons (CC BY)"
     },
     "spatialcoverage": {
         "$self": "/SWITCHON.GEOM/-1",
@@ -55,6 +55,21 @@
         }],
     "lastmodificationdate": null,
     "metadata": [{
+            "$self": "/SWITCHON.METADATA/-1",
+            "id": -1,
+            "name": "OpenData Registration Meta-Data",
+            "tags": [],
+            "description": null,
+            "contact": null,
+            "type": null,
+            "language": null,
+            "standard": null,
+            "uuid": null,
+            "contentlocation": null,
+            "creationdate": null,
+            "contenttype": null,
+            "content": null
+        }, {
             "$self": "/SWITCHON.METADATA/-1",
             "id": -1,
             "name": "Basic Lineage Meta-Data",

@@ -16,6 +16,11 @@ body {
          margin-left: 15px;
 }
 
+.switchon-keywords-form {
+    min-height:100px; 
+    cursor: pointer;
+}
+
 .gi-2x{font-size: 2em;}
 .gi-3x{font-size: 3em;}
 .gi-4x{font-size: 4em;}

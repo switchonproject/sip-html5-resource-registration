@@ -61,93 +61,73 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "    </div>\r" +
     "\n" +
+    "    \r" +
+    "\n" +
     "    <div class=\"col-md-3\">\r" +
     "\n" +
-    "        <!-- SWITCH DRAW -->\r" +
+    "        \r" +
     "\n" +
     "        <div class=\"row\">\r" +
     "\n" +
-    "            <div class=\"col-md-3\">\r" +
+    "            <div class=\"col-md-12\">\r" +
     "\n" +
-    "                <switch id=\"switch-bbox\" name=\"switch-bbox\" \r" +
-    "\n" +
-    "                        ng-model=\"geoController.mode.drawBBox\"\r" +
-    "\n" +
-    "                        ng-change=\"geoController.switchMode('drawBBox')\"></switch> \r" +
-    "\n" +
-    "            </div>\r" +
-    "\n" +
-    "            <div class=\"col-xs-8\">\r" +
-    "\n" +
-    "                <strong>Define bounding box or polygon</strong>\r" +
+    "                <label>Please select one</label>\r" +
     "\n" +
     "            </div>\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
-    "        <!-- SWITCH SELECT EUROPE -->\r" +
+    "        \r" +
     "\n" +
     "        <div class=\"row\">\r" +
     "\n" +
-    "            <div class=\"col-md-3\">\r" +
+    "             <div class=\"col-md-12\">\r" +
     "\n" +
-    "                <switch id=\"switch-europe\" name=\"switch-europe\"\r" +
+    "                <div class=\"btn-group-vertical\">\r" +
     "\n" +
-    "                        ng-model=\"geoController.mode.selectEC\"\r" +
+    "                    <label class=\"btn btn-primary\" \r" +
     "\n" +
-    "                        ng-change=\"geoController.switchMode('selectEC')\"></switch> \r" +
+    "                           ng-model=\"geoController.mode.drawBBox\" \r" +
     "\n" +
-    "            </div>\r" +
+    "                           ng-click=\"geoController.switchMode('drawBBox')\"\r" +
     "\n" +
-    "            <div class=\"col-xs-9\">\r" +
+    "                           btn-radio=\"true\">Define bounding box or polygon\r" +
     "\n" +
-    "                <strong>Select European country or region</strong>\r" +
+    "                           \r" +
     "\n" +
-    "            </div>\r" +
+    "                    </label>\r" +
     "\n" +
-    "        </div>\r" +
+    "                    <label class=\"btn btn-primary\" \r" +
     "\n" +
-    "        <!-- SWITCH SELECT WORLD -->\r" +
+    "                           ng-model=\"geoController.mode.selectEC\" \r" +
     "\n" +
-    "        <div class=\"row\">\r" +
+    "                           ng-click=\"geoController.switchMode('selectEC')\"\r" +
     "\n" +
-    "            <div class=\"col-md-3\">\r" +
+    "                           btn-radio=\"true\">Select European country or region</label>\r" +
     "\n" +
-    "                <switch id=\"switch-world\" name=\"switch-world\" \r" +
+    "                    \r" +
     "\n" +
-    "                        ng-model=\"geoController.mode.selectWC\"\r" +
+    "                    <label class=\"btn btn-primary\" \r" +
     "\n" +
-    "                        ng-change=\"geoController.switchMode('selectWC')\"></switch> \r" +
+    "                           ng-model=\"geoController.mode.selectWC\" \r" +
     "\n" +
-    "            </div>\r" +
+    "                           ng-click=\"geoController.switchMode('selectWC')\"\r" +
     "\n" +
-    "            <div class=\"col-xs-9\">\r" +
+    "                           btn-radio=\"true\">Select World country or region</label>\r" +
     "\n" +
-    "                <strong>Select World country or region</strong>\r" +
+    "                    \r" +
     "\n" +
-    "            </div>\r" +
+    "                    <label class=\"btn btn-primary\" \r" +
     "\n" +
-    "        </div>\r" +
+    "                           ng-model=\"geoController.mode.defineBBox\" \r" +
     "\n" +
-    "        <!-- SWITCH ENTER COORDINATES -->\r" +
+    "                           ng-click=\"geoController.switchMode('defineBBox')\"\r" +
     "\n" +
-    "        <div class=\"row\">\r" +
+    "                           btn-radio=\"true\">Enter bounding box coordinates</label>\r" +
     "\n" +
-    "            <div class=\"col-md-3\">\r" +
+    "                </div>\r" +
     "\n" +
-    "                <switch id=\"switch-coordinates\" name=\"switch-coordinates\" \r" +
-    "\n" +
-    "                        ng-model=\"geoController.mode.defineBBox\"\r" +
-    "\n" +
-    "                        ng-change=\"geoController.switchMode('defineBBox')\"></switch> \r" +
-    "\n" +
-    "            </div>\r" +
-    "\n" +
-    "            <div class=\"col-xs-9\">\r" +
-    "\n" +
-    "                <strong>Enter bounding box coordinates</strong>\r" +
-    "\n" +
-    "            </div>\r" +
+    "             <div class=\"col-md-12\">\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
@@ -160,6 +140,8 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "            <div class=\"col-md-12\">\r" +
     "\n" +
     "                <hr>\r" +
+    "\n" +
+    "                <label>European countries</label>\r" +
     "\n" +
     "                <ui-select ng-model=\"geoController.contentLocation.name\" \r" +
     "\n" +
@@ -198,6 +180,8 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "            <div class=\"col-md-12\">\r" +
     "\n" +
     "                <hr>\r" +
+    "\n" +
+    "                <label>World countries</label>\r" +
     "\n" +
     "                <ui-select ng-model=\"geoController.contentLocation.name\" \r" +
     "\n" +
@@ -263,6 +247,8 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                                   ng-model=\"geoController.contentLocation.bounds.north\" \r" +
     "\n" +
+    "                                   ng-change=\"geoController.applyBoundingBox()\"\r" +
+    "\n" +
     "                                   min=\"-90.00000000000000000\" max=\"90.0000000000000000\" required>\r" +
     "\n" +
     "                        </div>\r" +
@@ -294,6 +280,8 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "                            <input class=\"form-control\" type=\"number\" id=\"east\" name=\"east\" \r" +
     "\n" +
     "                                   ng-model=\"geoController.contentLocation.bounds.east\" \r" +
+    "\n" +
+    "                                   ng-change=\"geoController.applyBoundingBox()\"\r" +
     "\n" +
     "                                   min=\"-180.0000000000000000\" max=\"180.0000000000000000\" required>\r" +
     "\n" +
@@ -327,6 +315,8 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                                   ng-model=\"geoController.contentLocation.bounds.south\" \r" +
     "\n" +
+    "                                   ng-change=\"geoController.applyBoundingBox()\"\r" +
+    "\n" +
     "                                   min=\"-90.00000000000000000\" max=\"90.00000000000000000\" required>\r" +
     "\n" +
     "                        </div>\r" +
@@ -359,31 +349,9 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                                   ng-model=\"geoController.contentLocation.bounds.west\" \r" +
     "\n" +
+    "                                   ng-change=\"geoController.applyBoundingBox()\"\r" +
+    "\n" +
     "                                   min=\"-180.0000000000000000\" max=\"180.0000000000000000\" required>\r" +
-    "\n" +
-    "                        </div>\r" +
-    "\n" +
-    "                    </div>\r" +
-    "\n" +
-    "                    <div class=\"row\">\r" +
-    "\n" +
-    "                        <div class=\"col-md-12\">\r" +
-    "\n" +
-    "                            <button title=\"Apply\"\r" +
-    "\n" +
-    "                                name=\"applyButton\"\r" +
-    "\n" +
-    "                                id=\"applyButton\"\r" +
-    "\n" +
-    "                                class=\"btn btn-default\"\r" +
-    "\n" +
-    "                                ng-click=\"geoController.applyBoundingBox()\"\r" +
-    "\n" +
-    "                                ng-disabled=\"coordinatesForm.$error.required || coordinatesForm.$invalid\">\r" +
-    "\n" +
-    "                              Apply\r" +
-    "\n" +
-    "                            </button>\r" +
     "\n" +
     "                        </div>\r" +
     "\n" +
@@ -396,6 +364,207 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "        </div>\r" +
     "\n" +
     "    </div>\r" +
+    "\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('templates/keywordSelection.html',
+    "<div class=\"modal-header\">\r" +
+    "\n" +
+    "    <div class=\"row\">\r" +
+    "\n" +
+    "        <div class=\"col-md-12\">\r" +
+    "\n" +
+    "            <h3 class=\"modal-title\">Keyword Selection</h3>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "    </div>\r" +
+    "\n" +
+    "    <div class=\"row\">\r" +
+    "\n" +
+    "        <div class=\"col-md-10\">\r" +
+    "\n" +
+    "            <p>Please chose one or more <a href=\"https://www.cuahsi.org/\" target=\"_blank\">CUAHSI</a> Keywords from the extended <a href=\"http://his.cuahsi.org/ontologyfiles.html\" title=\"\" target=\"_blank\">Hydrologic Ontology for Discovery</a>.</p>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "        <div class=\"col-md-2\">\r" +
+    "\n" +
+    "            <button class=\"btn btn-primary pull-right\" \r" +
+    "\n" +
+    "            type=\"button\" \r" +
+    "\n" +
+    "            ng-disabled=\"dataset.tags.length === 0\"\r" +
+    "\n" +
+    "            ng-click=\"$dismiss()\">Close</button>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "    </div>\r" +
+    "\n" +
+    "</div>\r" +
+    "\n" +
+    "<div class=\"modal-body\">\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "    <div class=\"form-group row\" ng-show=\"tags['keywords - X-CUAHSI'].length === 0\">\r" +
+    "\n" +
+    "        <div class=\"col-md-2\">\r" +
+    "\n" +
+    "            <!-- empty -->\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "        <div class=\"col-md-8\">\r" +
+    "\n" +
+    "            <p>Please wait while the list of keywords is loaded.</p>\r" +
+    "\n" +
+    "            <progressbar class=\"progress-striped active\" \r" +
+    "\n" +
+    "                         max=\"100\" \r" +
+    "\n" +
+    "                         value=\"storageController.progress.currval\">\r" +
+    "\n" +
+    "            </progressbar>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "        <div class=\"col-md-2\">\r" +
+    "\n" +
+    "            <!-- empty -->\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "    </div>\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "    <div class=\"form-group row\" ng-show=\"tags['keywords - X-CUAHSI'].length > 0\">\r" +
+    "\n" +
+    "        <div class=\"col-md-3\">\r" +
+    "\n" +
+    "            <div class=\"checkbox\" ng-repeat=\"tag in tags['keywords - X-CUAHSI']| limit:0:30\">\r" +
+    "\n" +
+    "                <label>\r" +
+    "\n" +
+    "                    <input\r" +
+    "\n" +
+    "                        type=\"checkbox\"\r" +
+    "\n" +
+    "                        name=\"selectedKeywords\"\r" +
+    "\n" +
+    "                        value=\"tag\"\r" +
+    "\n" +
+    "                        ng-checked=\"dataset.tags.indexOf(tag) > -1\"\r" +
+    "\n" +
+    "                        ng-click=\"keywordsController.toggleSelection(tag)\"> \r" +
+    "\n" +
+    "                    {{tag.name}}\r" +
+    "\n" +
+    "                </label>\r" +
+    "\n" +
+    "            </div>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "        <div class=\"col-md-3\">\r" +
+    "\n" +
+    "            <div class=\"checkbox\" ng-repeat=\"tag in tags['keywords - X-CUAHSI']| limit:30:60\">\r" +
+    "\n" +
+    "                <label>\r" +
+    "\n" +
+    "                    <input\r" +
+    "\n" +
+    "                        type=\"checkbox\"\r" +
+    "\n" +
+    "                        name=\"selectedKeywords\"\r" +
+    "\n" +
+    "                        value=\"tag\"\r" +
+    "\n" +
+    "                        ng-checked=\"dataset.tags.indexOf(tag) > -1\"\r" +
+    "\n" +
+    "                        ng-click=\"keywordsController.toggleSelection(tag)\"> \r" +
+    "\n" +
+    "                    {{tag.name}}\r" +
+    "\n" +
+    "                </label>\r" +
+    "\n" +
+    "            </div>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "        <div class=\"col-md-3\">\r" +
+    "\n" +
+    "            <div class=\"checkbox\" ng-repeat=\"tag in tags['keywords - X-CUAHSI']| limit:60:90\">\r" +
+    "\n" +
+    "                <label>\r" +
+    "\n" +
+    "                    <input\r" +
+    "\n" +
+    "                        type=\"checkbox\"\r" +
+    "\n" +
+    "                        name=\"selectedKeywords\"\r" +
+    "\n" +
+    "                        value=\"tag\"\r" +
+    "\n" +
+    "                        ng-checked=\"dataset.tags.indexOf(tag) > -1\"\r" +
+    "\n" +
+    "                        ng-click=\"keywordsController.toggleSelection(tag)\"> \r" +
+    "\n" +
+    "                    {{tag.name}}\r" +
+    "\n" +
+    "                </label>\r" +
+    "\n" +
+    "            </div>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "        <div class=\"col-md-3\">\r" +
+    "\n" +
+    "            <div class=\"checkbox\" ng-repeat=\"tag in tags['keywords - X-CUAHSI']| limit:90:120\">\r" +
+    "\n" +
+    "                <label>\r" +
+    "\n" +
+    "                    <input\r" +
+    "\n" +
+    "                        type=\"checkbox\"\r" +
+    "\n" +
+    "                        name=\"selectedKeywords\"\r" +
+    "\n" +
+    "                        value=\"tag\"\r" +
+    "\n" +
+    "                        ng-checked=\"dataset.tags.indexOf(tag) > -1\"\r" +
+    "\n" +
+    "                        ng-click=\"keywordsController.toggleSelection(tag)\"> \r" +
+    "\n" +
+    "                    {{tag.name}}\r" +
+    "\n" +
+    "                </label>\r" +
+    "\n" +
+    "            </div>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "    </div>\r" +
+    "\n" +
+    "</div>\r" +
+    "\n" +
+    "<div class=\"modal-footer\">\r" +
+    "\n" +
+    "    <button class=\"btn btn-primary\" \r" +
+    "\n" +
+    "            type=\"button\" \r" +
+    "\n" +
+    "            ng-disabled=\"dataset.tags.length === 0\"\r" +
+    "\n" +
+    "            ng-click=\"$dismiss()\">Close</button>\r" +
     "\n" +
     "</div>"
   );
@@ -424,7 +593,7 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "            <select class=\"form-control\" id=\"datasetAccessconditions\" name=\"datasetAccessconditions\" \r" +
     "\n" +
-    "                    ng-options=\"tag as tag.name for tag in tags['accessconditions'] track by tag.name\"\r" +
+    "                    ng-options=\"tag as tag.name for tag in tags['accessconditions'] | orderBy:'name' track by tag.name\"\r" +
     "\n" +
     "                    ng-model=\"dataset.accessconditions\"\r" +
     "\n" +
@@ -466,7 +635,15 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                      ng-focus=\"showInfoMessage('Please provide a brief statement or URL to the license which applies to the usage of the dataset.')\"\r" +
     "\n" +
-    "                      ng-required=\"dataset.accessconditions && dataset.accessconditions.name === 'other'\"></textarea>\r" +
+    "                      ng-required=\"dataset.accessconditions && dataset.accessconditions.name === 'other'\"\r" +
+    "\n" +
+    "                      ng-disabled=\"(dataset.accessconditions.name !== 'other') \r" +
+    "\n" +
+    "                                  && (dataset.accessconditions.name !== 'no limitations')\r" +
+    "\n" +
+    "                                  && (dataset.accessconditions.name !== 'for research only')\"\r" +
+    "\n" +
+    "                      ></textarea>\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
@@ -484,7 +661,7 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "               class=\"col-md-2 form-control-label\">Contact Person</label>\r" +
     "\n" +
-    "        <div class=\"col-md-8\">\r" +
+    "        <div class=\"col-md-5\">\r" +
     "\n" +
     "            <input type=\"text\" class=\"form-control\" \r" +
     "\n" +
@@ -494,7 +671,63 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                   ng-model=\"dataset.contact.name\"\r" +
     "\n" +
-    "                   ng-focus=\"showInfoMessage('Please provide a name and if possible an emal address of the contact person responsible for the establishment, management, maintenance and distribution of dataset.');\">\r" +
+    "                   ng-focus=\"showInfoMessage('Please provide a name of the contact person responsible for the establishment, management, maintenance and distribution of dataset.');\">\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "        <div class=\"col-md-3\">\r" +
+    "\n" +
+    "            <input type=\"email\" class=\"form-control\" \r" +
+    "\n" +
+    "                   id=\"datasetContactperson\" name=\"datasetContactemail\" \r" +
+    "\n" +
+    "                   placeholder=\"Optional email address\"\r" +
+    "\n" +
+    "                   ng-model=\"dataset.contact.email\"\r" +
+    "\n" +
+    "                   ng-focus=\"showInfoMessage('Please provide an emal address of the contact person.');\">\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "    </div>\r" +
+    "\n" +
+    "    \r" +
+    "\n" +
+    "    <!-- Contact Organisation -->\r" +
+    "\n" +
+    "    <div class=\"form-group row\" \r" +
+    "\n" +
+    "         ng-class=\"{'has-error':wizard.hasError === 'datasetOrganisation'}\">\r" +
+    "\n" +
+    "        <label for=\"datasetOrganisation\" \r" +
+    "\n" +
+    "               class=\"col-md-2 form-control-label\">Institution</label>\r" +
+    "\n" +
+    "        <div class=\"col-md-4\">\r" +
+    "\n" +
+    "            <input type=\"text\" class=\"form-control\" \r" +
+    "\n" +
+    "                   id=\"datasetOrganisation\" name=\"datasetOrganisation\" \r" +
+    "\n" +
+    "                   placeholder=\"Optional name of the institution providing the dataset \"\r" +
+    "\n" +
+    "                   ng-model=\"dataset.contact.organisation\"\r" +
+    "\n" +
+    "                   ng-focus=\"showInfoMessage('Please provide a name of the organisation responsible for the establishment, management, maintenance and distribution of dataset.');\">\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "        <div class=\"col-md-4\">\r" +
+    "\n" +
+    "            <input type=\"url\" class=\"form-control\" \r" +
+    "\n" +
+    "                   id=\"datasetOrganisationurl\" name=\"datasetOrganisationurl\" \r" +
+    "\n" +
+    "                   placeholder=\"Optional Website of the organisation\"\r" +
+    "\n" +
+    "                   ng-model=\"dataset.contact.url\"\r" +
+    "\n" +
+    "                   ng-focus=\"showInfoMessage('Please provide the url of the website of the name of the organisation.');\">\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
@@ -554,9 +787,9 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                      rows=\"6\"\r" +
     "\n" +
-    "                      ng-model=\"dataset.metadata[0].description\" \r" +
+    "                      ng-model=\"dataset.metadata[1].description\" \r" +
     "\n" +
-    "                      ng-focus=\"showInfoMessage('When appropriate, please provide a statement on the <a href=\\'https://en.wikipedia.org/wiki/Data_lineage\\' target=\\'_blank\\'>data lineage</a>  of the resource. That is, whether and how the dataset was derived (transformed, combined, repurposed, ...) from other datasets.')\">  \r" +
+    "                      ng-focus=\"showInfoMessage('Provide information on the sources used to create datasets. Links and citations can be included.')\">  \r" +
     "\n" +
     "            </textarea>\r" +
     "\n" +
@@ -612,21 +845,33 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "         ng-class=\"{'has-error':wizard.hasError === 'datasetContentlocation'}\">\r" +
     "\n" +
-    "        <label for=\"datasetContentlocation\" class=\"col-md-1 form-control-label\">Link</label>\r" +
+    "        <label for=\"datasetContentlocation\" class=\"col-md-1 form-control-label\">Link to Data</label>\r" +
     "\n" +
     "        <!-- Function -->\r" +
     "\n" +
     "        <div class=\"col-md-2\">\r" +
     "\n" +
-    "            <select class=\"form-control\" id=\"datasetFunction\" name=\"datasetFunction\" \r" +
+    "            <select class=\"form-control\" \r" +
     "\n" +
-    "                    ng-options=\"tag as tag.name for tag in tags['function'] track by tag.name\"\r" +
+    "                    ng-style=\"(!dataset.representation[0].function \r" +
+    "\n" +
+    "                                && !odRegistrationForm.datasetFunction.$touched) && {'color':'#999999'}\" \r" +
+    "\n" +
+    "                    id=\"datasetFunction\" \r" +
+    "\n" +
+    "                    name=\"datasetFunction\" \r" +
+    "\n" +
+    "                    placeholder=\"Type of Link\"\r" +
+    "\n" +
+    "                    ng-options=\"tag as tag.name for tag in tags['function'] | orderBy:'name' track by tag.name\"\r" +
     "\n" +
     "                    ng-model=\"dataset.representation[0].function\"\r" +
     "\n" +
-    "                    ng-change=\"showInfoMessage('The ' + dataset.representation[0].function.description + ' / dataset.');\"\r" +
+    "                    ng-change=\"showInfoMessage(dataset.representation[0].function.description);\"\r" +
     "\n" +
     "                    required>\r" +
+    "\n" +
+    "                    <option style=\"color:#999999\" ng-show=\"!dataset.representation[0].function\" value=\"\">Type of Link</option>\r" +
     "\n" +
     "            </select>\r" +
     "\n" +
@@ -638,7 +883,11 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "            <input type=\"url\" class=\"form-control\" \r" +
     "\n" +
-    "                   name=\"datasetContentlocation\" id=\"datasetContentlocation\" placeholder=\"URL of the dataset\"\r" +
+    "                   name=\"datasetContentlocation\" \r" +
+    "\n" +
+    "                   id=\"datasetContentlocation\" \r" +
+    "\n" +
+    "                   placeholder=\"URL of the dataset\"\r" +
     "\n" +
     "                   ng-model=\"dataset.representation[0].contentlocation\"\r" +
     "\n" +
@@ -656,15 +905,27 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "        <div class=\"col-md-3\">\r" +
     "\n" +
-    "            <select class=\"form-control\" id=\"datasetContenttype\" name=\"datasetContenttype\" placeholder=\"Description of the dataset\"\r" +
+    "            <select class=\"form-control\" \r" +
     "\n" +
-    "                    ng-options=\"tag as tag.description for tag in tags['content type'] track by tag.name\"\r" +
+    "                    ng-style=\"(!dataset.representation[0].contenttype \r" +
+    "\n" +
+    "                                && !odRegistrationForm.datasetContenttype.$touched) && {'color':'#999999'}\" \r" +
+    "\n" +
+    "                    id=\"datasetContenttype\" \r" +
+    "\n" +
+    "                    name=\"datasetContenttype\" \r" +
+    "\n" +
+    "                    placeholder=\"Choose file format\"\r" +
+    "\n" +
+    "                    ng-options=\"tag as tag.description for tag in tags['content type'] | contenttype:'description' track by tag.name\"\r" +
     "\n" +
     "                    ng-model=\"dataset.representation[0].contenttype\"\r" +
     "\n" +
-    "                    ng-change=\"showInfoMessage('The <a href=\\'https://en.wikipedia.org/wiki/Media_type\\' target=\\'_blank\\'>media type</a> of the dataset is <i>'+dataset.representation[0].contenttype.name + '</i> (' + dataset.representation[0].contenttype.description + ').');\"\r" +
+    "                    ng-change=\"showInfoMessage('The <a href=\\'https://en.wikipedia.org/wiki/Media_type\\' target=\\'_blank\\'>media type</a> of the ' + dataset.representation[0].contenttype.description +  ' dataset file is <i>'+dataset.representation[0].contenttype.name + '</i>.');\"\r" +
     "\n" +
-    "                    required>   \r" +
+    "                    required>\r" +
+    "\n" +
+    "                <option style=\"color:#999999\" ng-show=\"!dataset.representation[0].contenttype\" value=\"\">Choose file format</option>\r" +
     "\n" +
     "            </select>\r" +
     "\n" +
@@ -704,33 +965,45 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "    </div>\r" +
     "\n" +
-    "\r" +
+    "    \r" +
     "\n" +
     "    <!-- Keywords -->\r" +
     "\n" +
-    "    <div class=\"form-group row\"\r" +
+    "    <div class=\"form-group row\">\r" +
+    "\n" +
+    "        <label  class=\"col-md-1 form-control-label\">Keywords</label>\r" +
+    "\n" +
+    "        <div class=\"col-md-8\">\r" +
+    "\n" +
+    "            <div class=\"form-control switchon-keywords-form\"\r" +
+    "\n" +
+    "                 ng-click=\"showInfoMessage('Please select one or more keywords from the <strong>extended</strong> CUAHSI Hydrologic Ontology for Discovery that best characterize the dataset. <br>Please click <a href=\\'http://his.cuahsi.org/ontologyfiles.html\\' target=\\'_blank\\'>here</a> for more information about the CUAHSI ontology. Get in touch with the <a href=\\'mailto:switchon.wm@gmail.com\\'>SWITCH-ON Consortium</a> if you want to make a proposal for new keywords.'); odRegistrationController.selectKeywords();\">\r" +
+    "\n" +
+    "                <span ng-repeat=\"tag in dataset.tags\">\r" +
+    "\n" +
+    "                        <span class=\"label label-primary\">{{tag.name}}</span>\r" +
+    "\n" +
+    "                </span>\r" +
+    "\n" +
+    "            </div>\r" +
+    "\n" +
+    "         </div>\r" +
+    "\n" +
+    "    </div>\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "    <!-- disabled as requested in https://github.com/switchonproject/switchon-tools/issues/1#issuecomment-180390096-->\r" +
+    "\n" +
+    "    <!--<div class=\"form-group row\"\r" +
     "\n" +
     "         ng-class=\"{'has-error':wizard.hasError === 'datasetTags'}\">\r" +
     "\n" +
     "        <label for=\"datasetTags\" class=\"col-md-1 form-control-label\">Keywords</label>\r" +
     "\n" +
-    "        <!--<div class=\"col-md-3\">\r" +
-    "\n" +
-    "            <select  ng-minlength=\"1\" multiple size=\"8\" class=\"form-control\" id=\"keyword-list\"\r" +
-    "\n" +
-    "                    ng-options=\"tag as tag.name for tag in tags['keywords - X-CUAHSI'] track by tag.name\"\r" +
-    "\n" +
-    "                    ng-model=\"dataset.tags\">   \r" +
-    "\n" +
-    "            </select>\r" +
-    "\n" +
-    "\r" +
-    "\n" +
-    "        </div>-->\r" +
-    "\n" +
     "        <div class=\"col-md-8\">\r" +
     "\n" +
-    "            <!--<textarea class=\"form-control\" id=\"keyword-box\" rows=\"7\"></textarea>-->\r" +
+    "            <textarea class=\"form-control\" id=\"keyword-box\" rows=\"7\"></textarea>\r" +
     "\n" +
     "            <ui-select  id=\"datasetTags\"\r" +
     "\n" +
@@ -754,15 +1027,15 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                <ui-select-match \r" +
     "\n" +
-    "                    placeholder=\"Please click here to open a list of selectable X-CUAHSI keywords.\"\r" +
-    "\n" +
-    "                    >\r" +
+    "                    placeholder=\"Please click here to open a list of selectable CUAHSI keywords.\">\r" +
     "\n" +
     "                    {{$item.name}}\r" +
     "\n" +
     "                </ui-select-match>\r" +
     "\n" +
-    "                <ui-select-choices repeat=\"tag in tags['keywords - X-CUAHSI'] | filter: {name: $select.search}\"\r" +
+    "\r" +
+    "\n" +
+    "                <ui-select-choices ng-show=\"false\" repeat=\"tag in tags['keywords - X-CUAHSI'] | filter: {name: $select.search}\"\r" +
     "\n" +
     "                                   group-by=\"odRegistrationController.groupBy\">\r" +
     "\n" +
@@ -774,7 +1047,7 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "        </div>\r" +
     "\n" +
-    "    </div>\r" +
+    "    </div>-->\r" +
     "\n" +
     "</form>\r" +
     "\n" +
@@ -806,11 +1079,35 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "            <div class=\"row\">\r" +
     "\n" +
-    "                <label class=\"col-md-3\" style=\"text-transform: capitalize;\">{{dataset.representation[0].function.name}}-Link</label>\r" +
+    "                <label class=\"col-md-3\">Link to data</label>\r" +
     "\n" +
     "                <div class=\"col-md-9\">\r" +
     "\n" +
     "                    <a href=\"{{dataset.representation[0].contentlocation}}\" target=\"_blank\" title=\"{{dataset.name}}\">{{dataset.representation[0].contentlocation}}</a>\r" +
+    "\n" +
+    "                </div>\r" +
+    "\n" +
+    "            </div>\r" +
+    "\n" +
+    "            \r" +
+    "\n" +
+    "            <!-- Function -->\r" +
+    "\n" +
+    "            <div class=\"row\">\r" +
+    "\n" +
+    "                <label class=\"col-md-3\">Type of Link</label>\r" +
+    "\n" +
+    "                <div class=\"col-md-9\">\r" +
+    "\n" +
+    "                    <span class=\"label label-success\" \r" +
+    "\n" +
+    "                          style=\"text-transform: capitalize;\" \r" +
+    "\n" +
+    "                          title=\"{{dataset.representation[0].function.description}}\">\r" +
+    "\n" +
+    "                        {{dataset.representation[0].function.name}}\r" +
+    "\n" +
+    "                    </span>\r" +
     "\n" +
     "                </div>\r" +
     "\n" +
@@ -822,11 +1119,17 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "            <div class=\"row\">\r" +
     "\n" +
-    "                <label class=\"col-md-3\">Content-Type</label>\r" +
+    "                <label class=\"col-md-3\">Format</label>\r" +
     "\n" +
     "                <div class=\"col-md-9\">\r" +
     "\n" +
-    "                    <span class=\"label label-success\" title=\"{{dataset.representation[0].contenttype.description}}\">{{dataset.representation[0].contenttype.name}}</span>\r" +
+    "                    <span class=\"label label-success\" \r" +
+    "\n" +
+    "                          title=\"{{dataset.representation[0].contenttype.description}}\">\r" +
+    "\n" +
+    "                        {{dataset.representation[0].contenttype.name}}\r" +
+    "\n" +
+    "                    </span>\r" +
     "\n" +
     "                </div>\r" +
     "\n" +
@@ -874,11 +1177,13 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "            <div class=\"row\">\r" +
     "\n" +
-    "                <label class=\"col-md-3\">Conditions</label>\r" +
+    "                <label class=\"col-md-3\">License</label>\r" +
     "\n" +
     "                <div class=\"col-md-9\">\r" +
     "\n" +
-    "                    <span class=\"label label-warning\" title=\"{{dataset.accessconditions.description}}\">{{dataset.accessconditions.name}}</span>\r" +
+    "                    <span class=\"label label-warning\" \r" +
+    "\n" +
+    "                          title=\"{{dataset.accessconditions.description | htmlToPlaintext}}\">{{dataset.accessconditions.name}}</span>\r" +
     "\n" +
     "                </div>\r" +
     "\n" +
@@ -910,13 +1215,47 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                <div class=\"col-md-9\">\r" +
     "\n" +
-    "                    {{dataset.contact.name}}\r" +
+    "                    <span ng-if=\"dataset.contact.name\">{{dataset.contact.name}} </span>\r" +
+    "\n" +
+    "                    <span ng-if=\"dataset.contact.email\">\r" +
+    "\n" +
+    "                        &lt;\r" +
+    "\n" +
+    "                        <a ng-if=\"dataset.contact.email.indexOf(' ') === -1\" href=\"mailto:{{dataset.contact.email}}\">{{dataset.contact.email}}</a>\r" +
+    "\n" +
+    "                        <span ng-if=\"dataset.contact.email.indexOf(' ') !== -1\">{{dataset.contact.email}}</span>\r" +
+    "\n" +
+    "                        &gt; \r" +
+    "\n" +
+    "                    </span>\r" +
     "\n" +
     "                </div>\r" +
     "\n" +
     "            </div>\r" +
     "\n" +
-    "\r" +
+    "            \r" +
+    "\n" +
+    "            <!-- Organisation (Institute) -->\r" +
+    "\n" +
+    "            <div class=\"row\" ng-if=\"dataset.contact && dataset.contact.organisation\">\r" +
+    "\n" +
+    "                <label class=\"col-md-3\">Institute</label>\r" +
+    "\n" +
+    "                <div class=\"col-md-9\">\r" +
+    "\n" +
+    "                    <span ng-if=\"dataset.contact.organisation && !dataset.contact.url\"> {{dataset.contact.organisation}}</span>\r" +
+    "\n" +
+    "                    <span ng-if=\"dataset.contact.organisation && dataset.contact.url\"> \r" +
+    "\n" +
+    "                        <a href=\"{{dataset.contact.url}}\" target=\"_blank\" rel=\"nofollow\">{{dataset.contact.organisation}}</a>)\r" +
+    "\n" +
+    "                    </span>\r" +
+    "\n" +
+    "                </div>\r" +
+    "\n" +
+    "            </div>\r" +
+    "\n" +
+    "            \r" +
     "\n" +
     "            <!-- Citation / DOI -->\r" +
     "\n" +
@@ -936,15 +1275,13 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "            <!-- Lineage -->\r" +
     "\n" +
-    "\r" +
-    "\n" +
-    "            <div class=\"row\" ng-if=\"dataset.metadata[0].description\">\r" +
+    "            <div class=\"row\" ng-if=\"dataset.metadata[1].description\">\r" +
     "\n" +
     "                <label class=\"col-md-3\">Data Lineage</label>\r" +
     "\n" +
     "                <div class=\"col-md-9\">\r" +
     "\n" +
-    "                    {{dataset.metadata[0].description}}\r" +
+    "                    {{dataset.metadata[1].description}}\r" +
     "\n" +
     "                </div>\r" +
     "\n" +

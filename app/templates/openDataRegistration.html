@@ -37,15 +37,25 @@
         </div>
         <!-- Content Location -->
         <div class="col-md-6">
-            <input type="url" class="form-control" 
-                   name="datasetContentlocation" 
-                   id="datasetContentlocation" 
-                   placeholder="URL of the dataset"
-                   ng-model="dataset.representation[0].contentlocation"
-                   ng-focus="showInfoMessage('Please provide a download link to the dataset or a link to additional information about the dataset.');"
-                   ng-change="odRegistrationController.checkLink(dataset.representation[0].contentlocation)"
-                   ng-model-options='{ debounce: 1000 }'
-                   required>
+            
+            <div class="input-group">
+                <input type="url" 
+                       class="form-control" 
+                       name="datasetContentlocation" 
+                       id="datasetContentlocation" 
+                       placeholder="URL of the dataset"
+                       ng-model="dataset.representation[0].contentlocation"
+                       ng-focus="showInfoMessage('Please provide a download link to the dataset or a link to additional information about the dataset.');"
+                       ng-change="odRegistrationController.checkLink(dataset.representation[0].contentlocation)"
+                       ng-model-options='{ debounce: 1000 }'
+                       required>
+                <span class="input-group-btn">
+                  <a class="btn btn-primary" 
+                          type="button"
+                          href="{{config.uploadtool.baseUrl}}?datasetname={{dataset.name}}"
+                          ng-disabled="!dataset.name || dataset.representation[0].contentlocation">Upload</a>
+                </span>
+                </div><!-- /input-group -->
         </div>
         <!-- Content Type -->
         <div class="col-md-3">

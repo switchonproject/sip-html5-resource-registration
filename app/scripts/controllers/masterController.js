@@ -35,6 +35,8 @@ angular.module(
                  * The resource meta data, initilaized from a template and changed by the app
                  */
                 $scope.dataset = dataset;
+                
+                $scope.config = AppConfig;
 
                 /**
                  * list of selectable tags. Initilaized by the controllers

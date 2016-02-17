@@ -881,23 +881,43 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "        <div class=\"col-md-6\">\r" +
     "\n" +
-    "            <input type=\"url\" class=\"form-control\" \r" +
+    "            \r" +
     "\n" +
-    "                   name=\"datasetContentlocation\" \r" +
+    "            <div class=\"input-group\">\r" +
     "\n" +
-    "                   id=\"datasetContentlocation\" \r" +
+    "                <input type=\"url\" \r" +
     "\n" +
-    "                   placeholder=\"URL of the dataset\"\r" +
+    "                       class=\"form-control\" \r" +
     "\n" +
-    "                   ng-model=\"dataset.representation[0].contentlocation\"\r" +
+    "                       name=\"datasetContentlocation\" \r" +
     "\n" +
-    "                   ng-focus=\"showInfoMessage('Please provide a download link to the dataset or a link to additional information about the dataset.');\"\r" +
+    "                       id=\"datasetContentlocation\" \r" +
     "\n" +
-    "                   ng-change=\"odRegistrationController.checkLink(dataset.representation[0].contentlocation)\"\r" +
+    "                       placeholder=\"URL of the dataset\"\r" +
     "\n" +
-    "                   ng-model-options='{ debounce: 1000 }'\r" +
+    "                       ng-model=\"dataset.representation[0].contentlocation\"\r" +
     "\n" +
-    "                   required>\r" +
+    "                       ng-focus=\"showInfoMessage('Please provide a download link to the dataset or a link to additional information about the dataset.');\"\r" +
+    "\n" +
+    "                       ng-change=\"odRegistrationController.checkLink(dataset.representation[0].contentlocation)\"\r" +
+    "\n" +
+    "                       ng-model-options='{ debounce: 1000 }'\r" +
+    "\n" +
+    "                       required>\r" +
+    "\n" +
+    "                <span class=\"input-group-btn\">\r" +
+    "\n" +
+    "                  <a class=\"btn btn-primary\" \r" +
+    "\n" +
+    "                          type=\"button\"\r" +
+    "\n" +
+    "                          href=\"{{config.uploadtool.baseUrl}}?datasetname={{dataset.name}}\"\r" +
+    "\n" +
+    "                          ng-disabled=\"!dataset.name || dataset.representation[0].contentlocation\">Upload</a>\r" +
+    "\n" +
+    "                </span>\r" +
+    "\n" +
+    "                </div><!-- /input-group -->\r" +
     "\n" +
     "        </div>\r" +
     "\n" +

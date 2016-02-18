@@ -6,20 +6,18 @@ angular.module(
         'de.cismet.sip-html5-resource-registration.controllers.odRegistrationController',
         [
             '$scope',
-            '$http',
             '$modal',
+            '$location',
             'AppConfig',
-            'WizardHandler',
             'de.cismet.sip-html5-resource-registration.services.dataset',
             'de.cismet.sip-html5-resource-registration.services.TagGroupService',
             'de.cismet.sip-html5-resource-registration.services.searchService',
             // Controller Constructor Function
             function (
                     $scope,
-                    $http,
                     $modal,
+                    $location,
                     AppConfig,
-                    WizardHandler,
                     dataset,
                     tagGroupService,
                     searchService
@@ -31,6 +29,7 @@ angular.module(
 
                 _this = this;
                 _this.dataset = dataset;
+                _this.config = AppConfig;
 
                 _this.groupBy = function (item) {
 
@@ -84,6 +83,26 @@ angular.module(
                         size: 'lg',
                         scope: $scope
                     });
+                };
+                
+                _this.gotoUploadTool = function () {
+                    var uploadToolUrl = _this.config.uploadtool.baseUrl 
+                            + '?datasetname=' + _this.dataset.name;
+                    console.log(uploadToolUrl);
+                    $location.url(uploadToolUrl); 
+                };
+                
+                _this.checkUploadName = function () {
+                     if (!dataset.name) {
+                        $scope.message.text = 'Please enter the name / title of the dataset before uploading ';
+                        $scope.message.icon = 'fa-warning';
+                        $scope.message.type = 'warning';
+
+                        $scope.wizard.hasError = 'datasetUploadchoiceName';
+                        return false;
+                    }
+                    
+                    return true;
                 };
 
                 // load list
@@ -144,6 +163,13 @@ angular.module(
                         $scope.message.type = 'warning';
 
                         $scope.wizard.hasError = 'datasetName';
+                        context.valid = false;
+                    } else if (dataset.$uploaded === undefined) {
+                        $scope.message.text = 'Please chose wheter you want to upload a new dataset or to provide a link to anexisting dataset.';
+                        $scope.message.icon = 'fa-warning';
+                        $scope.message.type = 'warning';
+
+                        $scope.wizard.hasError = 'datasetUploadchoice';
                         context.valid = false;
                     } else if (isInvalidFunction) {
                         $scope.message.text = 'Please select a valid function (e.g. download) of the link.';

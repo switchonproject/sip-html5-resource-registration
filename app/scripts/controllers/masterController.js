@@ -61,6 +61,7 @@ angular.module(
                  * Wizard status, etc.
                  */
                 $scope.wizard = {};
+                $scope.wizard.uploadchoice = false;
                 $scope.wizard.enterValidators = [];
                 $scope.wizard.exitValidators = [];
                 $scope.wizard.currentStep = '';

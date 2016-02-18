@@ -16,6 +16,9 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
             datasetTemplate.$promise.then(function(dataset) {
                   dataset.name=($location.search()).name;
                   dataset.representation[0].contentlocation=($location.search()).link;
+                  if(dataset.name && dataset.representation[0].contentlocation) {
+                      dataset.$uploaded=true;
+                  }
                 });   
                 
             return datasetTemplate;

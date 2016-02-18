@@ -73,6 +73,14 @@ angular.module(
                     intermediateResult = searchTags(taggroup, tags);
                     resultTags = [];
                     resultTags.$resolved = false;
+                    resultTags.getTagByName = function(tagname) {
+                        for (var i = 0; i < this.length; i++) {
+                            if (this[i].name && this[i].name === tagname) {
+                                return this[i];
+                            }
+                        }
+                    };
+
                     resultTags.$promise = intermediateResult.$promise.then(function (resource) {
                         for (i = 0; i < resource.$collection.length; i++) {
                             resultTags.push(resource.$collection[i]);

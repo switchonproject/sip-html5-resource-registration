@@ -9,6 +9,7 @@ angular.module(
             '$http',
             '$window',
             '$interval',
+            '$location',
             '$modalInstance',
             'rfc4122',
             'AppConfig',
@@ -21,6 +22,7 @@ angular.module(
                     $http,
                     $window,
                     $interval,
+                    $location,
                     $modalInstance,
                     rfc4122,
                     AppConfig,
@@ -49,16 +51,31 @@ angular.module(
 
 
                 $modalInstance.rendered.then(function () {
+                    
+                    var servicetype, serviceurl;
+                    servicetype = $location.search().servicetype;
+                    serviceurl = $location.search().serviceurl;
+                    
+                    if(servicetype && serviceurl) {
+                        _this.dataset.representation.contentlocation = serviceurl;
+                        _this.dataset.representation.name = _this.dataset.name + ' ' + servicetype;
+                    } else {
+                        _this.dataset.representation[1] = null;
+                    }
+                    
+                    // SRID TAG -> RESOURCE
                     tagGroupService.getTagList('srid', 'EPSG:4326').$promise.then(function (tags) {
                         _this.dataset.srid = tags[0];
                         _this.progress.currval += 10; // 10
                     });
-
+                    
+                    // CONFORMATIY TAG -> RESOURCE
                     tagGroupService.getTagList('conformity', 'Not evaluated').$promise.then(function (tags) {
                         _this.dataset.conformity = tags[0];
                         _this.progress.currval += 10; // 20
                     });
 
+                    // LANGUAGE TAG -> RESOURCE, BASIC METADATA, LINEAGE METADATA
                     tagGroupService.getTagList('language', 'eng').$promise.then(function (tags) {
                         _this.dataset.language = tags[0];
                         _this.dataset.metadata[0].language = tags[0];
@@ -70,16 +87,19 @@ angular.module(
                         _this.progress.currval += 10; // 30
                     });
 
+                    // RESOURCE TYPE -> RESOURCE
                     tagGroupService.getTagList('resource type', 'open data').$promise.then(function (tags) {
                         _this.dataset.type = tags[0];
                         _this.progress.currval += 10; // 40
                     });
 
+                    // INSPIRE TOPIC CATEGORY -> 
                     tagGroupService.getTagList('topic category', 'climatologyMeteorologyAtmosphere').$promise.then(function (tags) {
                         _this.dataset.topiccategory = tags[0];
                         _this.progress.currval += 10;  // 50
                     });
 
+                    // ROLE - CONTACT
                     tagGroupService.getTagList('role', 'pointOfContact').$promise.then(function (tags) {
                         if(_this.dataset.contact.organisation || 
                                 _this.dataset.contact.name || 
@@ -93,39 +113,62 @@ angular.module(
                         _this.progress.currval += 10; // 60
                     });
 
+                    // REPRESENTATION TYPE -> REPRESENTATION
                     tagGroupService.getTagList('representation type', 'original data').$promise.then(function (tags) {
                         _this.dataset.representation[0].type = tags[0];
+                        if(_this.dataset.representation[1]) {
+                            _this.dataset.representation[1].type = tags[0];
+                        }
                         _this.progress.currval += 10; // 70
                     });
 
-                    tagGroupService.getTagList('protocol', 'WWW:LINK-1.0-http--link').$promise.then(function (tags) {
-                        _this.dataset.representation[0].protocol = tags[0];
+                    // PROTOCOL -> REPRESENTATION
+                    tagGroupService.getTagList('protocol', 'WWW:LINK-1.0-http--link,OGC:WMS-1.1.1-http-get-capabilities,WWW:TILESERVER,OPeNDAP:OPeNDAP').$promise.then(function (tags) {
+                        _this.dataset.representation[0].protocol = tags.getTagByName('WWW:LINK-1.0-http--link');
+                        if(_this.dataset.representation[1]) {
+                            if(servicetype === 'WMS') {
+                                _this.dataset.representation[1].protocol = tags.getTagByName('OGC:WMS-1.1.1-http-get-capabilities'); 
+                                _this.dataset.representation[1].contenttype = tagGroupService.getTag('content type', 'application/xml', function (tag) {
+                                    _this.dataset.representation[1].contenttype = tag;
+                                });
+                            } else if(servicetype === 'OPeNDAP') {
+                                _this.dataset.representation[1].protocol = tags.getTagByName('OPeNDAP:OPeNDAP'); 
+                                _this.dataset.representation[1].contenttype = tagGroupService.getTag('content type', 'application/json', function (tag) {
+                                    _this.dataset.representation[1].contenttype = tag;
+                                });
+                                
+                                
+                            }
+                        }
                         _this.progress.currval += 10; // 80
                     });
                     
+                    // META-DATA TYPE -> BASIC METADATA, LINEAGE METADATA
                     tagGroupService.getTagList('meta-data type', 'basic meta-data,lineage meta-data').$promise.then(function (tags) {
-                        _this.dataset.metadata[0].type = tags[0];
+                        _this.dataset.metadata[0].type =  tags.getTagByName['basic meta-data'];
                         if(_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
-                            _this.dataset.metadata[1].type = tags[1];
+                            _this.dataset.metadata[1].type = tags.getTagByName['lineage meta-data'];
                         } else {
                             _this.dataset.metadata[1] = null;
                         }
                         _this.progress.currval += 10; // 90
                     });
 
+                    // ACCESS LIMITATIONS
                     tagGroupService.getTagList('access limitations', 'limitation not listed').$promise.then(function (tags) {
                         _this.dataset.accesslimitations = tags[0];
                         _this.progress.currval += 10; // 100
                     });
 
-                    // FIXME: define group for resource registration meta-data
+                    // COLLECTION -> RESOURCE
                     tagGroupService.getTagList('collection', 'Open Datasets').$promise.then(function (tags) {
                         _this.dataset.collection = tags[0];
                         _this.progress.currval += 10; // 110
                     });
                 });
                 
-                 tagGroupService.getTagList('meta-data standard', 'SWITCH-ON SIM').$promise.then(function (tags) {
+                // META-DATA STANDARD -> BASIC METADATA, LINEAGE METADATA
+                tagGroupService.getTagList('meta-data standard', 'SWITCH-ON SIM').$promise.then(function (tags) {
                         _this.dataset.metadata[0].standard = tags[0];
                         if(_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
                             _this.dataset.metadata[1].standard = tags[0];
@@ -145,11 +188,21 @@ angular.module(
                     _this.dataset.metadata[1] = null;
                 }
                 
+                // CONTENT TYPE -> BASIC METADATA
                 _this.dataset.metadata[0].contenttype = tagGroupService.getTag('content type', 'application/json', function (tag) {
                     _this.dataset.metadata[0].contenttype = tag;
                 });
+                
+                // FUNCTION
+                if(_this.dataset.representation[1]) {
+                    _this.dataset.representation[1].function = tagGroupService.getTag('function', 'service', function (tag) {
+                        _this.dataset.metadata[1].function = tag;
+                    });
+                }
                 _this.progress.currval += 10; // 130
                 
+                
+                // CONTENCT (REQUEST STATUS) -> BASIC METADATA
                 $http({
                     method: 'GET',
                     url: _this.config.cidsRestApi.host + '/service/status'
@@ -157,6 +210,8 @@ angular.module(
                       _this.dataset.metadata[0].content = JSON.stringify(response.data.$collection);
                       _this.progress.currval += 10; // 140
                 });
+
+
 
                 _this.close = function () {
                     $modalInstance.close();

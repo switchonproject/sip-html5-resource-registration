@@ -18,6 +18,15 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                   dataset.representation[0].contentlocation=($location.search()).link;
                   if(dataset.name && dataset.representation[0].contentlocation) {
                       dataset.$uploaded=true;
+                      dataset.representation[0].function = {};
+                      dataset.representation[0].function.name = 'download';
+                      dataset.representation[0].contenttype = {};
+                      
+                      if($location.search().format) {
+                        dataset.representation[0].contenttype.name = $location.search().format;
+                      } else {
+                          dataset.representation[0].contenttype.name = 'application/octet-stream';
+                      }
                   }
                 });   
                 

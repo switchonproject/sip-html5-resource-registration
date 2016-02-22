@@ -13,12 +13,45 @@
                    placeholder="Name of the dataset"
                    ng-model="dataset.name"
                    required
+                   ng-disabled="dataset.name && dataset.$uploaded === true"
                    ng-focus="showInfoMessage('Please provide a characteristic, and often unique, name by which the dataset is known.');">
         </div>
     </div>
+    
+    <!-- Link Buttons-->
+    <div class="row form-group"
+         ng-class="{'has-error':wizard.hasError === 'datasetUploadchoice'}"
+         ng-show = "dataset.$uploaded === undefined">
+            <label for="datasetUploadchoice" class="col-md-1 form-control-label">Link to Data</label>
+            <div class="col-md-10">
+                <button class="btn btn-primary" 
+                          type="button"
+                          ng-class="{'btn-danger':wizard.hasError === 'datasetUploadchoice'}"
+                          ng-click="dataset.$uploaded = false">Provide Link to existing Dataset</button>
+                <span>or</span>
+                    <!-- Fake disabled button -->
+                    <button class="btn btn-primary disabled" 
+                              type="button"
+                              ng-class="{'btn-danger':(wizard.hasError === 'datasetUploadchoice' || wizard.hasError === 'datasetUploadchoiceName')}"
+                              tooltip="{{!dataset.name ? 'Please enter the name of the dataset to enable the Data Upload Tool' : 'Open the  Data Upload Tool'}}"
+                              
+                              ng-if="!dataset.name">Upload new Dataset
+                    </button>
+                    <!-- Enabled link button -->
+                    <a class="btn btn-primary" 
+                              type="button"
+                              ng-class="{'btn-danger':(wizard.hasError === 'datasetUploadchoice' || wizard.hasError === 'datasetUploadchoiceName')}"
+                              ng-href="{{config.uploadtool.baseUrl}}?datasetname={{dataset.name}}"
+                              tooltip="{{!dataset.name ? 'Please enter the name of the dataset to enable the Data Upload Tool' : 'Open the  Data Upload Tool'}}"
+                              ng-if="dataset.name">Upload new Dataset
+                    </a> 
+            </div>
+    </div>
+    
     <!-- Link -->
     <div class="row form-group"
-         ng-class="{'has-error':wizard.hasError === 'datasetContentlocation'}">
+         ng-class="{'has-error':wizard.hasError === 'datasetContentlocation'}"
+         ng-show = "dataset.$uploaded !== undefined">
         <label for="datasetContentlocation" class="col-md-1 form-control-label">Link to Data</label>
         <!-- Function -->
         <div class="col-md-2">
@@ -28,34 +61,27 @@
                     id="datasetFunction" 
                     name="datasetFunction" 
                     placeholder="Type of Link"
-                    ng-options="tag as tag.name for tag in tags['function'] | orderBy:'name' track by tag.name"
+                    ng-options="tag as tag.name for tag in tags['function'] | function:'name' track by tag.name"
                     ng-model="dataset.representation[0].function"
                     ng-change="showInfoMessage(dataset.representation[0].function.description);"
+                    ng-disabled="dataset.$uploaded === true && dataset.representation[0].function"
                     required>
                     <option style="color:#999999" ng-show="!dataset.representation[0].function" value="">Type of Link</option>
             </select>
         </div>
         <!-- Content Location -->
         <div class="col-md-6">
-            
-            <div class="input-group">
-                <input type="url" 
-                       class="form-control" 
-                       name="datasetContentlocation" 
-                       id="datasetContentlocation" 
-                       placeholder="URL of the dataset"
-                       ng-model="dataset.representation[0].contentlocation"
-                       ng-focus="showInfoMessage('Please provide a download link to the dataset or a link to additional information about the dataset.');"
-                       ng-change="odRegistrationController.checkLink(dataset.representation[0].contentlocation)"
-                       ng-model-options='{ debounce: 1000 }'
-                       required>
-                <span class="input-group-btn">
-                  <a class="btn btn-primary" 
-                          type="button"
-                          href="{{config.uploadtool.baseUrl}}?datasetname={{dataset.name}}"
-                          ng-disabled="!dataset.name || dataset.representation[0].contentlocation">Upload</a>
-                </span>
-                </div><!-- /input-group -->
+            <input type="url" 
+                   class="form-control" 
+                   name="datasetContentlocation" 
+                   id="datasetContentlocation" 
+                   placeholder="URL of the dataset"
+                   ng-model="dataset.representation[0].contentlocation"
+                   ng-focus="showInfoMessage('Please provide a download link to the dataset or a link to additional information about the dataset.');"
+                   ng-change="odRegistrationController.checkLink(dataset.representation[0].contentlocation)"
+                   ng-model-options='{ debounce: 1000 }'
+                   ng-disabled="dataset.$uploaded === true && dataset.representation[0].contentlocation"
+                   required>
         </div>
         <!-- Content Type -->
         <div class="col-md-3">
@@ -68,6 +94,7 @@
                     ng-options="tag as tag.description for tag in tags['content type'] | contenttype:'description' track by tag.name"
                     ng-model="dataset.representation[0].contenttype"
                     ng-change="showInfoMessage('The <a href=\'https://en.wikipedia.org/wiki/Media_type\' target=\'_blank\'>media type</a> of the ' + dataset.representation[0].contenttype.description +  ' dataset file is <i>'+dataset.representation[0].contenttype.name + '</i>.');"
+                    ng-disabled="dataset.$uploaded === true && dataset.representation[0].contenttype"
                     required>
                 <option style="color:#999999" ng-show="!dataset.representation[0].contenttype" value="">Choose file format</option>
             </select>

@@ -52,6 +52,25 @@
             "contenttype": null,
             "uploadstatus": null,
             "uploadmessage": null
+        },{
+            "$self": "/SWITCHON.REPRESENTATION/-1",
+            "id": -1,
+            "name": null,
+            "description": null,
+            "content": null,
+            "type": null,
+            "function": null,
+            "protocol": null,
+            "applicationprofile": null,
+            "uuid": null,
+            "temporalresolution": null,
+            "spatialresolution": null,
+            "spatialscale": null,
+            "contentlocation": null,
+            "tags": [],
+            "contenttype": null,
+            "uploadstatus": null,
+            "uploadmessage": null
         }],
     "lastmodificationdate": null,
     "metadata": [{

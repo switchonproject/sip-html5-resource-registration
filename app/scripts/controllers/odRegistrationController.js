@@ -86,8 +86,8 @@ angular.module(
                 };
                 
                 _this.gotoUploadTool = function () {
-                    var uploadToolUrl = _this.config.uploadtool.baseUrl 
-                            + '?datasetname=' + _this.dataset.name;
+                    var uploadToolUrl = _this.config.uploadtool.baseUrl + 
+                            '?datasetname=' + _this.dataset.name;
                     console.log(uploadToolUrl);
                     $location.url(uploadToolUrl); 
                 };
@@ -106,7 +106,7 @@ angular.module(
                 };
 
                 // load list
-                $scope.tags['function'] = tagGroupService.getTagList('function', 'download,information,link to order data');
+                $scope.tags['function'] = tagGroupService.getTagList('function');
                 $scope.tags['content type'] = tagGroupService.getTagList('content type');
                 $scope.tags['keywords - X-CUAHSI'] = tagGroupService.getTagList('keywords - X-CUAHSI');
 

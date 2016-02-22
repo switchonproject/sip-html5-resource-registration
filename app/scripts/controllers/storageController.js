@@ -52,15 +52,30 @@ angular.module(
 
                 $modalInstance.rendered.then(function () {
                     
-                    var servicetype, serviceurl;
+                    var servicetype, servicename, serviceurl;
                     servicetype = $location.search().servicetype;
+                    servicename = $location.search().servicename;
                     serviceurl = $location.search().serviceurl;
                     
+                    
+                    // check optional representations
                     if(servicetype && serviceurl) {
-                        _this.dataset.representation.contentlocation = serviceurl;
-                        _this.dataset.representation.name = _this.dataset.name + ' ' + servicetype;
+                        _this.dataset.representation[1].contentlocation = serviceurl;
+                        _this.dataset.representation[1].name = servicename || _this.dataset.name + ' ' + servicetype;
+                        
+                        if(servicetype === 'WMS' && servicename) {  
+                            _this.dataset.representation[2].contentlocation = serviceurl;
+                            _this.dataset.representation[2].name = servicename;
+                        } else {
+                            _this.dataset.representation.splice(2,1);
+                        }
                     } else {
-                        _this.dataset.representation[1] = null;
+                        _this.dataset.representation.splice(1,2);
+                    }
+                    
+                    // check optional lineage metadata
+                    if(!_this.dataset.metadata[1] || !_this.dataset.metadata[1].description) {
+                        _this.dataset.representation.splice(1,1);
                     }
                     
                     // SRID TAG -> RESOURCE
@@ -81,8 +96,6 @@ angular.module(
                         _this.dataset.metadata[0].language = tags[0];
                         if(_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
                             _this.dataset.metadata[1].language = tags[0];
-                        } else {
-                            _this.dataset.metadata[1] = null;
                         }
                         _this.progress.currval += 10; // 30
                     });
@@ -114,11 +127,16 @@ angular.module(
                     });
 
                     // REPRESENTATION TYPE -> REPRESENTATION
-                    tagGroupService.getTagList('representation type', 'original data').$promise.then(function (tags) {
-                        _this.dataset.representation[0].type = tags[0];
+                    tagGroupService.getTagList('representation type').$promise.then(function (tags) {
+                        _this.dataset.representation[0].type = tags.getTagByName('original data');
+                        // additional representation
                         if(_this.dataset.representation[1]) {
-                            _this.dataset.representation[1].type = tags[0];
+                            _this.dataset.representation[1].type = tags.getTagByName('original data');
                         }
+                        if(_this.dataset.representation[2]) {
+                            _this.dataset.representation[2].type = tags.getTagByName('aggregated data');
+                        }
+                        
                         _this.progress.currval += 10; // 70
                     });
 
@@ -131,13 +149,16 @@ angular.module(
                                 _this.dataset.representation[1].contenttype = tagGroupService.getTag('content type', 'application/xml', function (tag) {
                                     _this.dataset.representation[1].contenttype = tag;
                                 });
+                                           
+                                if(_this.dataset.representation[2]) {
+                                    _this.dataset.representation[2].protocol = _this.dataset.representation[1].protocol;
+                                    _this.dataset.representation[2].contenttype = _this.dataset.representation[1].contenttype;
+                                }
                             } else if(servicetype === 'OPeNDAP') {
                                 _this.dataset.representation[1].protocol = tags.getTagByName('OPeNDAP:OPeNDAP'); 
-                                _this.dataset.representation[1].contenttype = tagGroupService.getTag('content type', 'application/json', function (tag) {
+                                _this.dataset.representation[1].contenttype = tagGroupService.getTag('content type', 'text/html', function (tag) {
                                     _this.dataset.representation[1].contenttype = tag;
-                                });
-                                
-                                
+                                }); 
                             }
                         }
                         _this.progress.currval += 10; // 80
@@ -148,8 +169,6 @@ angular.module(
                         _this.dataset.metadata[0].type =  tags.getTagByName['basic meta-data'];
                         if(_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
                             _this.dataset.metadata[1].type = tags.getTagByName['lineage meta-data'];
-                        } else {
-                            _this.dataset.metadata[1] = null;
                         }
                         _this.progress.currval += 10; // 90
                     });
@@ -172,8 +191,6 @@ angular.module(
                         _this.dataset.metadata[0].standard = tags[0];
                         if(_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
                             _this.dataset.metadata[1].standard = tags[0];
-                        } else {
-                            _this.dataset.metadata[1] = null;
                         }
                         _this.progress.currval += 10; // 120
                     });
@@ -184,8 +201,6 @@ angular.module(
                 _this.dataset.metadata[0].description = userAgent;
                 if(_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
                     _this.dataset.metadata[1].creationdate = currentdate;
-                } else {
-                    _this.dataset.metadata[1] = null;
                 }
                 
                 // CONTENT TYPE -> BASIC METADATA
@@ -196,8 +211,11 @@ angular.module(
                 // FUNCTION
                 if(_this.dataset.representation[1]) {
                     _this.dataset.representation[1].function = tagGroupService.getTag('function', 'service', function (tag) {
-                        _this.dataset.metadata[1].function = tag;
+                        _this.dataset.representation[1].function = tag;
                     });
+                    if(_this.dataset.representation[2]) {
+                            _this.dataset.representation[2].function = _this.dataset.representation[1].function;
+                    }
                 }
                 _this.progress.currval += 10; // 130
                 

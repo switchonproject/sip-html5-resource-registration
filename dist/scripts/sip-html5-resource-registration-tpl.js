@@ -833,17 +833,83 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                   required\r" +
     "\n" +
+    "                   ng-disabled=\"dataset.name && dataset.$uploaded === true\"\r" +
+    "\n" +
     "                   ng-focus=\"showInfoMessage('Please provide a characteristic, and often unique, name by which the dataset is known.');\">\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
     "    </div>\r" +
     "\n" +
+    "    \r" +
+    "\n" +
+    "    <!-- Link Buttons-->\r" +
+    "\n" +
+    "    <div class=\"row form-group\"\r" +
+    "\n" +
+    "         ng-class=\"{'has-error':wizard.hasError === 'datasetUploadchoice'}\"\r" +
+    "\n" +
+    "         ng-show = \"dataset.$uploaded === undefined\">\r" +
+    "\n" +
+    "            <label for=\"datasetUploadchoice\" class=\"col-md-1 form-control-label\">Link to Data</label>\r" +
+    "\n" +
+    "            <div class=\"col-md-10\">\r" +
+    "\n" +
+    "                <button class=\"btn btn-primary\" \r" +
+    "\n" +
+    "                          type=\"button\"\r" +
+    "\n" +
+    "                          ng-class=\"{'btn-danger':wizard.hasError === 'datasetUploadchoice'}\"\r" +
+    "\n" +
+    "                          ng-click=\"dataset.$uploaded = false\">Provide Link to existing Dataset</button>\r" +
+    "\n" +
+    "                <span>or</span>\r" +
+    "\n" +
+    "                    <!-- Fake disabled button -->\r" +
+    "\n" +
+    "                    <button class=\"btn btn-primary disabled\" \r" +
+    "\n" +
+    "                              type=\"button\"\r" +
+    "\n" +
+    "                              ng-class=\"{'btn-danger':(wizard.hasError === 'datasetUploadchoice' || wizard.hasError === 'datasetUploadchoiceName')}\"\r" +
+    "\n" +
+    "                              tooltip=\"{{!dataset.name ? 'Please enter the name of the dataset to enable the Data Upload Tool' : 'Open the  Data Upload Tool'}}\"\r" +
+    "\n" +
+    "                              \r" +
+    "\n" +
+    "                              ng-if=\"!dataset.name\">Upload new Dataset\r" +
+    "\n" +
+    "                    </button>\r" +
+    "\n" +
+    "                    <!-- Enabled link button -->\r" +
+    "\n" +
+    "                    <a class=\"btn btn-primary\" \r" +
+    "\n" +
+    "                              type=\"button\"\r" +
+    "\n" +
+    "                              ng-class=\"{'btn-danger':(wizard.hasError === 'datasetUploadchoice' || wizard.hasError === 'datasetUploadchoiceName')}\"\r" +
+    "\n" +
+    "                              ng-href=\"{{config.uploadtool.baseUrl}}?datasetname={{dataset.name}}\"\r" +
+    "\n" +
+    "                              tooltip=\"{{!dataset.name ? 'Please enter the name of the dataset to enable the Data Upload Tool' : 'Open the  Data Upload Tool'}}\"\r" +
+    "\n" +
+    "                              ng-if=\"dataset.name\">Upload new Dataset\r" +
+    "\n" +
+    "                    </a> \r" +
+    "\n" +
+    "            </div>\r" +
+    "\n" +
+    "    </div>\r" +
+    "\n" +
+    "    \r" +
+    "\n" +
     "    <!-- Link -->\r" +
     "\n" +
     "    <div class=\"row form-group\"\r" +
     "\n" +
-    "         ng-class=\"{'has-error':wizard.hasError === 'datasetContentlocation'}\">\r" +
+    "         ng-class=\"{'has-error':wizard.hasError === 'datasetContentlocation'}\"\r" +
+    "\n" +
+    "         ng-show = \"dataset.$uploaded !== undefined\">\r" +
     "\n" +
     "        <label for=\"datasetContentlocation\" class=\"col-md-1 form-control-label\">Link to Data</label>\r" +
     "\n" +
@@ -863,11 +929,13 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                    placeholder=\"Type of Link\"\r" +
     "\n" +
-    "                    ng-options=\"tag as tag.name for tag in tags['function'] | orderBy:'name' track by tag.name\"\r" +
+    "                    ng-options=\"tag as tag.name for tag in tags['function'] | function:'name' track by tag.name\"\r" +
     "\n" +
     "                    ng-model=\"dataset.representation[0].function\"\r" +
     "\n" +
     "                    ng-change=\"showInfoMessage(dataset.representation[0].function.description);\"\r" +
+    "\n" +
+    "                    ng-disabled=\"dataset.$uploaded === true && dataset.representation[0].function\"\r" +
     "\n" +
     "                    required>\r" +
     "\n" +
@@ -881,43 +949,27 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "        <div class=\"col-md-6\">\r" +
     "\n" +
-    "            \r" +
+    "            <input type=\"url\" \r" +
     "\n" +
-    "            <div class=\"input-group\">\r" +
+    "                   class=\"form-control\" \r" +
     "\n" +
-    "                <input type=\"url\" \r" +
+    "                   name=\"datasetContentlocation\" \r" +
     "\n" +
-    "                       class=\"form-control\" \r" +
+    "                   id=\"datasetContentlocation\" \r" +
     "\n" +
-    "                       name=\"datasetContentlocation\" \r" +
+    "                   placeholder=\"URL of the dataset\"\r" +
     "\n" +
-    "                       id=\"datasetContentlocation\" \r" +
+    "                   ng-model=\"dataset.representation[0].contentlocation\"\r" +
     "\n" +
-    "                       placeholder=\"URL of the dataset\"\r" +
+    "                   ng-focus=\"showInfoMessage('Please provide a download link to the dataset or a link to additional information about the dataset.');\"\r" +
     "\n" +
-    "                       ng-model=\"dataset.representation[0].contentlocation\"\r" +
+    "                   ng-change=\"odRegistrationController.checkLink(dataset.representation[0].contentlocation)\"\r" +
     "\n" +
-    "                       ng-focus=\"showInfoMessage('Please provide a download link to the dataset or a link to additional information about the dataset.');\"\r" +
+    "                   ng-model-options='{ debounce: 1000 }'\r" +
     "\n" +
-    "                       ng-change=\"odRegistrationController.checkLink(dataset.representation[0].contentlocation)\"\r" +
+    "                   ng-disabled=\"dataset.$uploaded === true && dataset.representation[0].contentlocation\"\r" +
     "\n" +
-    "                       ng-model-options='{ debounce: 1000 }'\r" +
-    "\n" +
-    "                       required>\r" +
-    "\n" +
-    "                <span class=\"input-group-btn\">\r" +
-    "\n" +
-    "                  <a class=\"btn btn-primary\" \r" +
-    "\n" +
-    "                          type=\"button\"\r" +
-    "\n" +
-    "                          href=\"{{config.uploadtool.baseUrl}}?datasetname={{dataset.name}}\"\r" +
-    "\n" +
-    "                          ng-disabled=\"!dataset.name || dataset.representation[0].contentlocation\">Upload</a>\r" +
-    "\n" +
-    "                </span>\r" +
-    "\n" +
-    "                </div><!-- /input-group -->\r" +
+    "                   required>\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
@@ -942,6 +994,8 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "                    ng-model=\"dataset.representation[0].contenttype\"\r" +
     "\n" +
     "                    ng-change=\"showInfoMessage('The <a href=\\'https://en.wikipedia.org/wiki/Media_type\\' target=\\'_blank\\'>media type</a> of the ' + dataset.representation[0].contenttype.description +  ' dataset file is <i>'+dataset.representation[0].contenttype.name + '</i>.');\"\r" +
+    "\n" +
+    "                    ng-disabled=\"dataset.$uploaded === true && dataset.representation[0].contenttype\"\r" +
     "\n" +
     "                    required>\r" +
     "\n" +
@@ -1263,11 +1317,11 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                <div class=\"col-md-9\">\r" +
     "\n" +
-    "                    <span ng-if=\"dataset.contact.organisation && !dataset.contact.url\"> {{dataset.contact.organisation}}</span>\r" +
+    "                    <span ng-if=\"dataset.contact.organisation && !dataset.contact.url\">{{dataset.contact.organisation}}</span>\r" +
     "\n" +
     "                    <span ng-if=\"dataset.contact.organisation && dataset.contact.url\"> \r" +
     "\n" +
-    "                        <a href=\"{{dataset.contact.url}}\" target=\"_blank\" rel=\"nofollow\">{{dataset.contact.organisation}}</a>)\r" +
+    "                        <a href=\"{{dataset.contact.url}}\" target=\"_blank\" rel=\"nofollow\">{{dataset.contact.organisation}}</a>\r" +
     "\n" +
     "                    </span>\r" +
     "\n" +
@@ -1356,6 +1410,8 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "                    wz-next \r" +
     "\n" +
     "                    ng-disabled=\"!wzData.canProceed\">{{wzData.proceedButtonText}}</button>\r" +
+    "\n" +
+    "            <span class=\"pull-right\">&nbsp;</span>\r" +
     "\n" +
     "            <button type=\"button\" \r" +
     "\n" +

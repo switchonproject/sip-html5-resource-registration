@@ -59,6 +59,7 @@ module.exports = function(config) {
         'target/dist/scripts/factories/_module.js',
         'target/dist/scripts/factories/appConfigFactory.js',
         'target/dist/scripts/filters/_module.js',
+        'target/dist/scripts/filters/functionFilter.js',
         'target/dist/scripts/filters/contenttypeFilter.js',
         'target/dist/scripts/filters/limitFilter.js',
         'target/dist/scripts/filters/plainTextFilter.js',

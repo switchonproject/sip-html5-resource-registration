@@ -547,6 +547,7 @@ angular.module(
                  * Wizard status, etc.
                  */
                 $scope.wizard = {};
+                $scope.wizard.uploadchoice = false;
                 $scope.wizard.enterValidators = [];
                 $scope.wizard.exitValidators = [];
                 $scope.wizard.currentStep = '';
@@ -601,20 +602,18 @@ angular.module(
         'de.cismet.sip-html5-resource-registration.controllers.odRegistrationController',
         [
             '$scope',
-            '$http',
             '$modal',
+            '$location',
             'AppConfig',
-            'WizardHandler',
             'de.cismet.sip-html5-resource-registration.services.dataset',
             'de.cismet.sip-html5-resource-registration.services.TagGroupService',
             'de.cismet.sip-html5-resource-registration.services.searchService',
             // Controller Constructor Function
             function (
                     $scope,
-                    $http,
                     $modal,
+                    $location,
                     AppConfig,
-                    WizardHandler,
                     dataset,
                     tagGroupService,
                     searchService
@@ -626,6 +625,7 @@ angular.module(
 
                 _this = this;
                 _this.dataset = dataset;
+                _this.config = AppConfig;
 
                 _this.groupBy = function (item) {
 
@@ -680,9 +680,29 @@ angular.module(
                         scope: $scope
                     });
                 };
+                
+                _this.gotoUploadTool = function () {
+                    var uploadToolUrl = _this.config.uploadtool.baseUrl + 
+                            '?datasetname=' + _this.dataset.name;
+                    console.log(uploadToolUrl);
+                    $location.url(uploadToolUrl); 
+                };
+                
+                _this.checkUploadName = function () {
+                     if (!dataset.name) {
+                        $scope.message.text = 'Please enter the name / title of the dataset before uploading ';
+                        $scope.message.icon = 'fa-warning';
+                        $scope.message.type = 'warning';
+
+                        $scope.wizard.hasError = 'datasetUploadchoiceName';
+                        return false;
+                    }
+                    
+                    return true;
+                };
 
                 // load list
-                $scope.tags['function'] = tagGroupService.getTagList('function', 'download,information,link to order data');
+                $scope.tags['function'] = tagGroupService.getTagList('function');
                 $scope.tags['content type'] = tagGroupService.getTagList('content type');
                 $scope.tags['keywords - X-CUAHSI'] = tagGroupService.getTagList('keywords - X-CUAHSI');
 
@@ -739,6 +759,13 @@ angular.module(
                         $scope.message.type = 'warning';
 
                         $scope.wizard.hasError = 'datasetName';
+                        context.valid = false;
+                    } else if (dataset.$uploaded === undefined) {
+                        $scope.message.text = 'Please chose wheter you want to upload a new dataset or to provide a link to anexisting dataset.';
+                        $scope.message.icon = 'fa-warning';
+                        $scope.message.type = 'warning';
+
+                        $scope.wizard.hasError = 'datasetUploadchoice';
                         context.valid = false;
                     } else if (isInvalidFunction) {
                         $scope.message.text = 'Please select a valid function (e.g. download) of the link.';
@@ -828,6 +855,7 @@ angular.module(
             '$http',
             '$window',
             '$interval',
+            '$location',
             '$modalInstance',
             'rfc4122',
             'AppConfig',
@@ -840,6 +868,7 @@ angular.module(
                     $http,
                     $window,
                     $interval,
+                    $location,
                     $modalInstance,
                     rfc4122,
                     AppConfig,
@@ -868,37 +897,68 @@ angular.module(
 
 
                 $modalInstance.rendered.then(function () {
+                    
+                    var servicetype, servicename, serviceurl;
+                    servicetype = $location.search().servicetype;
+                    servicename = $location.search().servicename;
+                    serviceurl = $location.search().serviceurl;
+                    
+                    
+                    // check optional representations
+                    if(servicetype && serviceurl) {
+                        _this.dataset.representation[1].contentlocation = serviceurl;
+                        _this.dataset.representation[1].name = servicename || _this.dataset.name + ' ' + servicetype;
+                        
+                        if(servicetype === 'WMS' && servicename) {  
+                            _this.dataset.representation[2].contentlocation = serviceurl;
+                            _this.dataset.representation[2].name = servicename;
+                        } else {
+                            _this.dataset.representation.splice(2,1);
+                        }
+                    } else {
+                        _this.dataset.representation.splice(1,2);
+                    }
+                    
+                    // check optional lineage metadata
+                    if(!_this.dataset.metadata[1] || !_this.dataset.metadata[1].description) {
+                        _this.dataset.representation.splice(1,1);
+                    }
+                    
+                    // SRID TAG -> RESOURCE
                     tagGroupService.getTagList('srid', 'EPSG:4326').$promise.then(function (tags) {
                         _this.dataset.srid = tags[0];
                         _this.progress.currval += 10; // 10
                     });
-
+                    
+                    // CONFORMATIY TAG -> RESOURCE
                     tagGroupService.getTagList('conformity', 'Not evaluated').$promise.then(function (tags) {
                         _this.dataset.conformity = tags[0];
                         _this.progress.currval += 10; // 20
                     });
 
+                    // LANGUAGE TAG -> RESOURCE, BASIC METADATA, LINEAGE METADATA
                     tagGroupService.getTagList('language', 'eng').$promise.then(function (tags) {
                         _this.dataset.language = tags[0];
                         _this.dataset.metadata[0].language = tags[0];
                         if(_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
                             _this.dataset.metadata[1].language = tags[0];
-                        } else {
-                            _this.dataset.metadata[1] = null;
                         }
                         _this.progress.currval += 10; // 30
                     });
 
+                    // RESOURCE TYPE -> RESOURCE
                     tagGroupService.getTagList('resource type', 'open data').$promise.then(function (tags) {
                         _this.dataset.type = tags[0];
                         _this.progress.currval += 10; // 40
                     });
 
+                    // INSPIRE TOPIC CATEGORY -> 
                     tagGroupService.getTagList('topic category', 'climatologyMeteorologyAtmosphere').$promise.then(function (tags) {
                         _this.dataset.topiccategory = tags[0];
                         _this.progress.currval += 10;  // 50
                     });
 
+                    // ROLE - CONTACT
                     tagGroupService.getTagList('role', 'pointOfContact').$promise.then(function (tags) {
                         if(_this.dataset.contact.organisation || 
                                 _this.dataset.contact.name || 
@@ -912,44 +972,71 @@ angular.module(
                         _this.progress.currval += 10; // 60
                     });
 
-                    tagGroupService.getTagList('representation type', 'original data').$promise.then(function (tags) {
-                        _this.dataset.representation[0].type = tags[0];
+                    // REPRESENTATION TYPE -> REPRESENTATION
+                    tagGroupService.getTagList('representation type').$promise.then(function (tags) {
+                        _this.dataset.representation[0].type = tags.getTagByName('original data');
+                        // additional representation
+                        if(_this.dataset.representation[1]) {
+                            _this.dataset.representation[1].type = tags.getTagByName('original data');
+                        }
+                        if(_this.dataset.representation[2]) {
+                            _this.dataset.representation[2].type = tags.getTagByName('aggregated data');
+                        }
+                        
                         _this.progress.currval += 10; // 70
                     });
 
-                    tagGroupService.getTagList('protocol', 'WWW:LINK-1.0-http--link').$promise.then(function (tags) {
-                        _this.dataset.representation[0].protocol = tags[0];
+                    // PROTOCOL -> REPRESENTATION
+                    tagGroupService.getTagList('protocol', 'WWW:LINK-1.0-http--link,OGC:WMS-1.1.1-http-get-capabilities,WWW:TILESERVER,OPeNDAP:OPeNDAP').$promise.then(function (tags) {
+                        _this.dataset.representation[0].protocol = tags.getTagByName('WWW:LINK-1.0-http--link');
+                        if(_this.dataset.representation[1]) {
+                            if(servicetype === 'WMS') {
+                                _this.dataset.representation[1].protocol = tags.getTagByName('OGC:WMS-1.1.1-http-get-capabilities'); 
+                                _this.dataset.representation[1].contenttype = tagGroupService.getTag('content type', 'application/xml', function (tag) {
+                                    _this.dataset.representation[1].contenttype = tag;
+                                });
+                                           
+                                if(_this.dataset.representation[2]) {
+                                    _this.dataset.representation[2].protocol = _this.dataset.representation[1].protocol;
+                                    _this.dataset.representation[2].contenttype = _this.dataset.representation[1].contenttype;
+                                }
+                            } else if(servicetype === 'OPeNDAP') {
+                                _this.dataset.representation[1].protocol = tags.getTagByName('OPeNDAP:OPeNDAP'); 
+                                _this.dataset.representation[1].contenttype = tagGroupService.getTag('content type', 'text/html', function (tag) {
+                                    _this.dataset.representation[1].contenttype = tag;
+                                }); 
+                            }
+                        }
                         _this.progress.currval += 10; // 80
                     });
                     
+                    // META-DATA TYPE -> BASIC METADATA, LINEAGE METADATA
                     tagGroupService.getTagList('meta-data type', 'basic meta-data,lineage meta-data').$promise.then(function (tags) {
-                        _this.dataset.metadata[0].type = tags[0];
+                        _this.dataset.metadata[0].type =  tags.getTagByName['basic meta-data'];
                         if(_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
-                            _this.dataset.metadata[1].type = tags[1];
-                        } else {
-                            _this.dataset.metadata[1] = null;
+                            _this.dataset.metadata[1].type = tags.getTagByName['lineage meta-data'];
                         }
                         _this.progress.currval += 10; // 90
                     });
 
+                    // ACCESS LIMITATIONS
                     tagGroupService.getTagList('access limitations', 'limitation not listed').$promise.then(function (tags) {
                         _this.dataset.accesslimitations = tags[0];
                         _this.progress.currval += 10; // 100
                     });
 
-                    // FIXME: define group for resource registration meta-data
+                    // COLLECTION -> RESOURCE
                     tagGroupService.getTagList('collection', 'Open Datasets').$promise.then(function (tags) {
                         _this.dataset.collection = tags[0];
                         _this.progress.currval += 10; // 110
                     });
                 });
                 
-                 tagGroupService.getTagList('meta-data standard', 'SWITCH-ON SIM').$promise.then(function (tags) {
+                // META-DATA STANDARD -> BASIC METADATA, LINEAGE METADATA
+                tagGroupService.getTagList('meta-data standard', 'SWITCH-ON SIM').$promise.then(function (tags) {
                         _this.dataset.metadata[0].standard = tags[0];
                         if(_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
                             _this.dataset.metadata[1].standard = tags[0];
-                        } else {
-                            _this.dataset.metadata[1] = null;
                         }
                         _this.progress.currval += 10; // 120
                     });
@@ -960,15 +1047,26 @@ angular.module(
                 _this.dataset.metadata[0].description = userAgent;
                 if(_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
                     _this.dataset.metadata[1].creationdate = currentdate;
-                } else {
-                    _this.dataset.metadata[1] = null;
                 }
                 
+                // CONTENT TYPE -> BASIC METADATA
                 _this.dataset.metadata[0].contenttype = tagGroupService.getTag('content type', 'application/json', function (tag) {
                     _this.dataset.metadata[0].contenttype = tag;
                 });
+                
+                // FUNCTION
+                if(_this.dataset.representation[1]) {
+                    _this.dataset.representation[1].function = tagGroupService.getTag('function', 'service', function (tag) {
+                        _this.dataset.representation[1].function = tag;
+                    });
+                    if(_this.dataset.representation[2]) {
+                            _this.dataset.representation[2].function = _this.dataset.representation[1].function;
+                    }
+                }
                 _this.progress.currval += 10; // 130
                 
+                
+                // CONTENCT (REQUEST STATUS) -> BASIC METADATA
                 $http({
                     method: 'GET',
                     url: _this.config.cidsRestApi.host + '/service/status'
@@ -976,6 +1074,8 @@ angular.module(
                       _this.dataset.metadata[0].content = JSON.stringify(response.data.$collection);
                       _this.progress.currval += 10; // 140
                 });
+
+
 
                 _this.close = function () {
                     $modalInstance.close();
@@ -1227,6 +1327,32 @@ angular.module(
 angular.module(
         'de.cismet.sip-html5-resource-registration.filters'
         ).filter(
+        'function',
+        function () {
+            'use strict';
+
+
+            return function (items) {
+                var filtered = [];
+                
+                angular.forEach(items, function (item) {
+                    if(item.name === 'download' || 
+                            item.name === 'information' || 
+                            item.name === 'link to order data') {
+                        filtered.push(item);
+                    }
+                });
+
+                filtered.sort(function (a, b) {
+                    return a.name.localeCompare(b.name);
+                });
+                return filtered;
+            };
+        });
+
+angular.module(
+        'de.cismet.sip-html5-resource-registration.filters'
+        ).filter(
         'limit',
         function () {
             'use strict';
@@ -1309,27 +1435,45 @@ angular.module(
     );
 
 angular.module('de.cismet.sip-html5-resource-registration.services')
-        .factory('de.cismet.sip-html5-resource-registration.services.dataset', 
-        ['$resource',
-            '$location',
-    function ($resource, $location) {
-            'use strict';
-            var datasetTemplate = $resource('data/datasetTemplate.json', {}, {
-                    query: {
-                        method: 'GET',
-                        params: {
-                        },
-                        isArray: false
-                    }
-                }).query();
-            
-            datasetTemplate.$promise.then(function(dataset) {
-                  dataset.name=($location.search()).name;
-                  dataset.representation[0].contentlocation=($location.search()).link;
-                });   
-                
-            return datasetTemplate;
-	}]);
+        .factory('de.cismet.sip-html5-resource-registration.services.dataset',
+                ['$resource',
+                    '$location',
+                    function ($resource, $location) {
+                        'use strict';
+                        var datasetTemplate = $resource('data/datasetTemplate.json', {}, {
+                            query: {
+                                method: 'GET',
+                                params: {
+                                },
+                                isArray: false
+                            }
+                        }).query();
+
+                        datasetTemplate.$promise.then(function (dataset) {
+                            dataset.name = ($location.search()).name;
+                            dataset.representation[0].contentlocation = ($location.search()).link;
+                            if (dataset.name && dataset.representation[0].contentlocation) {
+                                var linkFunction = ($location.search()).function;
+                                var contenttype = $location.search().format;
+                                dataset.$uploaded = true;
+                                dataset.representation[0].function = {};
+                                if (linkFunction && (linkFunction === 'download' || linkFunction === 'information')) {
+                                    dataset.representation[0].function.name = linkFunction;
+                                } else {
+                                    dataset.representation[0].function.name = 'download';
+                                }
+                                dataset.representation[0].contenttype = {};
+
+                                if (contenttype) {
+                                    dataset.representation[0].contenttype.name = contenttype;
+                                } else {
+                                    dataset.representation[0].contenttype.name = 'application/octet-stream';
+                                }
+                            }
+                        });
+
+                        return datasetTemplate;
+                    }]);
 
 
 
@@ -1681,6 +1825,14 @@ angular.module(
                     intermediateResult = searchTags(taggroup, tags);
                     resultTags = [];
                     resultTags.$resolved = false;
+                    resultTags.getTagByName = function(tagname) {
+                        for (var i = 0; i < this.length; i++) {
+                            if (this[i].name && this[i].name === tagname) {
+                                return this[i];
+                            }
+                        }
+                    };
+
                     resultTags.$promise = intermediateResult.$promise.then(function (resource) {
                         for (i = 0; i < resource.$collection.length; i++) {
                             resultTags.push(resource.$collection[i]);

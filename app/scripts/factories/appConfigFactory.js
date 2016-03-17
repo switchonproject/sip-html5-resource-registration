@@ -17,8 +17,8 @@ angular.module(
         var appConfig = {};
         
         appConfig.cidsRestApi = {};
-        appConfig.cidsRestApi.host = 'http://localhost:8890';
-        //appConfig.cidsRestApi.host = 'http://switchon.cismet.de/legacy-rest1';
+        //appConfig.cidsRestApi.host = 'http://localhost:8890';
+        appConfig.cidsRestApi.host = 'http://switchon.cismet.de/legacy-rest1';
         //appConfig.cidsRestApi.host = 'http://tl-243.xtr.deltares.nl/switchon_server_rest';
         
         appConfig.searchService = {};

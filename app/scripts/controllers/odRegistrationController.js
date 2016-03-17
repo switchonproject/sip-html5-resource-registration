@@ -1,3 +1,13 @@
+/* 
+ * ***************************************************
+ * 
+ * cismet GmbH, Saarbruecken, Germany
+ * 
+ *               ... and it just works.
+ * 
+ * ***************************************************
+ */
+
 /*jshint sub:true*/
 
 angular.module(

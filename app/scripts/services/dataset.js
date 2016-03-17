@@ -1,3 +1,13 @@
+/* 
+ * ***************************************************
+ * 
+ * cismet GmbH, Saarbruecken, Germany
+ * 
+ *               ... and it just works.
+ * 
+ * ***************************************************
+ */
+
 angular.module('de.cismet.sip-html5-resource-registration.services')
         .factory('de.cismet.sip-html5-resource-registration.services.dataset',
                 ['$resource',
@@ -17,8 +27,11 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                             dataset.name = ($location.search()).name;
                             dataset.representation[0].contentlocation = ($location.search()).link;
                             if (dataset.name && dataset.representation[0].contentlocation) {
+                                
+                                // check data upload tool parameters
                                 var linkFunction = ($location.search()).function;
                                 var contenttype = $location.search().format;
+                                
                                 dataset.$uploaded = true;
                                 dataset.representation[0].function = {};
                                 if (linkFunction && (linkFunction === 'download' || linkFunction === 'information')) {

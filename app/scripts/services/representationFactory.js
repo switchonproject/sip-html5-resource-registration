@@ -37,8 +37,7 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                             
                             
 
-                        };
-
+                        }
 
                         Representation.prototype.constructor = Representation;
                         return Representation;

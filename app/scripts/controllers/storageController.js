@@ -230,7 +230,7 @@ angular.module(
                 _this.progress.currval += 10; // 130
                 
                 
-                // CONTENCT (REQUEST STATUS) -> BASIC METADATA
+                // CONTENT (REQUEST STATUS) -> BASIC METADATA
                 $http({
                     method: 'GET',
                     url: _this.config.cidsRestApi.host + '/service/status'

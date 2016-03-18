@@ -51,6 +51,7 @@ module.exports = function(config) {
         'target/dist/scripts/directives/_module.js',
         'target/dist/scripts/services/_module.js',
         'target/dist/scripts/services/dataset.js',
+        'target/dist/scripts/services/representationFactory.js',
         'target/dist/scripts/services/geoTools.js',
         'target/dist/scripts/services/tagGroupService.js',
         'target/dist/scripts/services/countriesService.js',

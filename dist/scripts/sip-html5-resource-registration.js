@@ -23,6 +23,16 @@ angular.module(
          
     ]
 );
+/* 
+ * ***************************************************
+ * 
+ * cismet GmbH, Saarbruecken, Germany
+ * 
+ *               ... and it just works.
+ * 
+ * ***************************************************
+ */
+
 /* global L */
 /*jshint sub:true*/
 
@@ -359,6 +369,16 @@ angular.module(
         }
     ]
 );
+/* 
+ * ***************************************************
+ * 
+ * cismet GmbH, Saarbruecken, Germany
+ * 
+ *               ... and it just works.
+ * 
+ * ***************************************************
+ */
+
 /*jshint sub:true*/
 
 angular.module(
@@ -394,6 +414,16 @@ angular.module(
             }
         ]
         );
+/* 
+ * ***************************************************
+ * 
+ * cismet GmbH, Saarbruecken, Germany
+ * 
+ *               ... and it just works.
+ * 
+ * ***************************************************
+ */
+
 /*jshint sub:true*/
 
 angular.module(
@@ -484,6 +514,16 @@ angular.module(
         }
     ]
 );
+/* 
+ * ***************************************************
+ * 
+ * cismet GmbH, Saarbruecken, Germany
+ * 
+ *               ... and it just works.
+ * 
+ * ***************************************************
+ */
+
 angular.module(
         'de.cismet.sip-html5-resource-registration.controllers'
         ).controller(
@@ -594,6 +634,16 @@ angular.module(
             }
         ]
         );
+/* 
+ * ***************************************************
+ * 
+ * cismet GmbH, Saarbruecken, Germany
+ * 
+ *               ... and it just works.
+ * 
+ * ***************************************************
+ */
+
 /*jshint sub:true*/
 
 angular.module(
@@ -844,6 +894,16 @@ angular.module(
             }
         ]
         );
+/* 
+ * ***************************************************
+ * 
+ * cismet GmbH, Saarbruecken, Germany
+ * 
+ *               ... and it just works.
+ * 
+ * ***************************************************
+ */
+
 /*jshint sub:true*/
 
 angular.module(
@@ -1128,6 +1188,16 @@ angular.module(
             }
         ]
         );
+/* 
+ * ***************************************************
+ * 
+ * cismet GmbH, Saarbruecken, Germany
+ * 
+ *               ... and it just works.
+ * 
+ * ***************************************************
+ */
+
 /* global L */
 /*jshint sub:true*/
 
@@ -1295,6 +1365,17 @@ angular.module(
     ]
 );
 
+/* 
+ * ***************************************************
+ * 
+ * cismet GmbH, Saarbruecken, Germany
+ * 
+ *               ... and it just works.
+ * 
+ * ***************************************************
+ */
+
+
 angular.module(
         'de.cismet.sip-html5-resource-registration.filters'
         ).filter(
@@ -1324,6 +1405,16 @@ angular.module(
             };
         });
 
+/* 
+ * ***************************************************
+ * 
+ * cismet GmbH, Saarbruecken, Germany
+ * 
+ *               ... and it just works.
+ * 
+ * ***************************************************
+ */
+
 angular.module(
         'de.cismet.sip-html5-resource-registration.filters'
         ).filter(
@@ -1350,6 +1441,16 @@ angular.module(
             };
         });
 
+/* 
+ * ***************************************************
+ * 
+ * cismet GmbH, Saarbruecken, Germany
+ * 
+ *               ... and it just works.
+ * 
+ * ***************************************************
+ */
+
 angular.module(
         'de.cismet.sip-html5-resource-registration.filters'
         ).filter(
@@ -1360,6 +1461,16 @@ angular.module(
                 return items.slice(begin, end);
             };
         });
+
+/* 
+ * ***************************************************
+ * 
+ * cismet GmbH, Saarbruecken, Germany
+ * 
+ *               ... and it just works.
+ * 
+ * ***************************************************
+ */
 
 angular.module('de.cismet.sip-html5-resource-registration.filters').
         filter('htmlToPlaintext', function () {
@@ -1377,6 +1488,16 @@ angular.module(
         'ngResource'
     ]
 );
+/* 
+ * ***************************************************
+ * 
+ * cismet GmbH, Saarbruecken, Germany
+ * 
+ *               ... and it just works.
+ * 
+ * ***************************************************
+ */
+
 angular.module(
     'de.cismet.sip-html5-resource-registration.services'
 ).factory('de.cismet.sip-html5-resource-registration.services.CountriesService',
@@ -1434,11 +1555,22 @@ angular.module(
         }]
     );
 
+/* 
+ * ***************************************************
+ * 
+ * cismet GmbH, Saarbruecken, Germany
+ * 
+ *               ... and it just works.
+ * 
+ * ***************************************************
+ */
+
 angular.module('de.cismet.sip-html5-resource-registration.services')
         .factory('de.cismet.sip-html5-resource-registration.services.dataset',
                 ['$resource',
                     '$location',
-                    function ($resource, $location) {
+                    'de.cismet.sip-html5-resource-registration.services.RepresentationFactory',
+                    function ($resource, $location, Representation) {
                         'use strict';
                         var datasetTemplate = $resource('data/datasetTemplate.json', {}, {
                             query: {
@@ -1451,10 +1583,18 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
 
                         datasetTemplate.$promise.then(function (dataset) {
                             dataset.name = ($location.search()).name;
+                            
+                            dataset.representation[0] = new Representation();
+                            dataset.representation[1] = new Representation();
+                            dataset.representation[2] = new Representation();
+                            
                             dataset.representation[0].contentlocation = ($location.search()).link;
                             if (dataset.name && dataset.representation[0].contentlocation) {
+                                
+                                // check data upload tool parameters
                                 var linkFunction = ($location.search()).function;
                                 var contenttype = $location.search().format;
+                                
                                 dataset.$uploaded = true;
                                 dataset.representation[0].function = {};
                                 if (linkFunction && (linkFunction === 'download' || linkFunction === 'information')) {
@@ -1476,6 +1616,16 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                     }]);
 
 
+
+/* 
+ * ***************************************************
+ * 
+ * cismet GmbH, Saarbruecken, Germany
+ * 
+ *               ... and it just works.
+ * 
+ * ***************************************************
+ */
 
 /* global Wkt */
 
@@ -1561,6 +1711,63 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
 	}]);
 
 
+
+/* 
+ * ***************************************************
+ * 
+ * cismet GmbH, Saarbruecken, Germany
+ * 
+ *               ... and it just works.
+ * 
+ * ***************************************************
+ */
+
+angular.module('de.cismet.sip-html5-resource-registration.services')
+        .factory('de.cismet.sip-html5-resource-registration.services.RepresentationFactory',
+                ['$resource',
+                    function ($resource) {
+                        'use strict';
+
+                        function Representation() {
+                            var _this, resourceTemplate;
+                            _this = this;
+                            resourceTemplate = $resource('data/representationTemplate.json', {}, {
+                            query: {
+                                method: 'GET',
+                                params: {
+                                },
+                                isArray: false
+                            }
+                        }).query();
+                        
+                        resourceTemplate.$promise.then(function (json) {
+                            for (var key in json) {
+                                if (json.hasOwnProperty(key) && !_this.hasOwnProperty(key)) {
+                                    _this[key] = json[key];
+                                }
+                            }
+                        });
+                            
+                            
+                            
+
+                        }
+
+                        Representation.prototype.constructor = Representation;
+                        return Representation;
+                    }]);
+
+
+
+/* 
+ * ***************************************************
+ * 
+ * cismet GmbH, Saarbruecken, Germany
+ * 
+ *               ... and it just works.
+ * 
+ * ***************************************************
+ */
 
 angular.module(
     'de.cismet.sip-html5-resource-registration.services'
@@ -1705,6 +1912,17 @@ angular.module(
         /* jshint ignore:end */
     });
 
+/* 
+ * ***************************************************
+ * 
+ * cismet GmbH, Saarbruecken, Germany
+ * 
+ *               ... and it just works.
+ * 
+ * ***************************************************
+ */
+
+
 angular.module(
         'de.cismet.sip-html5-resource-registration.services'
         ).factory('de.cismet.sip-html5-resource-registration.services.storageService',
@@ -1750,6 +1968,16 @@ angular.module(
                 };
             }
         ]);
+/* 
+ * ***************************************************
+ * 
+ * cismet GmbH, Saarbruecken, Germany
+ * 
+ *               ... and it just works.
+ * 
+ * ***************************************************
+ */
+
 angular.module(
         'de.cismet.sip-html5-resource-registration.services'
         ).factory('de.cismet.sip-html5-resource-registration.services.TagGroupService',

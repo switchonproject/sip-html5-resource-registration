@@ -85,7 +85,7 @@ angular.module(
                         }
 
                         if (tags) {
-                            var tmpTags, tagArray, i, j;
+                            var tmpTags, tagArray, j;
                             tmpTags = '';
                             tagArray = tags.split(',');
                             j = 0;

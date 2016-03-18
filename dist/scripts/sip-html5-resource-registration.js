@@ -734,7 +734,7 @@ angular.module(
                 _this.gotoUploadTool = function () {
                     var uploadToolUrl = _this.config.uploadtool.baseUrl + 
                             '?datasetname=' + _this.dataset.name;
-                    console.log(uploadToolUrl);
+                    //console.log(uploadToolUrl);
                     $location.url(uploadToolUrl); 
                 };
                 
@@ -937,11 +937,12 @@ angular.module(
                     storageService
                     ) {
                 'use strict';
-                var _this, currentdate, userAgent;
-                
+                var _this, currentdate, userAgent, maxProgress;
+
                 currentdate = new Date().getTime();
                 userAgent = $window.navigator.userAgent;
-                
+                maxProgress = 120;
+
                 _this = this;
                 _this.dataset = dataset;
                 _this.config = AppConfig;
@@ -955,199 +956,157 @@ angular.module(
                 _this.progress.type = 'primary';
                 _this.progress.message = 'The dataset is now added to the SWITCH-ON Meta-Data Repository. <br>Please do not close this browser window until the uploaded has been completed';
 
+                _this.close = function () {
+                    $modalInstance.close();
+                    $window.location.reload();
+                };
 
                 $modalInstance.rendered.then(function () {
-                    
-                    var servicetype, servicename, serviceurl;
-                    servicetype = $location.search().servicetype;
-                    servicename = $location.search().servicename;
-                    serviceurl = $location.search().serviceurl;
-                    
-                    
-                    // check optional representations
-                    if(servicetype && serviceurl) {
-                        _this.dataset.representation[1].contentlocation = serviceurl;
-                        _this.dataset.representation[1].name = servicename || _this.dataset.name + ' ' + servicetype;
-                        
-                        if(servicetype === 'WMS' && servicename) {  
-                            _this.dataset.representation[2].contentlocation = serviceurl;
-                            _this.dataset.representation[2].name = servicename;
-                        } else {
-                            _this.dataset.representation.splice(2,1);
-                        }
-                    } else {
-                        _this.dataset.representation.splice(1,2);
-                    }
-                    
-                    // check optional lineage metadata
-                    if(!_this.dataset.metadata[1] || !_this.dataset.metadata[1].description) {
-                        _this.dataset.representation.splice(1,1);
-                    }
+
+                    // REPRESENTATIONS
+                    _this.dataset.representation.forEach(function (representation) {
+                        maxProgress += 10;  
+                        representation.updateTags().then(function () {
+                            _this.progress.currval += 10; // maxProgress + 10
+                            console.log('REPRESENTATIONS: ' + _this.progress.currval);
+                        });
+                    });
                     
                     // SRID TAG -> RESOURCE
                     tagGroupService.getTagList('srid', 'EPSG:4326').$promise.then(function (tags) {
                         _this.dataset.srid = tags[0];
                         _this.progress.currval += 10; // 10
+                        console.log('SRID TAG -> RESOURCE: ' + _this.progress.currval);
                     });
-                    
-                    // CONFORMATIY TAG -> RESOURCE
+
+                    // CONFORMITY TAG -> RESOURCE
                     tagGroupService.getTagList('conformity', 'Not evaluated').$promise.then(function (tags) {
                         _this.dataset.conformity = tags[0];
                         _this.progress.currval += 10; // 20
+                        console.log('CONFORMITY TAG -> RESOURCE: ' + _this.progress.currval);
                     });
 
                     // LANGUAGE TAG -> RESOURCE, BASIC METADATA, LINEAGE METADATA
                     tagGroupService.getTagList('language', 'eng').$promise.then(function (tags) {
                         _this.dataset.language = tags[0];
                         _this.dataset.metadata[0].language = tags[0];
-                        if(_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
+                        if (_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
                             _this.dataset.metadata[1].language = tags[0];
                         }
                         _this.progress.currval += 10; // 30
+                        console.log('LANGUAGE TAG: ' + _this.progress.currval);
                     });
 
                     // RESOURCE TYPE -> RESOURCE
                     tagGroupService.getTagList('resource type', 'open data').$promise.then(function (tags) {
                         _this.dataset.type = tags[0];
                         _this.progress.currval += 10; // 40
+                        console.log('RESOURCE TYPE -> RESOURCE: ' + _this.progress.currval);
                     });
 
                     // INSPIRE TOPIC CATEGORY -> 
                     tagGroupService.getTagList('topic category', 'climatologyMeteorologyAtmosphere').$promise.then(function (tags) {
                         _this.dataset.topiccategory = tags[0];
                         _this.progress.currval += 10;  // 50
+                        console.log('INSPIRE TOPIC CATEGORY: ' + _this.progress.currval);
                     });
 
-                    // ROLE - CONTACT
+                    // ROLE -> CONTACT
                     tagGroupService.getTagList('role', 'pointOfContact').$promise.then(function (tags) {
-                        if(_this.dataset.contact.organisation || 
-                                _this.dataset.contact.name || 
-                                _this.dataset.contact.description || 
-                                _this.dataset.contact.email || 
+                        if (_this.dataset.contact.organisation ||
+                                _this.dataset.contact.name ||
+                                _this.dataset.contact.description ||
+                                _this.dataset.contact.email ||
                                 _this.dataset.contact.url) {
                             _this.dataset.contact.role = tags[0];
                         } else {
                             _this.dataset.contact = null;
                         }
                         _this.progress.currval += 10; // 60
+                        console.log('ROLE -> CONTACT: ' + _this.progress.currval);
                     });
 
-                    // REPRESENTATION TYPE -> REPRESENTATION
-                    tagGroupService.getTagList('representation type').$promise.then(function (tags) {
-                        _this.dataset.representation[0].type = tags.getTagByName('original data');
-                        // additional representation
-                        if(_this.dataset.representation[1]) {
-                            _this.dataset.representation[1].type = tags.getTagByName('original data');
-                        }
-                        if(_this.dataset.representation[2]) {
-                            _this.dataset.representation[2].type = tags.getTagByName('aggregated data');
-                        }
-                        
-                        _this.progress.currval += 10; // 70
-                    });
-
-                    // PROTOCOL -> REPRESENTATION
-                    tagGroupService.getTagList('protocol', 'WWW:LINK-1.0-http--link,OGC:WMS-1.1.1-http-get-capabilities,WWW:TILESERVER,OPeNDAP:OPeNDAP').$promise.then(function (tags) {
-                        _this.dataset.representation[0].protocol = tags.getTagByName('WWW:LINK-1.0-http--link');
-                        if(_this.dataset.representation[1]) {
-                            if(servicetype === 'WMS') {
-                                _this.dataset.representation[1].protocol = tags.getTagByName('OGC:WMS-1.1.1-http-get-capabilities'); 
-                                _this.dataset.representation[1].contenttype = tagGroupService.getTag('content type', 'application/xml', function (tag) {
-                                    _this.dataset.representation[1].contenttype = tag;
-                                });
-                                           
-                                if(_this.dataset.representation[2]) {
-                                    _this.dataset.representation[2].protocol = _this.dataset.representation[1].protocol;
-                                    _this.dataset.representation[2].contenttype = _this.dataset.representation[1].contenttype;
-                                }
-                            } else if(servicetype === 'OPeNDAP') {
-                                _this.dataset.representation[1].protocol = tags.getTagByName('OPeNDAP:OPeNDAP'); 
-                                _this.dataset.representation[1].contenttype = tagGroupService.getTag('content type', 'text/html', function (tag) {
-                                    _this.dataset.representation[1].contenttype = tag;
-                                }); 
-                            }
-                        }
-                        _this.progress.currval += 10; // 80
-                    });
-                    
                     // META-DATA TYPE -> BASIC METADATA, LINEAGE METADATA
                     tagGroupService.getTagList('meta-data type', 'basic meta-data,lineage meta-data').$promise.then(function (tags) {
-                        _this.dataset.metadata[0].type =  tags.getTagByName['basic meta-data'];
-                        if(_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
+                        _this.dataset.metadata[0].type = tags.getTagByName['basic meta-data'];
+                        if (_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
                             _this.dataset.metadata[1].type = tags.getTagByName['lineage meta-data'];
                         }
-                        _this.progress.currval += 10; // 90
+                        _this.progress.currval += 10; // 70
+                        console.log('META-DATA TYPE: ' + _this.progress.currval);
                     });
 
                     // ACCESS LIMITATIONS
                     tagGroupService.getTagList('access limitations', 'limitation not listed').$promise.then(function (tags) {
                         _this.dataset.accesslimitations = tags[0];
-                        _this.progress.currval += 10; // 100
+                        _this.progress.currval += 10; // 80
+                        console.log('ACCESS LIMITATIONS: ' + _this.progress.currval);
                     });
 
                     // COLLECTION -> RESOURCE
                     tagGroupService.getTagList('collection', 'Open Datasets').$promise.then(function (tags) {
                         _this.dataset.collection = tags[0];
-                        _this.progress.currval += 10; // 110
+                        _this.progress.currval += 10; // 90
+                        console.log('COLLECTION -> RESOURCE: ' + _this.progress.currval);
                     });
-                });
-                
-                // META-DATA STANDARD -> BASIC METADATA, LINEAGE METADATA
-                tagGroupService.getTagList('meta-data standard', 'SWITCH-ON SIM').$promise.then(function (tags) {
+
+                    // META-DATA STANDARD -> BASIC METADATA, LINEAGE METADATA
+                    tagGroupService.getTagList('meta-data standard', 'SWITCH-ON SIM').$promise.then(function (tags) {
                         _this.dataset.metadata[0].standard = tags[0];
-                        if(_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
+                        if (_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
                             _this.dataset.metadata[1].standard = tags[0];
                         }
-                        _this.progress.currval += 10; // 120
+                        _this.progress.currval += 10; // 100
+                        console.log('META-DATA STANDARD: ' + _this.progress.currval);
                     });
-                
-                _this.dataset.representation[0].name = _this.dataset.name;
-                _this.dataset.uuid = rfc4122.v4();
-                _this.dataset.metadata[0].creationdate = currentdate;
-                _this.dataset.metadata[0].description = userAgent;
-                if(_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
-                    _this.dataset.metadata[1].creationdate = currentdate;
-                }
-                
-                // CONTENT TYPE -> BASIC METADATA
-                _this.dataset.metadata[0].contenttype = tagGroupService.getTag('content type', 'application/json', function (tag) {
-                    _this.dataset.metadata[0].contenttype = tag;
-                });
-                
-                // FUNCTION
-                if(_this.dataset.representation[1]) {
-                    _this.dataset.representation[1].function = tagGroupService.getTag('function', 'service', function (tag) {
-                        _this.dataset.representation[1].function = tag;
+
+
+                    // CONTENT TYPE -> BASIC METADATA
+                    _this.dataset.metadata[0].contenttype = tagGroupService.getTag('content type', 'application/json', function (tag) {
+                        _this.dataset.metadata[0].contenttype = tag;
+                        // callback function might get called or might not get called!
+                        //_this.progress.currval += 10; // 110
+                        console.log('CONTENT TYPE: ' + _this.progress.currval);
                     });
-                    if(_this.dataset.representation[2]) {
-                            _this.dataset.representation[2].function = _this.dataset.representation[1].function;
+
+
+                    // CONTENT (REQUEST STATUS) -> BASIC METADATA
+                    $http({
+                        method: 'GET',
+                        url: _this.config.cidsRestApi.host + '/service/status'
+                    }).then(function (response) {
+                        _this.dataset.metadata[0].content = JSON.stringify(response.data.$collection);
+                        _this.dataset.metadata[0].creationdate = currentdate;
+                        _this.dataset.metadata[0].description = userAgent;
+                        _this.progress.currval += 10; // 110
+                        console.log('CONTENT (REQUEST STATUS): ' + _this.progress.currval);
+                    });
+                    
+                    
+                    // check first resource name
+                    if (!_this.dataset.representation[0].name) {
+                        _this.dataset.representation[0].name = _this.dataset.name;
                     }
-                }
-                _this.progress.currval += 10; // 130
-                
-                
-                // CONTENCT (REQUEST STATUS) -> BASIC METADATA
-                $http({
-                    method: 'GET',
-                    url: _this.config.cidsRestApi.host + '/service/status'
-                  }).then(function (response) {
-                      _this.dataset.metadata[0].content = JSON.stringify(response.data.$collection);
-                      _this.progress.currval += 10; // 140
+                    
+                    // CLEANUP
+                    _this.dataset.uuid = rfc4122.v4();
+                    
+                    // check optional lineage metadata
+                    if (!_this.dataset.metadata[1] || !_this.dataset.metadata[1].description) {
+                        _this.dataset.metadata.splice(1, 1);
+                    } else {
+                         _this.dataset.metadata[1].creationdate = currentdate;
+                    }
+                    
+                    _this.progress.currval += 10; // 120
+                    console.log('CLEANUP: ' + _this.progress.currval);
                 });
-
-
-
-                _this.close = function () {
-                    $modalInstance.close();
-                    $window.location.reload();
-                };
 
                 $scope.$watch(function () {
                     // Return the "result" of the watch expression.
                     return(_this.progress.currval);
                 }, function (newProgress) {
-                    if (newProgress && newProgress === 140) {
-
+                    if (newProgress && newProgress === maxProgress) {
                         var timer = $interval(function () {
                             if (_this.progress.currval < 190) {
                                 _this.progress.currval += 1;
@@ -1317,8 +1276,8 @@ angular.module(
         var appConfig = {};
         
         appConfig.cidsRestApi = {};
-        //appConfig.cidsRestApi.host = 'http://localhost:8890';
-        appConfig.cidsRestApi.host = 'http://switchon.cismet.de/legacy-rest1';
+        appConfig.cidsRestApi.host = 'http://localhost:8890';
+        //appConfig.cidsRestApi.host = 'http://switchon.cismet.de/legacy-rest1';
         //appConfig.cidsRestApi.host = 'http://tl-243.xtr.deltares.nl/switchon_server_rest';
         
         appConfig.searchService = {};
@@ -1724,40 +1683,97 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
 
 angular.module('de.cismet.sip-html5-resource-registration.services')
         .factory('de.cismet.sip-html5-resource-registration.services.RepresentationFactory',
-                ['$resource',
-                    function ($resource) {
+                ['$q', 
+                    'de.cismet.sip-html5-resource-registration.services.TagGroupService',
+                    function ($q, tagGroupService) {
                         'use strict';
 
-                        function Representation() {
-                            var _this, resourceTemplate;
+                        function Representation(representation) {
+                            var _this; //, resourceTemplate;
                             _this = this;
-                            resourceTemplate = $resource('data/representationTemplate.json', {}, {
-                            query: {
-                                method: 'GET',
-                                params: {
-                                },
-                                isArray: false
-                            }
-                        }).query();
-                        
-                        resourceTemplate.$promise.then(function (json) {
-                            for (var key in json) {
-                                if (json.hasOwnProperty(key) && !_this.hasOwnProperty(key)) {
-                                    _this[key] = json[key];
-                                }
-                            }
-                        });
-                            
-                            
-                            
 
+                            _this.$self = '/SWITCHON.REPRESENTATION/-1';
+                            _this.id = -1;
+
+                            if (representation) {
+                                for (var key in representation) {
+                                    if (representation.hasOwnProperty(key) && !_this.hasOwnProperty(key) &&
+                                            key !== '$resolved' && key !== '$promise') {
+                                        _this[key] = representation[key];
+                                    }
+                                }
+                            } 
+//                            else {
+//                                _this.contenttype = 'application/octet-stream';
+//                                _this.function = 'download';
+//                            }
                         }
+
+                        Representation.prototype.updateTags = function () {
+                            var promises;
+                            var _that = this;
+                            promises = [];
+
+                            // resource type
+                            if (!_that.type) {
+                                _that.type = 'original data';
+                            }
+                            if (typeof _that.type !== 'object') {
+                                promises.push(tagGroupService.getTagList('representation type').$promise.then(
+                                        function (tags) {
+                                            _that.type = tags.getTagByName(_that.type);
+                                        }));
+                            }
+
+                            // resource protocol
+                            if (!_that.protocol) {
+                                _that.protocol = 'WWW:LINK-1.0-http--link';
+                            }
+                            if (typeof _that.protocol !== 'object') {
+                                promises.push(tagGroupService.getTagList('protocol', 'WWW:LINK-1.0-http--link,OGC:WMS-1.1.1-http-get-capabilities,WWW:TILESERVER,OPeNDAP:OPeNDAP').$promise.then(
+                                        function (tags) {
+                                            _that.protocol = tags.getTagByName(_that.protocol);
+                                        }));
+                            }
+
+                            // resource function
+                            if (!_that.function) {
+                                _that.function = 'download';
+                            }
+                            if (typeof _that.function !== 'object') {
+                                promises.push(tagGroupService.getTagList('function').$promise.then(
+                                        function (tags) {
+                                            _that.function = tags.getTagByName(_that.function);
+                                        }));
+                            }
+
+                            // resource content type
+                            if (!_that.contenttype) {
+                                _that.contenttype = 'application/octet-stream';
+                            }
+                            if (typeof _that.contenttype !== 'object') {
+                                promises.push(tagGroupService.getTagList('content type').$promise.then(
+                                        function (tags) {
+                                            _that.contenttype = tags.getTagByName(_that.contenttype);
+                                        }));
+                            }
+
+                            //return a fake promise to satisfy progress watch
+                            if (promises.length === 0) {
+                                promises.push($q(function (resolve) {
+                                    setTimeout(function () {
+                                        resolve();
+                                    }, 500);
+                                }));
+                            }
+                            
+                            return $q.all(promises);
+                        };
 
                         Representation.prototype.constructor = Representation;
                         return Representation;
+
                     }]);
-
-
 
 /* 
  * ***************************************************
@@ -2046,24 +2062,61 @@ angular.module(
                     var intermediateResult, resultTags, i;
                     // cached list does exist
                     if (tagGroups.hasOwnProperty(taggroup)) {
-                        return tagGroups[taggroup];
+                        resultTags = tagGroups[taggroup];
+                        if (!resultTags.$resolved) {
+                            console.warn('possible synchonisation problem for taggroup ' + taggroup);
+                            resultTags.$promise.then(function () {
+                                lazyLoadTagLists(taggroup, tags);
+                            });
+                        }
+
+                        if (tags) {
+                            var tmpTags, tagArray, j;
+                            tmpTags = '';
+                            tagArray = tags.split(',');
+                            j = 0;
+                            for (i = 0; i < tagArray.length; ++i) {
+                                if (!resultTags.getTagByName(tagArray[i])) {
+                                    if (j > 0) {
+                                        tmpTags += ',';
+                                    }
+                                    tmpTags += tagArray[i];
+                                    j++;
+                                }
+                            }
+
+                            // tag list exists but entry not found
+                            if (j > 0) {
+                                tags = tmpTags;
+                            } else {
+                                return resultTags;
+                            }
+
+                        } else {
+                            return resultTags;
+                        }
+                    } else {
+                        resultTags = [];
+                        resultTags.getTagByName = function (tagname) {
+                            for (var i = 0; i < this.length; i++) {
+                                if (this[i].name && this[i].name === tagname) {
+                                    return this[i];
+                                }
+                            }
+
+                            return null;
+                        };
                     }
 
-
-                    intermediateResult = searchTags(taggroup, tags);
-                    resultTags = [];
                     resultTags.$resolved = false;
-                    resultTags.getTagByName = function(tagname) {
-                        for (var i = 0; i < this.length; i++) {
-                            if (this[i].name && this[i].name === tagname) {
-                                return this[i];
-                            }
-                        }
-                    };
+                    intermediateResult = searchTags(taggroup, tags);
 
                     resultTags.$promise = intermediateResult.$promise.then(function (resource) {
                         for (i = 0; i < resource.$collection.length; i++) {
-                            resultTags.push(resource.$collection[i]);
+                            var resultTag = resource.$collection[i];
+                            if (!resultTags.getTagByName(resultTag)) {
+                                resultTags.push(resource.$collection[i]);
+                            }
                         }
                         resultTags.$resolved = true;
                         return resultTags;
@@ -2082,21 +2135,21 @@ angular.module(
                         function (taggroup, tag, callbackFunction) {
                             if (tagGroups.hasOwnProperty(taggroup)) {
                                 if (tagGroups[taggroup].$resolved === true) {
-                                    for (var i = 0; i < tagGroups[taggroup].length; i++) {
-                                        if (tagGroups[taggroup][i].name && tagGroups[taggroup][i].name === tag) {
-                                            return tagGroups[taggroup][i];
-                                        }
-                                    }
+                                    return tagGroups[taggroup].getTagByName(tag);
                                 } else if (callbackFunction) {
                                     tagGroups[taggroup].$promise.then(function (resolvedTaggroup) {
-                                        for (var i = 0; i < resolvedTaggroup.length; i++) {
-                                            if (resolvedTaggroup[i].name && resolvedTaggroup[i].name === tag) {
-                                                callbackFunction(resolvedTaggroup[i]);
-                                                return resolvedTaggroup[i];
-                                            }
-                                        }
+                                        var resolvedTag = resolvedTaggroup.getTagByName(tag);
+                                        callbackFunction(resolvedTag);
+                                        return resolvedTag;
                                     });
                                 }
+                            } else if (callbackFunction) {
+                                lazyLoadTagLists(taggroup, tag).$promise.then(function (resolvedTaggroup) {
+                                    var resolvedTag = resolvedTaggroup.getTagByName(tag);
+                                    callbackFunction(resolvedTag);
+                                    return resolvedTag;
+                                });
+
                             }
                             return null;
                         };

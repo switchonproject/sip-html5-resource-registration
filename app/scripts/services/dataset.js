@@ -25,33 +25,28 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                         }).query();
 
                         datasetTemplate.$promise.then(function (dataset) {
-                            dataset.name = ($location.search()).name;
-                            
-                            dataset.representation[0] = new Representation();
-                            dataset.representation[1] = new Representation();
-                            dataset.representation[2] = new Representation();
-                            
-                            dataset.representation[0].contentlocation = ($location.search()).link;
-                            if (dataset.name && dataset.representation[0].contentlocation) {
-                                
-                                // check data upload tool parameters
-                                var linkFunction = ($location.search()).function;
-                                var contenttype = $location.search().format;
-                                
-                                dataset.$uploaded = true;
-                                dataset.representation[0].function = {};
-                                if (linkFunction && (linkFunction === 'download' || linkFunction === 'information')) {
-                                    dataset.representation[0].function.name = linkFunction;
-                                } else {
-                                    dataset.representation[0].function.name = 'download';
-                                }
-                                dataset.representation[0].contenttype = {};
 
-                                if (contenttype) {
-                                    dataset.representation[0].contenttype.name = contenttype;
-                                } else {
-                                    dataset.representation[0].contenttype.name = 'application/octet-stream';
+                            var tmpRepresentations = [];
+                            var representationJson = ($location.search()).representations;
+                            if (representationJson) {
+                                tmpRepresentations =  JSON.parse(decodeURIComponent(representationJson));
+                                if (Array.isArray(tmpRepresentations)) {
+                                    tmpRepresentations.forEach(function (representation) {
+                                        dataset.representation.push(new Representation(representation));
+                                    });
                                 }
+                            }
+
+                            if (dataset.representation.length > 0 && dataset.representation[0].name !== null) {
+                                dataset.name = dataset.representation[0].name;
+                                if (dataset.representation[0].contentlocation &&
+                                        dataset.representation[0].function.name &&
+                                        dataset.representation[0].contenttype.name) {
+                                    dataset.$uploaded = true;
+                                }
+
+                            } else {
+                                dataset.representation[0] = new Representation();
                             }
                         });
 

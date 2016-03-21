@@ -98,7 +98,7 @@ angular.module(
                 _this.gotoUploadTool = function () {
                     var uploadToolUrl = _this.config.uploadtool.baseUrl + 
                             '?datasetname=' + _this.dataset.name;
-                    console.log(uploadToolUrl);
+                    //console.log(uploadToolUrl);
                     $location.url(uploadToolUrl); 
                 };
                 

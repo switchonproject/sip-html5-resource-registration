@@ -10,7 +10,7 @@
 
 angular.module('de.cismet.sip-html5-resource-registration.services')
         .factory('de.cismet.sip-html5-resource-registration.services.RepresentationFactory',
-                ['$q', 
+                ['$q',
                     'de.cismet.sip-html5-resource-registration.services.TagGroupService',
                     function ($q, tagGroupService) {
                         'use strict';
@@ -29,7 +29,7 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                                         _this[key] = representation[key];
                                     }
                                 }
-                            } 
+                            }
 //                            else {
 //                                _this.contenttype = 'application/octet-stream';
 //                                _this.function = 'download';
@@ -43,45 +43,57 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
 
                             // resource type
                             if (!_that.type) {
-                                _that.type = 'original data';
+                                _that.type = {};
                             }
-                            if (typeof _that.type !== 'object') {
+                            if (!_that.type.name) {
+                                _that.type.name = 'original data';
+                            }
+                            if (!_that.type.$self || !_that.type.$ref) {
                                 promises.push(tagGroupService.getTagList('representation type').$promise.then(
                                         function (tags) {
-                                            _that.type = tags.getTagByName(_that.type);
+                                            _that.type = tags.getTagByName(_that.type.name);
                                         }));
                             }
 
                             // resource protocol
                             if (!_that.protocol) {
-                                _that.protocol = 'WWW:LINK-1.0-http--link';
+                                _that.protocol = {};
                             }
-                            if (typeof _that.protocol !== 'object') {
+                            if (!_that.protocol.name) {
+                                _that.protocol.name = 'WWW:LINK-1.0-http--link';
+                            }
+                            if (!_that.protocol.$self || !_that.protocol.$ref) {
                                 promises.push(tagGroupService.getTagList('protocol', 'WWW:LINK-1.0-http--link,OGC:WMS-1.1.1-http-get-capabilities,WWW:TILESERVER,OPeNDAP:OPeNDAP').$promise.then(
                                         function (tags) {
-                                            _that.protocol = tags.getTagByName(_that.protocol);
+                                            _that.protocol = tags.getTagByName(_that.protocol.name);
                                         }));
                             }
 
                             // resource function
-                            if (!_that.function) {
+                            if (!_that.function.name) {
+                                _that.function = {};
+                            }
+                            if (!_that.function.name) {
                                 _that.function = 'download';
                             }
-                            if (typeof _that.function !== 'object') {
+                            if (!_that.function.$self || !_that.function.$ref) {
                                 promises.push(tagGroupService.getTagList('function').$promise.then(
                                         function (tags) {
-                                            _that.function = tags.getTagByName(_that.function);
+                                            _that.function = tags.getTagByName(_that.function.name);
                                         }));
                             }
 
                             // resource content type
                             if (!_that.contenttype) {
-                                _that.contenttype = 'application/octet-stream';
+                                _that.contenttype = {};
                             }
-                            if (typeof _that.contenttype !== 'object') {
+                            if (!_that.contenttype.name) {
+                                _that.contenttype.name = 'application/octet-stream';
+                            }
+                            if (!_that.contenttype.$self || !_that.contenttype.$ref) {
                                 promises.push(tagGroupService.getTagList('content type').$promise.then(
                                         function (tags) {
-                                            _that.contenttype = tags.getTagByName(_that.contenttype);
+                                            _that.contenttype = tags.getTagByName(_that.contenttype.name);
                                         }));
                             }
 
@@ -93,7 +105,7 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                                     }, 500);
                                 }));
                             }
-                            
+
                             return $q.all(promises);
                         };
 

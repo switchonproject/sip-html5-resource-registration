@@ -21,19 +21,36 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
 
                             _this.$self = '/SWITCHON.REPRESENTATION/-1';
                             _this.id = -1;
+                            _this.description = null;
+                            _this.content = null;
+                            _this.type = {};
+                            _this.function = {};
+                            _this.protocol = {};
+                            _this.applicationprofile = null;
+                            _this.uuid = null;
+                            _this.temporalresolution = null;
+                            _this.spatialresolution = null;
+                            _this.spatialscale = null;
+                            _this.contentlocation = null;
+                            _this.tags = null;
+                            _this.contenttype = {};
+                            _this.uploadstatus = null;
+                            _this.uploadmessage = null;
+                            
 
                             if (representation) {
                                 for (var key in representation) {
                                     if (representation.hasOwnProperty(key) && !_this.hasOwnProperty(key) &&
                                             key !== '$resolved' && key !== '$promise') {
-                                        _this[key] = representation[key];
+                                        
+                                        if(typeof _this[key] === 'object') {
+                                            _this[key].name = representation[key];
+                                        } else {
+                                            _this[key] = representation[key];
+                                        } 
                                     }
                                 }
                             }
-//                            else {
-//                                _this.contenttype = 'application/octet-stream';
-//                                _this.function = 'download';
-//                            }
                         }
 
                         Representation.prototype.updateTags = function () {

@@ -1,4 +1,4 @@
-sip-html5-resource-registration   
+SIP HTML Open Data Registration Tool
 ==============================
 
-A simple example project that is actually buildable by the default build script.
+http://switchonproject.github.io/sip-html5-resource-registration/

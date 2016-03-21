@@ -1,0 +1,9 @@
+[{
+        "name": "name",
+        "description": "description",
+        "contentlocation": "http://127.0.0.1:1099/1/SWITCHON",
+        "contenttype": "application/adrg",
+        "type": "original data",
+        "function": "information",
+        "protocol": "WWW:LINK-1.0-http--link"
+    }]

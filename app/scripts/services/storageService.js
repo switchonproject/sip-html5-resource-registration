@@ -40,10 +40,11 @@ angular.module(
                 storeFunction = function (dataset) {
                     var storeResult;
 
+                    // remove uploaded flag (unavailable in cids bean);
+                    delete dataset.$uploaded;
 
                     // result of the remote store operation (promise)
                     // starting the store!
-
                     storeResult = storeResource.store(dataset);
 
                     return storeResult;

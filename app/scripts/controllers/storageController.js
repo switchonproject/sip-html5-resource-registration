@@ -72,7 +72,7 @@ angular.module(
                         maxProgress += 10;  
                         representation.updateTags().then(function () {
                             _this.progress.currval += 10; // maxProgress + 10
-                            console.log('REPRESENTATIONS: ' + _this.progress.currval);
+                            //console.log('REPRESENTATIONS: ' + _this.progress.currval);
                         });
                     });
                     
@@ -80,14 +80,14 @@ angular.module(
                     tagGroupService.getTagList('srid', 'EPSG:4326').$promise.then(function (tags) {
                         _this.dataset.srid = tags[0];
                         _this.progress.currval += 10; // 10
-                        console.log('SRID TAG -> RESOURCE: ' + _this.progress.currval);
+                        //console.log('SRID TAG -> RESOURCE: ' + _this.progress.currval);
                     });
 
                     // CONFORMITY TAG -> RESOURCE
                     tagGroupService.getTagList('conformity', 'Not evaluated').$promise.then(function (tags) {
                         _this.dataset.conformity = tags[0];
                         _this.progress.currval += 10; // 20
-                        console.log('CONFORMITY TAG -> RESOURCE: ' + _this.progress.currval);
+                        //console.log('CONFORMITY TAG -> RESOURCE: ' + _this.progress.currval);
                     });
 
                     // LANGUAGE TAG -> RESOURCE, BASIC METADATA, LINEAGE METADATA
@@ -98,21 +98,21 @@ angular.module(
                             _this.dataset.metadata[1].language = tags[0];
                         }
                         _this.progress.currval += 10; // 30
-                        console.log('LANGUAGE TAG: ' + _this.progress.currval);
+                        //console.log('LANGUAGE TAG: ' + _this.progress.currval);
                     });
 
                     // RESOURCE TYPE -> RESOURCE
                     tagGroupService.getTagList('resource type', 'open data').$promise.then(function (tags) {
                         _this.dataset.type = tags[0];
                         _this.progress.currval += 10; // 40
-                        console.log('RESOURCE TYPE -> RESOURCE: ' + _this.progress.currval);
+                        //console.log('RESOURCE TYPE -> RESOURCE: ' + _this.progress.currval);
                     });
 
                     // INSPIRE TOPIC CATEGORY -> 
                     tagGroupService.getTagList('topic category', 'climatologyMeteorologyAtmosphere').$promise.then(function (tags) {
                         _this.dataset.topiccategory = tags[0];
                         _this.progress.currval += 10;  // 50
-                        console.log('INSPIRE TOPIC CATEGORY: ' + _this.progress.currval);
+                        //console.log('INSPIRE TOPIC CATEGORY: ' + _this.progress.currval);
                     });
 
                     // ROLE -> CONTACT
@@ -127,7 +127,7 @@ angular.module(
                             _this.dataset.contact = null;
                         }
                         _this.progress.currval += 10; // 60
-                        console.log('ROLE -> CONTACT: ' + _this.progress.currval);
+                        //console.log('ROLE -> CONTACT: ' + _this.progress.currval);
                     });
 
                     // META-DATA TYPE -> BASIC METADATA, LINEAGE METADATA
@@ -137,21 +137,21 @@ angular.module(
                             _this.dataset.metadata[1].type = tags.getTagByName['lineage meta-data'];
                         }
                         _this.progress.currval += 10; // 70
-                        console.log('META-DATA TYPE: ' + _this.progress.currval);
+                        //console.log('META-DATA TYPE: ' + _this.progress.currval);
                     });
 
                     // ACCESS LIMITATIONS
                     tagGroupService.getTagList('access limitations', 'limitation not listed').$promise.then(function (tags) {
                         _this.dataset.accesslimitations = tags[0];
                         _this.progress.currval += 10; // 80
-                        console.log('ACCESS LIMITATIONS: ' + _this.progress.currval);
+                        //console.log('ACCESS LIMITATIONS: ' + _this.progress.currval);
                     });
 
                     // COLLECTION -> RESOURCE
                     tagGroupService.getTagList('collection', 'Open Datasets').$promise.then(function (tags) {
                         _this.dataset.collection = tags[0];
                         _this.progress.currval += 10; // 90
-                        console.log('COLLECTION -> RESOURCE: ' + _this.progress.currval);
+                        //console.log('COLLECTION -> RESOURCE: ' + _this.progress.currval);
                     });
 
                     // META-DATA STANDARD -> BASIC METADATA, LINEAGE METADATA
@@ -161,7 +161,7 @@ angular.module(
                             _this.dataset.metadata[1].standard = tags[0];
                         }
                         _this.progress.currval += 10; // 100
-                        console.log('META-DATA STANDARD: ' + _this.progress.currval);
+                        //console.log('META-DATA STANDARD: ' + _this.progress.currval);
                     });
 
 
@@ -170,7 +170,7 @@ angular.module(
                         _this.dataset.metadata[0].contenttype = tag;
                         // callback function might get called or might not get called!
                         //_this.progress.currval += 10; // 110
-                        console.log('CONTENT TYPE: ' + _this.progress.currval);
+                        //console.log('CONTENT TYPE: ' + _this.progress.currval);
                     });
 
 
@@ -183,7 +183,7 @@ angular.module(
                         _this.dataset.metadata[0].creationdate = currentdate;
                         _this.dataset.metadata[0].description = userAgent;
                         _this.progress.currval += 10; // 110
-                        console.log('CONTENT (REQUEST STATUS): ' + _this.progress.currval);
+                        //console.log('CONTENT (REQUEST STATUS): ' + _this.progress.currval);
                     });
                     
                     
@@ -203,7 +203,7 @@ angular.module(
                     }
                     
                     _this.progress.currval += 10; // 120
-                    console.log('CLEANUP: ' + _this.progress.currval);
+                    //console.log('CLEANUP: ' + _this.progress.currval);
                 });
 
                 $scope.$watch(function () {

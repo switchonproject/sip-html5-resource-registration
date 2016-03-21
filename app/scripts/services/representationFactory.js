@@ -21,6 +21,7 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
 
                             _this.$self = '/SWITCHON.REPRESENTATION/-1';
                             _this.id = -1;
+                            _this.name = null;
                             _this.description = null;
                             _this.content = null;
                             _this.type = {};
@@ -36,18 +37,17 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                             _this.contenttype = {};
                             _this.uploadstatus = null;
                             _this.uploadmessage = null;
-                            
+
 
                             if (representation) {
                                 for (var key in representation) {
-                                    if (representation.hasOwnProperty(key) && !_this.hasOwnProperty(key) &&
+                                    if (representation.hasOwnProperty(key) && _this.hasOwnProperty(key) &&
                                             key !== '$resolved' && key !== '$promise') {
-                                        
-                                        if(typeof _this[key] === 'object') {
+                                        if (_this[key] !== null && typeof _this[key] === 'object') {
                                             _this[key].name = representation[key];
                                         } else {
                                             _this[key] = representation[key];
-                                        } 
+                                        }
                                     }
                                 }
                             }

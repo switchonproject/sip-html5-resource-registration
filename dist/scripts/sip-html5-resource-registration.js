@@ -968,7 +968,7 @@ angular.module(
                         maxProgress += 10;  
                         representation.updateTags().then(function () {
                             _this.progress.currval += 10; // maxProgress + 10
-                            console.log('REPRESENTATIONS: ' + _this.progress.currval);
+                            //console.log('REPRESENTATIONS: ' + _this.progress.currval);
                         });
                     });
                     
@@ -976,14 +976,14 @@ angular.module(
                     tagGroupService.getTagList('srid', 'EPSG:4326').$promise.then(function (tags) {
                         _this.dataset.srid = tags[0];
                         _this.progress.currval += 10; // 10
-                        console.log('SRID TAG -> RESOURCE: ' + _this.progress.currval);
+                        //console.log('SRID TAG -> RESOURCE: ' + _this.progress.currval);
                     });
 
                     // CONFORMITY TAG -> RESOURCE
                     tagGroupService.getTagList('conformity', 'Not evaluated').$promise.then(function (tags) {
                         _this.dataset.conformity = tags[0];
                         _this.progress.currval += 10; // 20
-                        console.log('CONFORMITY TAG -> RESOURCE: ' + _this.progress.currval);
+                        //console.log('CONFORMITY TAG -> RESOURCE: ' + _this.progress.currval);
                     });
 
                     // LANGUAGE TAG -> RESOURCE, BASIC METADATA, LINEAGE METADATA
@@ -994,21 +994,21 @@ angular.module(
                             _this.dataset.metadata[1].language = tags[0];
                         }
                         _this.progress.currval += 10; // 30
-                        console.log('LANGUAGE TAG: ' + _this.progress.currval);
+                        //console.log('LANGUAGE TAG: ' + _this.progress.currval);
                     });
 
                     // RESOURCE TYPE -> RESOURCE
                     tagGroupService.getTagList('resource type', 'open data').$promise.then(function (tags) {
                         _this.dataset.type = tags[0];
                         _this.progress.currval += 10; // 40
-                        console.log('RESOURCE TYPE -> RESOURCE: ' + _this.progress.currval);
+                        //console.log('RESOURCE TYPE -> RESOURCE: ' + _this.progress.currval);
                     });
 
                     // INSPIRE TOPIC CATEGORY -> 
                     tagGroupService.getTagList('topic category', 'climatologyMeteorologyAtmosphere').$promise.then(function (tags) {
                         _this.dataset.topiccategory = tags[0];
                         _this.progress.currval += 10;  // 50
-                        console.log('INSPIRE TOPIC CATEGORY: ' + _this.progress.currval);
+                        //console.log('INSPIRE TOPIC CATEGORY: ' + _this.progress.currval);
                     });
 
                     // ROLE -> CONTACT
@@ -1023,7 +1023,7 @@ angular.module(
                             _this.dataset.contact = null;
                         }
                         _this.progress.currval += 10; // 60
-                        console.log('ROLE -> CONTACT: ' + _this.progress.currval);
+                        //console.log('ROLE -> CONTACT: ' + _this.progress.currval);
                     });
 
                     // META-DATA TYPE -> BASIC METADATA, LINEAGE METADATA
@@ -1033,21 +1033,21 @@ angular.module(
                             _this.dataset.metadata[1].type = tags.getTagByName['lineage meta-data'];
                         }
                         _this.progress.currval += 10; // 70
-                        console.log('META-DATA TYPE: ' + _this.progress.currval);
+                        //console.log('META-DATA TYPE: ' + _this.progress.currval);
                     });
 
                     // ACCESS LIMITATIONS
                     tagGroupService.getTagList('access limitations', 'limitation not listed').$promise.then(function (tags) {
                         _this.dataset.accesslimitations = tags[0];
                         _this.progress.currval += 10; // 80
-                        console.log('ACCESS LIMITATIONS: ' + _this.progress.currval);
+                        //console.log('ACCESS LIMITATIONS: ' + _this.progress.currval);
                     });
 
                     // COLLECTION -> RESOURCE
                     tagGroupService.getTagList('collection', 'Open Datasets').$promise.then(function (tags) {
                         _this.dataset.collection = tags[0];
                         _this.progress.currval += 10; // 90
-                        console.log('COLLECTION -> RESOURCE: ' + _this.progress.currval);
+                        //console.log('COLLECTION -> RESOURCE: ' + _this.progress.currval);
                     });
 
                     // META-DATA STANDARD -> BASIC METADATA, LINEAGE METADATA
@@ -1057,7 +1057,7 @@ angular.module(
                             _this.dataset.metadata[1].standard = tags[0];
                         }
                         _this.progress.currval += 10; // 100
-                        console.log('META-DATA STANDARD: ' + _this.progress.currval);
+                        //console.log('META-DATA STANDARD: ' + _this.progress.currval);
                     });
 
 
@@ -1066,7 +1066,7 @@ angular.module(
                         _this.dataset.metadata[0].contenttype = tag;
                         // callback function might get called or might not get called!
                         //_this.progress.currval += 10; // 110
-                        console.log('CONTENT TYPE: ' + _this.progress.currval);
+                        //console.log('CONTENT TYPE: ' + _this.progress.currval);
                     });
 
 
@@ -1079,7 +1079,7 @@ angular.module(
                         _this.dataset.metadata[0].creationdate = currentdate;
                         _this.dataset.metadata[0].description = userAgent;
                         _this.progress.currval += 10; // 110
-                        console.log('CONTENT (REQUEST STATUS): ' + _this.progress.currval);
+                        //console.log('CONTENT (REQUEST STATUS): ' + _this.progress.currval);
                     });
                     
                     
@@ -1099,7 +1099,7 @@ angular.module(
                     }
                     
                     _this.progress.currval += 10; // 120
-                    console.log('CLEANUP: ' + _this.progress.currval);
+                    //console.log('CLEANUP: ' + _this.progress.currval);
                 });
 
                 $scope.$watch(function () {
@@ -1541,33 +1541,28 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                         }).query();
 
                         datasetTemplate.$promise.then(function (dataset) {
-                            dataset.name = ($location.search()).name;
-                            
-                            dataset.representation[0] = new Representation();
-                            dataset.representation[1] = new Representation();
-                            dataset.representation[2] = new Representation();
-                            
-                            dataset.representation[0].contentlocation = ($location.search()).link;
-                            if (dataset.name && dataset.representation[0].contentlocation) {
-                                
-                                // check data upload tool parameters
-                                var linkFunction = ($location.search()).function;
-                                var contenttype = $location.search().format;
-                                
-                                dataset.$uploaded = true;
-                                dataset.representation[0].function = {};
-                                if (linkFunction && (linkFunction === 'download' || linkFunction === 'information')) {
-                                    dataset.representation[0].function.name = linkFunction;
-                                } else {
-                                    dataset.representation[0].function.name = 'download';
-                                }
-                                dataset.representation[0].contenttype = {};
 
-                                if (contenttype) {
-                                    dataset.representation[0].contenttype.name = contenttype;
-                                } else {
-                                    dataset.representation[0].contenttype.name = 'application/octet-stream';
+                            var tmpRepresentations = [];
+                            var representationJson = ($location.search()).representations;
+                            if (representationJson) {
+                                tmpRepresentations =  JSON.parse(decodeURIComponent(representationJson));
+                                if (Array.isArray(tmpRepresentations)) {
+                                    tmpRepresentations.forEach(function (representation) {
+                                        dataset.representation.push(new Representation(representation));
+                                    });
                                 }
+                            }
+
+                            if (dataset.representation.length > 0 && dataset.representation[0].name !== null) {
+                                dataset.name = dataset.representation[0].name;
+                                if (dataset.representation[0].contentlocation &&
+                                        dataset.representation[0].function.name &&
+                                        dataset.representation[0].contenttype.name) {
+                                    dataset.$uploaded = true;
+                                }
+
+                            } else {
+                                dataset.representation[0] = new Representation();
                             }
                         });
 
@@ -1683,7 +1678,7 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
 
 angular.module('de.cismet.sip-html5-resource-registration.services')
         .factory('de.cismet.sip-html5-resource-registration.services.RepresentationFactory',
-                ['$q', 
+                ['$q',
                     'de.cismet.sip-html5-resource-registration.services.TagGroupService',
                     function ($q, tagGroupService) {
                         'use strict';
@@ -1694,19 +1689,36 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
 
                             _this.$self = '/SWITCHON.REPRESENTATION/-1';
                             _this.id = -1;
+                            _this.name = null;
+                            _this.description = null;
+                            _this.content = null;
+                            _this.type = {};
+                            _this.function = {};
+                            _this.protocol = {};
+                            _this.applicationprofile = null;
+                            _this.uuid = null;
+                            _this.temporalresolution = null;
+                            _this.spatialresolution = null;
+                            _this.spatialscale = null;
+                            _this.contentlocation = null;
+                            _this.tags = null;
+                            _this.contenttype = {};
+                            _this.uploadstatus = null;
+                            _this.uploadmessage = null;
+
 
                             if (representation) {
                                 for (var key in representation) {
-                                    if (representation.hasOwnProperty(key) && !_this.hasOwnProperty(key) &&
+                                    if (representation.hasOwnProperty(key) && _this.hasOwnProperty(key) &&
                                             key !== '$resolved' && key !== '$promise') {
-                                        _this[key] = representation[key];
+                                        if (_this[key] !== null && typeof _this[key] === 'object') {
+                                            _this[key].name = representation[key];
+                                        } else {
+                                            _this[key] = representation[key];
+                                        }
                                     }
                                 }
-                            } 
-//                            else {
-//                                _this.contenttype = 'application/octet-stream';
-//                                _this.function = 'download';
-//                            }
+                            }
                         }
 
                         Representation.prototype.updateTags = function () {
@@ -1716,45 +1728,57 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
 
                             // resource type
                             if (!_that.type) {
-                                _that.type = 'original data';
+                                _that.type = {};
                             }
-                            if (typeof _that.type !== 'object') {
+                            if (!_that.type.name) {
+                                _that.type.name = 'original data';
+                            }
+                            if (!_that.type.$self || !_that.type.$ref) {
                                 promises.push(tagGroupService.getTagList('representation type').$promise.then(
                                         function (tags) {
-                                            _that.type = tags.getTagByName(_that.type);
+                                            _that.type = tags.getTagByName(_that.type.name);
                                         }));
                             }
 
                             // resource protocol
                             if (!_that.protocol) {
-                                _that.protocol = 'WWW:LINK-1.0-http--link';
+                                _that.protocol = {};
                             }
-                            if (typeof _that.protocol !== 'object') {
+                            if (!_that.protocol.name) {
+                                _that.protocol.name = 'WWW:LINK-1.0-http--link';
+                            }
+                            if (!_that.protocol.$self || !_that.protocol.$ref) {
                                 promises.push(tagGroupService.getTagList('protocol', 'WWW:LINK-1.0-http--link,OGC:WMS-1.1.1-http-get-capabilities,WWW:TILESERVER,OPeNDAP:OPeNDAP').$promise.then(
                                         function (tags) {
-                                            _that.protocol = tags.getTagByName(_that.protocol);
+                                            _that.protocol = tags.getTagByName(_that.protocol.name);
                                         }));
                             }
 
                             // resource function
-                            if (!_that.function) {
+                            if (!_that.function.name) {
+                                _that.function = {};
+                            }
+                            if (!_that.function.name) {
                                 _that.function = 'download';
                             }
-                            if (typeof _that.function !== 'object') {
+                            if (!_that.function.$self || !_that.function.$ref) {
                                 promises.push(tagGroupService.getTagList('function').$promise.then(
                                         function (tags) {
-                                            _that.function = tags.getTagByName(_that.function);
+                                            _that.function = tags.getTagByName(_that.function.name);
                                         }));
                             }
 
                             // resource content type
                             if (!_that.contenttype) {
-                                _that.contenttype = 'application/octet-stream';
+                                _that.contenttype = {};
                             }
-                            if (typeof _that.contenttype !== 'object') {
+                            if (!_that.contenttype.name) {
+                                _that.contenttype.name = 'application/octet-stream';
+                            }
+                            if (!_that.contenttype.$self || !_that.contenttype.$ref) {
                                 promises.push(tagGroupService.getTagList('content type').$promise.then(
                                         function (tags) {
-                                            _that.contenttype = tags.getTagByName(_that.contenttype);
+                                            _that.contenttype = tags.getTagByName(_that.contenttype.name);
                                         }));
                             }
 
@@ -1766,7 +1790,7 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                                     }, 500);
                                 }));
                             }
-                            
+
                             return $q.all(promises);
                         };
 
@@ -1970,10 +1994,11 @@ angular.module(
                 storeFunction = function (dataset) {
                     var storeResult;
 
+                    // remove uploaded flag (unavailable in cids bean);
+                    delete dataset.$uploaded;
 
                     // result of the remote store operation (promise)
                     // starting the store!
-
                     storeResult = storeResource.store(dataset);
 
                     return storeResult;

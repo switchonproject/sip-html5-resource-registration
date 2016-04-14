@@ -1,20 +1,30 @@
 <section ng-show="selected" ng-class="{current: selected, done: completed}" class="step">
     <div class="panel panel-primary">
-        <div class="panel-heading"><h1 class="panel-title">{{wzTitle}}</h1>
+        <div class="panel-heading">
+            <h1 class="panel-title">{{wzTitle}}</h1>
         </div>
         <div class="panel-body">
             <div ng-transclude></div>
         </div>
         <div class="panel-footer clearfix">
+            <a class="btn btn-primary pull-left"
+               href="mailto:switchon.wm@gmail.com?subject=Open-Data Registration Tool">
+                <span class="fa fa-fw fa-envelope"></span>
+                <span>Feedback</span>
+            </a>
             <button type="button" 
                     class="btn btn-primary pull-right" 
                     wz-next 
-                    ng-disabled="!wzData.canProceed">{{wzData.proceedButtonText}}</button>
+                    ng-disabled="!wzData.canProceed">
+                {{wzData.proceedButtonText}}
+            </button>
             <span class="pull-right">&nbsp;</span>
             <button type="button" 
                     class="btn btn-default pull-right" 
                     wz-previous 
-                    ng-disabled="!wzData.canGoBack">Previous</button>
+                    ng-disabled="!wzData.canGoBack">
+                Previous
+            </button>
         </div>
     </div>
 </section>

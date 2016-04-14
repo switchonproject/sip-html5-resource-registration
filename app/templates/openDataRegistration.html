@@ -94,7 +94,6 @@
                     ng-options="tag as tag.description for tag in tags['content type'] | contenttype:'description' track by tag.name"
                     ng-model="dataset.representation[0].contenttype"
                     ng-change="showInfoMessage('The <a href=\'https://en.wikipedia.org/wiki/Media_type\' target=\'_blank\'>media type</a> of the ' + dataset.representation[0].contenttype.description +  ' dataset file is <i>'+dataset.representation[0].contenttype.name + '</i>.');"
-                    ng-disabled="dataset.$uploaded === true && dataset.representation[0].contenttype"
                     required>
                 <option style="color:#999999" ng-show="!dataset.representation[0].contenttype" value="">Choose file format</option>
             </select>

@@ -223,7 +223,7 @@ angular.module(
                         map.addControl(drawControls);
                      });
                      drawControlsEnabled = true;
-                } else if(drawControlsEnabled) {
+                } else if(_this.mode.drawBBox !== true && drawControlsEnabled) {
                     drawControls.setDrawingOptions(noDrawOptions);
                     leafletData.getMap('mainmap').then(function (map) {
                         map.removeControl(drawControls);
@@ -577,10 +577,10 @@ angular.module(
                 $scope.message.icon = 'fa-info-circle';
                 $scope.message.type = 'success';
 
-                $scope.showInfoMessage = function (messageText) {
+                $scope.showInfoMessage = function (messageText, messageType, messageIcon) {
                     $scope.message.text = messageText;
-                    $scope.message.icon = 'fa-info-circle';
-                    $scope.message.type = 'success';
+                    $scope.message.type = messageType ? messageType : 'success';
+                    $scope.message.icon = messageIcon ? messageIcon : 'fa-info-circle';
                 };
 
                 /**
@@ -688,7 +688,7 @@ angular.module(
                 };
 
                 _this.checkLink = function (url) {
-                    console.log(url);
+                    //console.log(url);
                     if (url) {
                         var searchResultPromise, searchSuccess, searchError;
                         searchSuccess = function (searchResult) {
@@ -703,13 +703,18 @@ angular.module(
                                 $scope.message.type = 'info';
                                 $scope.wizard.hasError = 'datasetContentlocation';
                             } else {
+                                // reset the warning!
+                                if($scope.wizard.hasError === 'datasetContentlocation') {
+                                    $scope.wizard.hasError = null;
+                                }
+                                
                                 //console.log('resource ' + url + ' not in Meta-Data Repository');
                                 duplicateLink = undefined;
                             }
                         };
 
                         searchError = function (data) {
-                            console.log('search error: ' + data);
+                            console.error('search error: ' + data);
                             duplicateLink = undefined;
                         };
 

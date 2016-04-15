@@ -823,21 +823,25 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "        <div class=\"col-md-8\">\r" +
     "\n" +
-    "            <input type=\"text\" class=\"form-control\" \r" +
+    "            <div tooltip=\"{{(dataset.name && dataset.$uploaded === true) ? 'The name of an uploaded dataset cannot be changed afterwards.' : null}}\">\r" +
     "\n" +
-    "                   id=\"datasetName\" name=\"datasetName\" \r" +
+    "                <input type=\"text\" class=\"form-control disabled\" \r" +
     "\n" +
-    "                   placeholder=\"Name of the dataset\"\r" +
+    "                       id=\"datasetName\" name=\"datasetName\" \r" +
     "\n" +
-    "                   ng-model=\"dataset.name\"\r" +
+    "                       placeholder=\"Name of the dataset\"\r" +
     "\n" +
-    "                   required\r" +
+    "                       ng-model=\"dataset.name\"\r" +
     "\n" +
-    "                   ng-disabled=\"dataset.name && dataset.$uploaded === true\"\r" +
+    "                       required\r" +
     "\n" +
-    "                   ng-focus=\"showInfoMessage('Please provide a characteristic, and often unique, name by which the dataset is known.');\">\r" +
+    "                       ng-disabled=\"dataset.name && dataset.$uploaded === true\"\r" +
     "\n" +
-    "        </div>\r" +
+    "                       ng-focus=\"showInfoMessage('Please provide a characteristic, and often unique, name by which the dataset is known.');\">\r" +
+    "\n" +
+    "                </div>\r" +
+    "\n" +
+    "            </div>\r" +
     "\n" +
     "    </div>\r" +
     "\n" +
@@ -873,9 +877,7 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                              ng-class=\"{'btn-danger':(wizard.hasError === 'datasetUploadchoice' || wizard.hasError === 'datasetUploadchoiceName')}\"\r" +
     "\n" +
-    "                              tooltip=\"{{!dataset.name ? 'Please enter the name of the dataset to enable the Data Upload Tool' : 'Open the  Data Upload Tool'}}\"\r" +
-    "\n" +
-    "                              \r" +
+    "                              tooltip=\"{{!dataset.name ? 'Please enter the name of the dataset to enable the Data Upload Tool' : 'Open the Data Upload Tool'}}\"\r" +
     "\n" +
     "                              ng-if=\"!dataset.name\">Upload new Dataset\r" +
     "\n" +
@@ -891,7 +893,7 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                              ng-href=\"{{config.uploadtool.baseUrl}}?datasetname={{dataset.name}}\"\r" +
     "\n" +
-    "                              tooltip=\"{{!dataset.name ? 'Please enter the name of the dataset to enable the Data Upload Tool' : 'Open the  Data Upload Tool'}}\"\r" +
+    "                              tooltip=\"{{!dataset.name ? 'Please enter the name of the dataset to enable the Data Upload Tool' : 'Open the Data Upload Tool'}}\"\r" +
     "\n" +
     "                              ng-if=\"dataset.name\">Upload new Dataset\r" +
     "\n" +
@@ -909,7 +911,9 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "         ng-class=\"{'has-error':wizard.hasError === 'datasetContentlocation'}\"\r" +
     "\n" +
-    "         ng-show = \"dataset.$uploaded !== undefined\">\r" +
+    "         ng-show = \"dataset.$uploaded !== undefined\"\r" +
+    "\n" +
+    "         tooltip=\"{{(dataset.$uploaded === true && dataset.representation[0].contentlocation) ? 'The link of an uploaded dataset cannot be changed afterwards.' : null}}\">\r" +
     "\n" +
     "        <label for=\"datasetContentlocation\" class=\"col-md-1 form-control-label\">Link to Data</label>\r" +
     "\n" +
@@ -937,6 +941,8 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                    ng-disabled=\"dataset.$uploaded === true && dataset.representation[0].function\"\r" +
     "\n" +
+    "                    tooltip=\"{{(dataset.$uploaded === true && dataset.representation[0].function) ? 'The type of the link of an uploaded dataset cannot be changed afterwards.' : null}}\"\r" +
+    "\n" +
     "                    required>\r" +
     "\n" +
     "                    <option style=\"color:#999999\" ng-show=\"!dataset.representation[0].function\" value=\"\">Type of Link</option>\r" +
@@ -961,13 +967,15 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                   ng-model=\"dataset.representation[0].contentlocation\"\r" +
     "\n" +
-    "                   ng-focus=\"showInfoMessage('Please provide a download link to the dataset or a link to additional information about the dataset.');\"\r" +
+    "                   ng-focus=\"(wizard.hasError === 'datasetContentlocation') ? showInfoMessage('This dataset is alredy registered in the SWITCH-ON Spatial Information Platform', 'info', 'fa-warning') : showInfoMessage('Please provide a download link to the dataset or a link to additional information about the dataset.');\"\r" +
     "\n" +
     "                   ng-change=\"odRegistrationController.checkLink(dataset.representation[0].contentlocation)\"\r" +
     "\n" +
     "                   ng-model-options='{ debounce: 1000 }'\r" +
     "\n" +
     "                   ng-disabled=\"dataset.$uploaded === true && dataset.representation[0].contentlocation\"\r" +
+    "\n" +
+    "                   tooltip=\"{{(dataset.$uploaded === true && dataset.representation[0].contentlocation) ? 'The link of an uploaded dataset cannot be changed afterwards.' : null}}\"\r" +
     "\n" +
     "                   required>\r" +
     "\n" +
@@ -994,8 +1002,6 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "                    ng-model=\"dataset.representation[0].contenttype\"\r" +
     "\n" +
     "                    ng-change=\"showInfoMessage('The <a href=\\'https://en.wikipedia.org/wiki/Media_type\\' target=\\'_blank\\'>media type</a> of the ' + dataset.representation[0].contenttype.description +  ' dataset file is <i>'+dataset.representation[0].contenttype.name + '</i>.');\"\r" +
-    "\n" +
-    "                    ng-disabled=\"dataset.$uploaded === true && dataset.representation[0].contenttype\"\r" +
     "\n" +
     "                    required>\r" +
     "\n" +
@@ -1391,7 +1397,9 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "    <div class=\"panel panel-primary\">\r" +
     "\n" +
-    "        <div class=\"panel-heading\"><h1 class=\"panel-title\">{{wzTitle}}</h1>\r" +
+    "        <div class=\"panel-heading\">\r" +
+    "\n" +
+    "            <h1 class=\"panel-title\">{{wzTitle}}</h1>\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
@@ -1403,13 +1411,27 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "        <div class=\"panel-footer clearfix\">\r" +
     "\n" +
+    "            <a class=\"btn btn-primary pull-left\"\r" +
+    "\n" +
+    "               href=\"mailto:switchon.wm@gmail.com?subject=Open-Data Registration Tool\">\r" +
+    "\n" +
+    "                <span class=\"fa fa-fw fa-envelope\"></span>\r" +
+    "\n" +
+    "                <span>Feedback</span>\r" +
+    "\n" +
+    "            </a>\r" +
+    "\n" +
     "            <button type=\"button\" \r" +
     "\n" +
     "                    class=\"btn btn-primary pull-right\" \r" +
     "\n" +
     "                    wz-next \r" +
     "\n" +
-    "                    ng-disabled=\"!wzData.canProceed\">{{wzData.proceedButtonText}}</button>\r" +
+    "                    ng-disabled=\"!wzData.canProceed\">\r" +
+    "\n" +
+    "                {{wzData.proceedButtonText}}\r" +
+    "\n" +
+    "            </button>\r" +
     "\n" +
     "            <span class=\"pull-right\">&nbsp;</span>\r" +
     "\n" +
@@ -1419,7 +1441,11 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                    wz-previous \r" +
     "\n" +
-    "                    ng-disabled=\"!wzData.canGoBack\">Previous</button>\r" +
+    "                    ng-disabled=\"!wzData.canGoBack\">\r" +
+    "\n" +
+    "                Previous\r" +
+    "\n" +
+    "            </button>\r" +
     "\n" +
     "        </div>\r" +
     "\n" +

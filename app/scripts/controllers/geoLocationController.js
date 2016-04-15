@@ -198,7 +198,7 @@ angular.module(
                         map.addControl(drawControls);
                      });
                      drawControlsEnabled = true;
-                } else if(drawControlsEnabled) {
+                } else if(_this.mode.drawBBox !== true && drawControlsEnabled) {
                     drawControls.setDrawingOptions(noDrawOptions);
                     leafletData.getMap('mainmap').then(function (map) {
                         map.removeControl(drawControls);

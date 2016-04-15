@@ -61,10 +61,10 @@ angular.module(
                 $scope.message.icon = 'fa-info-circle';
                 $scope.message.type = 'success';
 
-                $scope.showInfoMessage = function (messageText) {
+                $scope.showInfoMessage = function (messageText, messageType, messageIcon) {
                     $scope.message.text = messageText;
-                    $scope.message.icon = 'fa-info-circle';
-                    $scope.message.type = 'success';
+                    $scope.message.type = messageType ? messageType : 'success';
+                    $scope.message.icon = messageIcon ? messageIcon : 'fa-info-circle';
                 };
 
                 /**

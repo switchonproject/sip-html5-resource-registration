@@ -110,8 +110,7 @@ module.exports = function(config) {
     
     preprocessors: {
         '**/*.json': ['gb-json2js'],
-        '**/templates/**/*.html': ['ng-html2js'],
-        '**/views/**/*.html': ['ng-html2js']
+        '**/templates/**/*.html': ['ng-html2js']
     },
     
     ngHtml2JsPreprocessor: {

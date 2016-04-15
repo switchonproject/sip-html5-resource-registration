@@ -52,7 +52,7 @@ angular.module(
                 };
 
                 _this.checkLink = function (url) {
-                    console.log(url);
+                    //console.log(url);
                     if (url) {
                         var searchResultPromise, searchSuccess, searchError;
                         searchSuccess = function (searchResult) {
@@ -67,13 +67,18 @@ angular.module(
                                 $scope.message.type = 'info';
                                 $scope.wizard.hasError = 'datasetContentlocation';
                             } else {
+                                // reset the warning!
+                                if($scope.wizard.hasError === 'datasetContentlocation') {
+                                    $scope.wizard.hasError = null;
+                                }
+                                
                                 //console.log('resource ' + url + ' not in Meta-Data Repository');
                                 duplicateLink = undefined;
                             }
                         };
 
                         searchError = function (data) {
-                            console.log('search error: ' + data);
+                            console.error('search error: ' + data);
                             duplicateLink = undefined;
                         };
 

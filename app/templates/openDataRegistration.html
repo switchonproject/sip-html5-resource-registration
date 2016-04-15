@@ -80,7 +80,7 @@
                    id="datasetContentlocation" 
                    placeholder="URL of the dataset"
                    ng-model="dataset.representation[0].contentlocation"
-                   ng-focus="showInfoMessage('Please provide a download link to the dataset or a link to additional information about the dataset.');"
+                   ng-focus="(wizard.hasError === 'datasetContentlocation') ? showInfoMessage('This dataset is alredy registered in the SWITCH-ON Spatial Information Platform', 'info', 'fa-warning') : showInfoMessage('Please provide a download link to the dataset or a link to additional information about the dataset.');"
                    ng-change="odRegistrationController.checkLink(dataset.representation[0].contentlocation)"
                    ng-model-options='{ debounce: 1000 }'
                    ng-disabled="dataset.$uploaded === true && dataset.representation[0].contentlocation"

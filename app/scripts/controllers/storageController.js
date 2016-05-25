@@ -70,10 +70,17 @@ angular.module(
                     // REPRESENTATIONS
                     _this.dataset.representation.forEach(function (representation) {
                         maxProgress += 10;  
+                        
+                        // TAGS -> REPRESENTATION
                         representation.updateTags().then(function () {
                             _this.progress.currval += 10; // maxProgress + 10
                             //console.log('REPRESENTATIONS: ' + _this.progress.currval);
                         });
+                        
+                        // the uuid is needed to uniquely indentify the representation 
+                        // when the server has to perform an update of the uploadmessage (processing instruction)
+                        // UUID -> REPRESENTATION
+                        representation.uuid = representation.uuid || rfc4122.v4();
                     });
                     
                     // SRID TAG -> RESOURCE
@@ -193,7 +200,7 @@ angular.module(
                     }
                     
                     // CLEANUP
-                    _this.dataset.uuid = rfc4122.v4();
+                    _this.dataset.uuid = _this.dataset.uuid || rfc4122.v4();
                     
                     // check optional lineage metadata
                     if (!_this.dataset.metadata[1] || !_this.dataset.metadata[1].description) {

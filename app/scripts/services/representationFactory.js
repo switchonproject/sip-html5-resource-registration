@@ -38,7 +38,8 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                             _this.uploadstatus = null;
                             _this.uploadmessage = null;
 
-
+                            // copy properties from remote representation object (angular resource)
+                            // and ignore $resolved and $promise
                             if (representation) {
                                 for (var key in representation) {
                                     if (representation.hasOwnProperty(key) && _this.hasOwnProperty(key) &&

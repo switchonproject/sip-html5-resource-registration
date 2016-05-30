@@ -57,7 +57,7 @@ angular.module(
                         var searchResultPromise, searchSuccess, searchError;
                         searchSuccess = function (searchResult) {
                             if (searchResult && searchResult.$collection && searchResult.$collection.length > 0) {
-                                duplicateLink = 'This dataset is alredy registered in the SWITCH-ON Spatial Information Platform under the name </strong>"' +
+                                duplicateLink = 'This dataset is already registered in the SWITCH-ON Spatial Information Platform under the name </strong>"' +
                                         searchResult.$collection[0].name + '"</strong>. Click <a href="'+AppConfig.byod.baseUrl+'/#/resource/' +
                                         searchResult.$collection[0].id + '" title="' +
                                         searchResult.$collection[0].name + '" target="_blank">here</a> to view the dataset meta-data.';

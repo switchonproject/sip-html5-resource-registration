@@ -139,9 +139,9 @@ angular.module(
 
                     // META-DATA TYPE -> BASIC METADATA, LINEAGE METADATA
                     tagGroupService.getTagList('meta-data type', 'basic meta-data,lineage meta-data').$promise.then(function (tags) {
-                        _this.dataset.metadata[0].type = tags.getTagByName['basic meta-data'];
+                        _this.dataset.metadata[0].type = tags.getTagByName('basic meta-data');
                         if (_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
-                            _this.dataset.metadata[1].type = tags.getTagByName['lineage meta-data'];
+                            _this.dataset.metadata[1].type = tags.getTagByName('lineage meta-data');
                         }
                         _this.progress.currval += 10; // 70
                         //console.log('META-DATA TYPE: ' + _this.progress.currval);

@@ -26,17 +26,21 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
 
                         datasetTemplate.$promise.then(function (dataset) {
 
+                            // check request parameters for representations, parse and add to
+                            // the dataset's representation array
                             var tmpRepresentations = [];
                             var representationJson = ($location.search()).representations;
                             if (representationJson) {
-                                tmpRepresentations =  JSON.parse(decodeURIComponent(representationJson));
+                                tmpRepresentations =  JSON.parse(representationJson);
                                 if (Array.isArray(tmpRepresentations)) {
                                     tmpRepresentations.forEach(function (representation) {
+                                        //invoke representation constructor
                                         dataset.representation.push(new Representation(representation));
                                     });
                                 }
                             }
 
+                            // choose the name of the first representation as name of the dataset
                             if (dataset.representation.length > 0 && dataset.representation[0].name !== null) {
                                 dataset.name = dataset.representation[0].name;
                                 if (dataset.representation[0].contentlocation &&

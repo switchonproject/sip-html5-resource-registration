@@ -44,15 +44,16 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                                 for (var key in representation) {
                                     if (representation.hasOwnProperty(key) && _this.hasOwnProperty(key) &&
                                             key !== '$resolved' && key !== '$promise') {
+                                        // tags need special handling
                                         if (_this[key] !== null && typeof _this[key] === 'object') {
                                             _this[key].name = representation[key];
                                         } else {
-                                            _this[key] = representation[key];
+                                                 _this[key] = representation[key];
+                                            } 
                                         }
                                     }
                                 }
                             }
-                        }
 
                         Representation.prototype.updateTags = function () {
                             var promises;

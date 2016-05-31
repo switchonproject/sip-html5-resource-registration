@@ -551,7 +551,7 @@ angular.module(
                 _this.config = AppConfig;
                 _this.dataset = dataset;            
 
-                // - dataset: the resource meta data, initilaized from a template and changed by the app
+                // - dataset: the resource meta data, initialized from a template and changed by the app
                 // - tags: list of selectable tags
                 // - wizard: the wizard status
 
@@ -693,7 +693,7 @@ angular.module(
                         var searchResultPromise, searchSuccess, searchError;
                         searchSuccess = function (searchResult) {
                             if (searchResult && searchResult.$collection && searchResult.$collection.length > 0) {
-                                duplicateLink = 'This dataset is alredy registered in the SWITCH-ON Spatial Information Platform under the name </strong>"' +
+                                duplicateLink = 'This dataset is already registered in the SWITCH-ON Spatial Information Platform under the name </strong>"' +
                                         searchResult.$collection[0].name + '"</strong>. Click <a href="'+AppConfig.byod.baseUrl+'/#/resource/' +
                                         searchResult.$collection[0].id + '" title="' +
                                         searchResult.$collection[0].name + '" target="_blank">here</a> to view the dataset meta-data.';
@@ -971,10 +971,17 @@ angular.module(
                     // REPRESENTATIONS
                     _this.dataset.representation.forEach(function (representation) {
                         maxProgress += 10;  
+                        
+                        // TAGS -> REPRESENTATION
                         representation.updateTags().then(function () {
                             _this.progress.currval += 10; // maxProgress + 10
                             //console.log('REPRESENTATIONS: ' + _this.progress.currval);
                         });
+                        
+                        // the uuid is needed to uniquely indentify the representation 
+                        // when the server has to perform an update of the uploadmessage (processing instruction)
+                        // UUID -> REPRESENTATION
+                        representation.uuid = representation.uuid || rfc4122.v4();
                     });
                     
                     // SRID TAG -> RESOURCE
@@ -1033,9 +1040,9 @@ angular.module(
 
                     // META-DATA TYPE -> BASIC METADATA, LINEAGE METADATA
                     tagGroupService.getTagList('meta-data type', 'basic meta-data,lineage meta-data').$promise.then(function (tags) {
-                        _this.dataset.metadata[0].type = tags.getTagByName['basic meta-data'];
+                        _this.dataset.metadata[0].type = tags.getTagByName('basic meta-data');
                         if (_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
-                            _this.dataset.metadata[1].type = tags.getTagByName['lineage meta-data'];
+                            _this.dataset.metadata[1].type = tags.getTagByName('lineage meta-data');
                         }
                         _this.progress.currval += 10; // 70
                         //console.log('META-DATA TYPE: ' + _this.progress.currval);
@@ -1094,7 +1101,7 @@ angular.module(
                     }
                     
                     // CLEANUP
-                    _this.dataset.uuid = rfc4122.v4();
+                    _this.dataset.uuid = _this.dataset.uuid || rfc4122.v4();
                     
                     // check optional lineage metadata
                     if (!_this.dataset.metadata[1] || !_this.dataset.metadata[1].description) {
@@ -1547,17 +1554,21 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
 
                         datasetTemplate.$promise.then(function (dataset) {
 
+                            // check request parameters for representations, parse and add to
+                            // the dataset's representation array
                             var tmpRepresentations = [];
                             var representationJson = ($location.search()).representations;
                             if (representationJson) {
-                                tmpRepresentations =  JSON.parse(decodeURIComponent(representationJson));
+                                tmpRepresentations =  JSON.parse(representationJson);
                                 if (Array.isArray(tmpRepresentations)) {
                                     tmpRepresentations.forEach(function (representation) {
+                                        //invoke representation constructor
                                         dataset.representation.push(new Representation(representation));
                                     });
                                 }
                             }
 
+                            // choose the name of the first representation as name of the dataset
                             if (dataset.representation.length > 0 && dataset.representation[0].name !== null) {
                                 dataset.name = dataset.representation[0].name;
                                 if (dataset.representation[0].contentlocation &&
@@ -1711,20 +1722,22 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                             _this.uploadstatus = null;
                             _this.uploadmessage = null;
 
-
+                            // copy properties from remote representation object (angular resource)
+                            // and ignore $resolved and $promise
                             if (representation) {
                                 for (var key in representation) {
                                     if (representation.hasOwnProperty(key) && _this.hasOwnProperty(key) &&
                                             key !== '$resolved' && key !== '$promise') {
+                                        // tags need special handling
                                         if (_this[key] !== null && typeof _this[key] === 'object') {
                                             _this[key].name = representation[key];
                                         } else {
-                                            _this[key] = representation[key];
+                                                 _this[key] = representation[key];
+                                            } 
                                         }
                                     }
                                 }
                             }
-                        }
 
                         Representation.prototype.updateTags = function () {
                             var promises;

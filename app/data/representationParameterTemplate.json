@@ -5,5 +5,6 @@
         "contenttype": "application/adrg",
         "type": "original data",
         "function": "information",
-        "protocol": "WWW:LINK-1.0-http--link"
+        "protocol": "WWW:LINK-1.0-http--link",
+        "uploadmessage": null
     }]

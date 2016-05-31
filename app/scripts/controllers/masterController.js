@@ -35,7 +35,7 @@ angular.module(
                 _this.config = AppConfig;
                 _this.dataset = dataset;            
 
-                // - dataset: the resource meta data, initilaized from a template and changed by the app
+                // - dataset: the resource meta data, initialized from a template and changed by the app
                 // - tags: list of selectable tags
                 // - wizard: the wizard status
 

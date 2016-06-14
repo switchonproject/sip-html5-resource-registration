@@ -5,7 +5,8 @@
         "protocol": "WWW:DOWNLOAD-1.0-http--download",
         "type": "original data",
         "contentlocation": "http://dl-ng003.xtr.deltares.nl/data/shp_upload_test_2016_06_13/download.zip",
-        "description": "File download"
+        "description": "File download",
+        "uploadmessage": "deriveSpatialIndex:shp"
     }, {
         "function": "service",
         "contenttype": "application/xml",
@@ -23,12 +24,11 @@
         "contentlocation": "http://dl-ng003.xtr.deltares.nl/geoserver/shp_upload_test_2016_06_13/ows?service=WFS&version=1.0.0&request=GetCapabilities",
         "description": "WFS service"
     }, {
-        "function": "download",
-        "contenttype": "application/zip",
-        "name": "download.zip",
-        "uploadmessage": "deriveSpatialIndex:shp",
-        "protocol": "WWW:DOWNLOAD-1.0-http--download",
-        "type": "original data",
-        "contentlocation": "http://dl-ng003.xtr.deltares.nl/data/shp_upload_test_2016_06_13/download.zip",
-        "description": "Zipped shapefile"
+        "function": "service",
+        "contenttype": "application/xml",
+        "name": "20141218_GRDC_Stations",
+        "protocol": "OGC:WMS-1.1.1-http-get-capabilities",
+        "type": "aggregated data",
+        "contentlocation": "http://dl-ng003.xtr.deltares.nl/geoserver/shp_upload_test_2016_06_13/wms?service=WMS&version=1.1.0&request=GetCapabilities",
+        "description": "WMS service"
     }]

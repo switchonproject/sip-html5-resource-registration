@@ -1300,7 +1300,7 @@ angular.module(
         appConfig.searchService.host = appConfig.cidsRestApi.host;
         
         appConfig.mapView = {};
-        appConfig.mapView.backgroundLayer = 'http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png';
+        appConfig.mapView.backgroundLayer = 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png';
         appConfig.mapView.home = {};
         appConfig.mapView.home.lat = 49.245166;
         appConfig.mapView.home.lng = 6.936809;
@@ -1766,7 +1766,7 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                                 _that.protocol.name = 'WWW:LINK-1.0-http--link';
                             }
                             if (!_that.protocol.$self || !_that.protocol.$ref) {
-                                promises.push(tagGroupService.getTagList('protocol', 'WWW:LINK-1.0-http--link,OGC:WMS-1.1.1-http-get-capabilities,WWW:TILESERVER,OPeNDAP:OPeNDAP').$promise.then(
+                                promises.push(tagGroupService.getTagList('protocol').$promise.then(
                                         function (tags) {
                                             _that.protocol = tags.getTagByName(_that.protocol.name);
                                         }));

@@ -56,7 +56,7 @@
         },
         "description": "English"
     },
-    "description": "SHP Upload TEST 2016-06-13",
+    "description": "SHP Upload TEST 2016-06-13 #2",
     "type": {
         "$self": "/SWITCHON.TAG/1535",
         "id": 1535,
@@ -86,9 +86,20 @@
     "name": "SHP Upload TEST 2016-06-13",
     "licensestatement": null,
     "tags": [{
-            "$self": "/SWITCHON.TAG/1475",
-            "id": 1475,
-            "name": "Water body, river",
+            "$self": "/SWITCHON.TAG/1487",
+            "id": 1487,
+            "name": "Land cover",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/169",
+                "id": 169,
+                "name": "keywords - X-CUAHSI",
+                "description": "X-CUAHSI keywords build on a hierarchical keyword selection from the hydrologic ontology developed by CUAHSI, with additinal hierarchical keywords for relevant non-hydrosphere data."
+            },
+            "description": null
+        }, {
+            "$self": "/SWITCHON.TAG/1461",
+            "id": 1461,
+            "name": "Land management",
             "taggroup": {
                 "$self": "/SWITCHON.TAGGROUP/169",
                 "id": 169,
@@ -96,6 +107,39 @@
                 "description": "X-CUAHSI keywords build on a hierarchical keyword selection from the hydrologic ontology developed by CUAHSI, with additinal hierarchical keywords for relevant non-hydrosphere data."
             },
             "description": "n/a"
+        }, {
+            "$self": "/SWITCHON.TAG/1509",
+            "id": 1509,
+            "name": "Land management, agriculture",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/169",
+                "id": 169,
+                "name": "keywords - X-CUAHSI",
+                "description": "X-CUAHSI keywords build on a hierarchical keyword selection from the hydrologic ontology developed by CUAHSI, with additinal hierarchical keywords for relevant non-hydrosphere data."
+            },
+            "description": null
+        }, {
+            "$self": "/SWITCHON.TAG/1508",
+            "id": 1508,
+            "name": "Land management, forestry",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/169",
+                "id": 169,
+                "name": "keywords - X-CUAHSI",
+                "description": "X-CUAHSI keywords build on a hierarchical keyword selection from the hydrologic ontology developed by CUAHSI, with additinal hierarchical keywords for relevant non-hydrosphere data."
+            },
+            "description": null
+        }, {
+            "$self": "/SWITCHON.TAG/1507",
+            "id": 1507,
+            "name": "Land management, urban",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/169",
+                "id": 169,
+                "name": "keywords - X-CUAHSI",
+                "description": "X-CUAHSI keywords build on a hierarchical keyword selection from the hydrologic ontology developed by CUAHSI, with additinal hierarchical keywords for relevant non-hydrosphere data."
+            },
+            "description": null
         }],
     "contact": null,
     "geography": null,
@@ -129,9 +173,20 @@
                 },
                 "description": "The link will get the dataset. The function of the link is to download a file."
             },
-            "protocol": null,
+            "protocol": {
+                "$self": "/SWITCHON.TAG/1386",
+                "id": 1386,
+                "name": "WWW:DOWNLOAD-1.0-http--download",
+                "taggroup": {
+                    "$self": "/SWITCHON.TAGGROUP/161",
+                    "id": 161,
+                    "name": "protocol",
+                    "description": "Protocol of the service that can be accessed at the contentLocation of the resource representation (open group with several predefined tags from standard codelists)."
+                },
+                "description": "Web Address (URL), this is a download URL"
+            },
             "applicationprofile": null,
-            "uuid": "5246b5b2-140f-47f4-a79b-e289ea96492b",
+            "uuid": "e2b3655a-2990-40e0-bec6-487a4c739ecf",
             "temporalresolution": null,
             "spatialresolution": null,
             "spatialscale": null,
@@ -150,7 +205,7 @@
                 "description": "ZIP (zip archive file format)"
             },
             "uploadstatus": null,
-            "uploadmessage": null
+            "uploadmessage": "deriveSpatialIndex:shp"
         }, {
             "$self": "/SWITCHON.REPRESENTATION/-1",
             "id": -1,
@@ -194,7 +249,7 @@
                 "description": "OGC Web Map Service"
             },
             "applicationprofile": null,
-            "uuid": "bd61b20b-1b0f-4f0b-b0b1-2bad9bcabcd8",
+            "uuid": "18cf4129-8494-4142-b9bf-28b5d9a2dc58",
             "temporalresolution": null,
             "spatialresolution": null,
             "spatialscale": null,
@@ -244,9 +299,20 @@
                 },
                 "description": "link is service endpoint"
             },
-            "protocol": null,
+            "protocol": {
+                "$self": "/SWITCHON.TAG/185",
+                "id": 185,
+                "name": "OGC:WFS-1.0.0-http-get-capabilities",
+                "taggroup": {
+                    "$self": "/SWITCHON.TAGGROUP/161",
+                    "id": 161,
+                    "name": "protocol",
+                    "description": "Protocol of the service that can be accessed at the contentLocation of the resource representation (open group with several predefined tags from standard codelists)."
+                },
+                "description": "OGC Web Feature Service, a WFS getcapabilities operation"
+            },
             "applicationprofile": null,
-            "uuid": "bbfabc86-b95b-4891-af3e-7fdc09392e9e",
+            "uuid": "c2738f0d-6328-4e3d-8e4a-ff3e8f2de2e0",
             "temporalresolution": null,
             "spatialresolution": null,
             "spatialscale": null,
@@ -269,55 +335,66 @@
         }, {
             "$self": "/SWITCHON.REPRESENTATION/-1",
             "id": -1,
-            "name": "download.zip",
-            "description": "Zipped shapefile",
+            "name": "20141218_GRDC_Stations.shp",
+            "description": "WMS service",
             "content": null,
             "type": {
-                "$self": "/SWITCHON.TAG/212",
-                "id": 212,
-                "name": "original data",
+                "$self": "/SWITCHON.TAG/213",
+                "id": 213,
+                "name": "aggregated data",
                 "taggroup": {
                     "$self": "/SWITCHON.TAGGROUP/163",
                     "id": 163,
                     "name": "representation type",
                     "description": "SIP internal type of the representation of the resource (fixed group)."
                 },
-                "description": "The representation holds the original data of the resource"
+                "description": "The representation holds aggregated data of the resource, e.g. average mean values"
             },
             "function": {
-                "$self": "/SWITCHON.TAG/71",
-                "id": 71,
-                "name": "download",
+                "$self": "/SWITCHON.TAG/72",
+                "id": 72,
+                "name": "service",
                 "taggroup": {
                     "$self": "/SWITCHON.TAGGROUP/152",
                     "id": 152,
                     "name": "function",
                     "description": "Function that can be perfomred following the contentLocation link to the resource representation (fixed group, standard codelist)."
                 },
-                "description": "The link will get the dataset. The function of the link is to download a file."
+                "description": "link is service endpoint"
             },
-            "protocol": null,
+            "protocol": {
+                "$self": "/SWITCHON.TAG/186",
+                "id": 186,
+                "name": "OGC:WMS-1.1.1-http-get-capabilities",
+                "taggroup": {
+                    "$self": "/SWITCHON.TAGGROUP/161",
+                    "id": 161,
+                    "name": "protocol",
+                    "description": "Protocol of the service that can be accessed at the contentLocation of the resource representation (open group with several predefined tags from standard codelists)."
+                },
+                "description": "OGC Web Map Service"
+            },
             "applicationprofile": null,
-            "uuid": "8a61368c-e216-4bdd-a855-4f615f6cd3ed",
+            "uuid": "96f39a07-5dc1-4a6e-9c3e-68ad3be5eda9",
             "temporalresolution": null,
             "spatialresolution": null,
             "spatialscale": null,
-            "contentlocation": "http://dl-ng003.xtr.deltares.nl/data/shp_upload_test_2016_06_13/download.zip",
+            "contentlocation": "http://dl-ng003.xtr.deltares.nl/geoserver/shp_upload_test_2016_06_13/wms?service=WMS&version=1.1.0&request=GetCapabilities",
             "tags": null,
             "contenttype": {
-                "$self": "/SWITCHON.TAG/53",
-                "id": 53,
-                "name": "application/zip",
+                "$self": "/SWITCHON.TAG/51",
+                "id": 51,
+                "name": "application/xml",
                 "taggroup": {
                     "$self": "/SWITCHON.TAGGROUP/151",
                     "id": 151,
                     "name": "content type",
                     "description": "MIME Type of the representation (open group which several predefined tags)."
                 },
-                "description": "ZIP (zip archive file format)"
+                "description": "XML (eXtensible Markup Language)"
             },
             "uploadstatus": null,
-            "uploadmessage": "deriveSpatialIndex:shp"
+            "uploadmessage": null
         }],
     "lastmodificationdate": null,
     "metadata": [{
@@ -365,7 +442,7 @@
             },
             "uuid": null,
             "contentlocation": null,
-            "creationdate": 1465798770028,
+            "creationdate": 1465822399601,
             "contenttype": {
                 "$self": "/SWITCHON.TAG/40",
                 "id": 40,
@@ -378,7 +455,7 @@
                 },
                 "description": "JSON (Java Script Object Notation)"
             },
-            "content": "[{\"key\":\"standalone\",\"value\":\"true\",\"lastBuildDate\":1465792634910},{\"key\":\"startupMode\",\"value\":\"non-interactive\",\"lastBuildDate\":1465792635575},{\"key\":\"registry\",\"value\":\"NO-REGISTRY-BECAUSE-OF-STANDALONE-SERVER\",\"lastBuildDate\":1465792634910},{\"key\":\"cachedUsers\",\"value\":\"1\",\"lastBuildDate\":1465792734638},{\"key\":\"connector\",\"value\":\"0.0.0.0:8890\",\"lastBuildDate\":1465792635552},{\"key\":\"sslEnabled\",\"value\":\"false\",\"lastBuildDate\":1465792634910},{\"key\":\"activeCores\",\"value\":[\"core.legacy.action\",\"core.legacy.entity\",\"core.legacy.entityInfo\",\"core.default.infrastructure\",\"core.legacy.node\",\"core.legacy.permission\",\"core.legacy.search\",\"core.legacy.user\"],\"lastBuildDate\":1465792634912},{\"key\":\"serverStart\",\"value\":\"1465792635573\",\"lastBuildDate\":1465792635573},{\"key\":\"cachedClasses\",\"value\":\"18\",\"lastBuildDate\":1465792735547},{\"key\":\"request\",\"value\":{\"localName\":\"127.0.0.1\",\"Host\":\"localhost:8890\",\"localAddress\":\"127.0.0.1\",\"X-Forwarded-Server\":\"switchon.cismet.de\",\"User-Agent\":\"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.84 Safari/537.36\",\"Origin\":\"http://localhost:8383\",\"Connection\":\"Keep-Alive\",\"Pragma\":\"no-cache\",\"Cache-Control\":\"no-cache\",\"X-Forwarded-Host\":\"switchon.cismet.de\",\"Accept-Language\":\"de-DE,de;q=0.8,en-US;q=0.6,en;q=0.4\",\"Referer\":\"http://localhost:8383/sip-html5-resource-registration/index.html\",\"Accept-Encoding\":\"gzip, deflate, sdch\",\"DNT\":\"1\",\"X-Forwarded-For\":\"134.96.213.194\",\"Accept\":\"application/json, text/plain, */*\"},\"lastBuildDate\":1465794139900}]"
+            "content": "[{\"key\":\"standalone\",\"value\":\"true\",\"lastBuildDate\":1465792634910},{\"key\":\"startupMode\",\"value\":\"non-interactive\",\"lastBuildDate\":1465792635575},{\"key\":\"registry\",\"value\":\"NO-REGISTRY-BECAUSE-OF-STANDALONE-SERVER\",\"lastBuildDate\":1465792634910},{\"key\":\"cachedUsers\",\"value\":\"1\",\"lastBuildDate\":1465792734638},{\"key\":\"connector\",\"value\":\"0.0.0.0:8890\",\"lastBuildDate\":1465792635552},{\"key\":\"sslEnabled\",\"value\":\"false\",\"lastBuildDate\":1465792634910},{\"key\":\"activeCores\",\"value\":[\"core.legacy.action\",\"core.legacy.entity\",\"core.legacy.entityInfo\",\"core.default.infrastructure\",\"core.legacy.node\",\"core.legacy.permission\",\"core.legacy.search\",\"core.legacy.user\"],\"lastBuildDate\":1465792634912},{\"key\":\"serverStart\",\"value\":\"1465792635573\",\"lastBuildDate\":1465792635573},{\"key\":\"cachedClasses\",\"value\":\"18\",\"lastBuildDate\":1465792735547},{\"key\":\"request\",\"value\":{\"localName\":\"127.0.0.1\",\"Host\":\"localhost:8890\",\"localAddress\":\"127.0.0.1\",\"X-Forwarded-Server\":\"switchon.cismet.de\",\"User-Agent\":\"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.84 Safari/537.36\",\"Origin\":\"http://localhost:8383\",\"Connection\":\"Keep-Alive\",\"Pragma\":\"no-cache\",\"Cache-Control\":\"no-cache\",\"X-Forwarded-Host\":\"switchon.cismet.de\",\"Accept-Language\":\"de-DE,de;q=0.8,en-US;q=0.6,en;q=0.4\",\"Referer\":\"http://localhost:8383/sip-html5-resource-registration/index.html\",\"Accept-Encoding\":\"gzip, deflate, sdch\",\"DNT\":\"1\",\"X-Forwarded-For\":\"134.96.213.194\",\"Accept\":\"application/json, text/plain, */*\"},\"lastBuildDate\":1465817764931}]"
         }],
     "accesslimitations": {
         "$self": "/SWITCHON.TAG/1",
@@ -392,7 +469,7 @@
         },
         "description": "otherRestrictions (limitation not listed)"
     },
-    "uuid": "c4c4395c-614e-49d0-a560-65f7f35e8297",
+    "uuid": "0ec7a79d-cb3a-4975-8ef2-7c35c56dda77",
     "collection": {
         "$self": "/SWITCHON.TAG/1534",
         "id": 1534,

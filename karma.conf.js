@@ -8,16 +8,6 @@ module.exports = function(config) {
 
     // testing framework to use (jasmine/mocha/qunit/...)
     frameworks: ['jasmine'],
-    
-   plugins:[
-             'karma-jasmine',
-             'karma-requirejs',
-             'karma-coverage',
-             'karma-junit-reporter',
-             'karma-phantomjs-launcher',
-             'karma-chrome-launcher',
-             'karma-ng-html2js-preprocessor'
-             ],
 
     // list of files / patterns to load in the browser
     files: [
@@ -75,6 +65,7 @@ module.exports = function(config) {
         'app/templates/wizard-tpl.html',
         'app/views/myView.html',
         'test/spec/controllers/myController.js',
+        'test/spec/services/representationFactoryTest.js',
         {pattern: 'test/res/**/*.json', watched: true, included: true, served: true}
     ],
 
@@ -109,15 +100,25 @@ module.exports = function(config) {
     singleRun: true,
     
     preprocessors: {
-        '**/*.json': ['gb-json2js'],
-        '**/templates/**/*.html': ['ng-html2js']
+        '**/*.json': ['ng-json2js'],
+        '**/templates/**/*.html': ['ng-html2js'],
+        '**/views/**/*.html': ['ng-html2js']
     },
+    
+    plugins: [
+        'karma-ng-html2js-preprocessor',
+        'karma-ng-json2js-preprocessor',
+        'karma-phantomjs-launcher',
+        'karma-jasmine',
+        'karma-junit-reporter'
+    ],
     
     ngHtml2JsPreprocessor: {
         moduleName: 'templates'
     },
     
     reporters: ['progress', 'junit'],
+    
     junitReporter: {
         outputFile: 'test-results.xml'
     }

@@ -82,7 +82,7 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                                 _that.protocol.name = 'WWW:LINK-1.0-http--link';
                             }
                             if (!_that.protocol.$self || !_that.protocol.$ref) {
-                                promises.push(tagGroupService.getTagList('protocol', 'WWW:LINK-1.0-http--link,OGC:WMS-1.1.1-http-get-capabilities,WWW:TILESERVER,OPeNDAP:OPeNDAP').$promise.then(
+                                promises.push(tagGroupService.getTagList('protocol').$promise.then(
                                         function (tags) {
                                             _that.protocol = tags.getTagByName(_that.protocol.name);
                                         }));

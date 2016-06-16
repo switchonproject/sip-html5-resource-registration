@@ -130,7 +130,7 @@ angular.module(
                 };
                 
             
-            // resize the map on enter
+            // resize the map on enter, read spatial coverage from dataset
             $scope.wizard.enterValidators['Geographic Location'] = function(context){
                 if(context.valid === true)
                 {
@@ -161,6 +161,7 @@ angular.module(
                 return context.valid;
             };            
             
+            // on exit: write spatial coverage to dataset
             $scope.wizard.exitValidators['Geographic Location'] = function(context){
                 context.valid = true;
                 if(_this.mode.defineBBox === true && $scope.coordinatesForm.$invalid) {
@@ -1564,6 +1565,11 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                                     tmpRepresentations.forEach(function (representation) {
                                         //invoke representation constructor
                                         dataset.representation.push(new Representation(representation));
+                                        
+                                        // WKT BBox from Data upload Tool (SHP -> Geoserver)
+                                        if(representation.wktboundingbox && !dataset.spatialcoverage.geo_field) { // jshint ignore:line
+                                            dataset.spatialcoverage.geo_field = representation.wktboundingbox; // jshint ignore:line
+                                        }
                                     });
                                 }
                             }
@@ -1645,8 +1651,14 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
             readSpatialCoverageFunction = function(dataset) {
                 if(dataset.spatialcoverage && dataset.spatialcoverage.geo_field) { // jshint ignore:line
                     var wktString = dataset.spatialcoverage.geo_field; // jshint ignore:line
-                    wicket.read(wktString.substr(wktString.indexOf(';') + 1));
-
+                    
+                    // WKT from REST API contains EPSG definition. 
+                    // WKT from data upload tool does not!
+                    if(wktString.indexOf(';') !== -1) {
+                        wicket.read(wktString.substr(wktString.indexOf(';') + 1));
+                    } else {
+                        wicket.read(wktString);
+                    }
                     var layer = wicket.toObject(defaultStyle);
                     layer.setStyle(defaultStyle);
                     return layer;
@@ -1739,6 +1751,8 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                                 }
                             }
 
+                        // client does not know the internal tag id and provides just the tag name
+                        // -> retrieve the actual tag objects from REST API
                         Representation.prototype.updateTags = function () {
                             var promises;
                             var _that = this;

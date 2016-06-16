@@ -36,6 +36,11 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                                     tmpRepresentations.forEach(function (representation) {
                                         //invoke representation constructor
                                         dataset.representation.push(new Representation(representation));
+                                        
+                                        // WKT BBox from Data upload Tool (SHP -> Geoserver)
+                                        if(representation.wktboundingbox && !dataset.spatialcoverage.geo_field) { // jshint ignore:line
+                                            dataset.spatialcoverage.geo_field = representation.wktboundingbox; // jshint ignore:line
+                                        }
                                     });
                                 }
                             }

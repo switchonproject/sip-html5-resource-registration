@@ -55,6 +55,8 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                                 }
                             }
 
+                        // client does not know the internal tag id and provides just the tag name
+                        // -> retrieve the actual tag objects from REST API
                         Representation.prototype.updateTags = function () {
                             var promises;
                             var _that = this;

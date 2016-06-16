@@ -10,7 +10,7 @@
     }, {
         "function": "service",
         "contenttype": "application/xml",
-        "name": "20141218_GRDC_Stations.shp",
+        "name": "20141218_GRDC_Stations.shp WMS",
         "protocol": "OGC:WMS-1.1.1-http-get-capabilities",
         "type": "original data",
         "contentlocation": "http://dl-ng003.xtr.deltares.nl/geoserver/shp_upload_test_2016_06_13/wms?service=WMS&version=1.1.0&request=GetCapabilities",
@@ -18,7 +18,7 @@
     }, {
         "function": "service",
         "contenttype": "application/xml",
-        "name": "20141218_GRDC_Stations.shp",
+        "name": "20141218_GRDC_Stations.shp WFS",
         "protocol": "OGC:WFS-1.0.0-http-get-capabilities",
         "type": "original data",
         "contentlocation": "http://dl-ng003.xtr.deltares.nl/geoserver/shp_upload_test_2016_06_13/ows?service=WFS&version=1.0.0&request=GetCapabilities",
@@ -30,5 +30,6 @@
         "protocol": "OGC:WMS-1.1.1-http-get-capabilities",
         "type": "aggregated data",
         "contentlocation": "http://dl-ng003.xtr.deltares.nl/geoserver/shp_upload_test_2016_06_13/wms?service=WMS&version=1.1.0&request=GetCapabilities",
-        "description": "WMS service"
+        "description": "WMS service",
+        "wktboundingbox": "POLYGON((4.222277896763563 51.42535602405059, 4.5150779570640545 51.42535602405059, 4.5150779570640545 51.62408716595048, 4.222277896763563 51.42535602405059))"
     }]

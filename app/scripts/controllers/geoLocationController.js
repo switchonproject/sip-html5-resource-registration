@@ -105,7 +105,7 @@ angular.module(
                 };
                 
             
-            // resize the map on enter
+            // resize the map on enter, read spatial coverage from dataset
             $scope.wizard.enterValidators['Geographic Location'] = function(context){
                 if(context.valid === true)
                 {
@@ -136,6 +136,7 @@ angular.module(
                 return context.valid;
             };            
             
+            // on exit: write spatial coverage to dataset
             $scope.wizard.exitValidators['Geographic Location'] = function(context){
                 context.valid = true;
                 if(_this.mode.defineBBox === true && $scope.coordinatesForm.$invalid) {

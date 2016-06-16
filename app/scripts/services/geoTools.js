@@ -56,8 +56,14 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
             readSpatialCoverageFunction = function(dataset) {
                 if(dataset.spatialcoverage && dataset.spatialcoverage.geo_field) { // jshint ignore:line
                     var wktString = dataset.spatialcoverage.geo_field; // jshint ignore:line
-                    wicket.read(wktString.substr(wktString.indexOf(';') + 1));
-
+                    
+                    // WKT from REST API contains EPSG definition. 
+                    // WKT from data upload tool does not!
+                    if(wktString.indexOf(';') !== -1) {
+                        wicket.read(wktString.substr(wktString.indexOf(';') + 1));
+                    } else {
+                        wicket.read(wktString);
+                    }
                     var layer = wicket.toObject(defaultStyle);
                     layer.setStyle(defaultStyle);
                     return layer;

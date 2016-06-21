@@ -574,7 +574,7 @@ angular.module(
                  * Message text
                  */
                 $scope.message = {};
-                $scope.message.text = '<strong>Welcome to the SWITCH-ON tool for the registration of (hydrological) open-data in the <a href=\'http://www.water-switch-on.eu/sip-webclient/sip-beta/\' title=\'Find open data with the SIP BYOD Client\' target=\'_blank\'>SWITCH-ON Spatial Information Platform</a>!</strong> <br>Please provide some general information about the new dataset such as name, description, a (download) link and keywords. ';
+                $scope.message.text = '<strong>Welcome to the SWITCH-ON tool for the registration of (hydrological) open-data in the <a href="'+AppConfig.byod.baseUrl+'" title="Find open data with the SIP BYOD Client" target="_blank">SWITCH-ON Spatial Information Platform</a>!</strong> <br>Please provide some general information about the new dataset such as name, description, a (download) link and keywords. ';
                 $scope.message.icon = 'fa-info-circle';
                 $scope.message.type = 'success';
 
@@ -1290,8 +1290,8 @@ angular.module(
         
         appConfig.cidsRestApi = {};
         //appConfig.cidsRestApi.host = 'http://localhost:8890';
-        appConfig.cidsRestApi.host = 'http://switchon.cismet.de/legacy-rest1';
-        //appConfig.cidsRestApi.host = 'http://tl-243.xtr.deltares.nl/switchon_server_rest';
+        //appConfig.cidsRestApi.host = 'http://switchon.cismet.de/legacy-rest1';
+        appConfig.cidsRestApi.host = 'http://data.water-switch-on.eu/switchon_server_rest';
         
         appConfig.searchService = {};
         appConfig.searchService.username = 'admin@SWITCHON';
@@ -1320,11 +1320,13 @@ angular.module(
         appConfig.searchService.username + ':' +
         appConfig.searchService.password + '@' +
         appConfig.searchService.host.replace(/.*?:\/\//g, '');
-        appConfig.objectInfo.resourceXmlUrl = 'http://tl-243.xtr.deltares.nl/csw?request=GetRecordById&service=CSW&version=2.0.2&namespace=xmlns%28csw=http://www.opengis.net/cat/csw/2.0.2%29&resultType=results&outputSchema=http://www.isotc211.org/2005/gmd&outputFormat=application/xml&ElementSetName=full&id=';
+        appConfig.objectInfo.resourceXmlUrl = 'http://data.water-switch-on.eu/csw?request=GetRecordById&service=CSW&version=2.0.2&namespace=xmlns%28csw=http://www.opengis.net/cat/csw/2.0.2%29&resultType=results&outputSchema=http://www.isotc211.org/2005/gmd&outputFormat=application/xml&ElementSetName=full&id=';
 
         appConfig.byod = {};
         //appConfig.byod.baseUrl = 'http://tl-243.xtr.deltares.nl/byod';
-        appConfig.byod.baseUrl = 'http://switchon.cismet.de/sip-snapshot';
+        //appConfig.byod.baseUrl = 'http://switchon.cismet.de/sip-snapshot';
+        appConfig.byod.baseUrl = 'http://www.water-switch-on.eu/sip-webclient/byod/';
+        
         
         appConfig.uploadtool = {};
         appConfig.uploadtool.baseUrl = 'http://dl-ng003.xtr.deltares.nl';

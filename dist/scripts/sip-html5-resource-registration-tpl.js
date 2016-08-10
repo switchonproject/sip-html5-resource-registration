@@ -63,7 +63,9 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "    \r" +
     "\n" +
-    "    <div class=\"col-md-3\">\r" +
+    "    <div class=\"col-md-3\" \r" +
+    "\n" +
+    "         ng-if=\"!geoController.readOnly\">\r" +
     "\n" +
     "        \r" +
     "\n" +
@@ -91,11 +93,29 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                           ng-click=\"geoController.switchMode('drawBBox')\"\r" +
     "\n" +
-    "                           btn-radio=\"true\">Define bounding box or polygon\r" +
+    "                           btn-radio=\"true\"\r" +
+    "\n" +
+    "                           ng-disabled=\"geoController.readOnly\">Define bounding box or polygon\r" +
     "\n" +
     "                           \r" +
     "\n" +
     "                    </label>\r" +
+    "\n" +
+    "                    \r" +
+    "\n" +
+    "                    <label class=\"btn btn-primary\" \r" +
+    "\n" +
+    "                           ng-model=\"geoController.mode.selectEC\" \r" +
+    "\n" +
+    "                           ng-click=\"geoController.switchMode('selectCountry')\"\r" +
+    "\n" +
+    "                           btn-radio=\"true\"\r" +
+    "\n" +
+    "                           ng-disabled=\"geoController.readOnly\">Select countries</label>\r" +
+    "\n" +
+    "                    \r" +
+    "\n" +
+    "                    <!--\r" +
     "\n" +
     "                    <label class=\"btn btn-primary\" \r" +
     "\n" +
@@ -115,6 +135,8 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                           btn-radio=\"true\">Select World country or region</label>\r" +
     "\n" +
+    "                    -->\r" +
+    "\n" +
     "                    \r" +
     "\n" +
     "                    <label class=\"btn btn-primary\" \r" +
@@ -123,7 +145,9 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                           ng-click=\"geoController.switchMode('defineBBox')\"\r" +
     "\n" +
-    "                           btn-radio=\"true\">Enter bounding box coordinates</label>\r" +
+    "                           btn-radio=\"true\"\r" +
+    "\n" +
+    "                           ng-disabled=\"geoController.readOnly\">Enter bounding box coordinates</label>\r" +
     "\n" +
     "                </div>\r" +
     "\n" +
@@ -133,7 +157,7 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "\r" +
     "\n" +
-    "        <!-- CONTROL SELECT EUROPE -->\r" +
+    "        <!-- CONTROL SELECT EUROPE \r" +
     "\n" +
     "        <div class=\"row\" ng-show=\"geoController.mode.selectEC\">\r" +
     "\n" +
@@ -169,11 +193,11 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "            </div>\r" +
     "\n" +
-    "        </div>\r" +
+    "        </div>-->\r" +
     "\n" +
     "\r" +
     "\n" +
-    "        <!-- CONTROL SELECT WORLD -->\r" +
+    "        <!-- CONTROL SELECT WORLD \r" +
     "\n" +
     "        <div class=\"row\" ng-show=\"geoController.mode.selectWC\">\r" +
     "\n" +
@@ -209,7 +233,7 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "            </div>\r" +
     "\n" +
-    "        </div>\r" +
+    "        </div>-->\r" +
     "\n" +
     "        \r" +
     "\n" +

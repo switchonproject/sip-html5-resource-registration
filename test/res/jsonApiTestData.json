@@ -31,5 +31,5 @@
         "type": "aggregated data",
         "contentlocation": "http://dl-ng003.xtr.deltares.nl/geoserver/shp_upload_test_2016_06_13/wms?service=WMS&version=1.1.0&request=GetCapabilities",
         "description": "WMS service",
-        "wktboundingbox": "POLYGON((4.222277896763563 51.42535602405059, 4.5150779570640545 51.42535602405059, 4.5150779570640545 51.62408716595048, 4.222277896763563 51.42535602405059))"
+        "wktboundingbox": "POLYGON((-17.578125 73.02259157147301,65.390625 73.02259157147301,65.390625 29.53522956294847,-17.578125 29.53522956294847,-17.578125 73.02259157147301))"
     }]

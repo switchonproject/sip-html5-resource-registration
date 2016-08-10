@@ -47,6 +47,7 @@ module.exports = function(config) {
         'target/dist/scripts/services/countriesService.js',
         'target/dist/scripts/services/searchService.js',
         'target/dist/scripts/services/storageService.js',
+        'target/dist/scripts/services/featureRendererService.js',
         'target/dist/scripts/factories/_module.js',
         'target/dist/scripts/factories/appConfigFactory.js',
         'target/dist/scripts/filters/_module.js',

@@ -17,7 +17,7 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
             'use strict';
             var defaultStyle, countriesStyle, noDrawOptions, defaultDrawOptions, 
                     readSpatialCoverageFunction, writeSpatialCoverageFunction, 
-                    fireResizeFunction;
+                    fireResizeFunction, readOnlyStyle;
             
             defaultStyle = {
                 color: '#0000FF', 
@@ -27,6 +27,15 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                 fillColor: '#1589FF', 
                 riseOnHover: true, 
                 clickable: true
+            };
+            
+            readOnlyStyle = {
+                color: '#0000FF', 
+                weight: 2, 
+                opacity: 0.25,
+                fill: false, 
+                riseOnHover: false, 
+                clickable: false
             };
             
             countriesStyle = {
@@ -82,8 +91,10 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                     } else {
                         wicket.read(wktString);
                     }
-                    var layer = wicket.toObject(defaultStyle);
-                    layer.setStyle(defaultStyle);
+                    
+                    var style = dataset.$geoserverUploaded ? readOnlyStyle : defaultStyle;
+                    var layer = wicket.toObject(style);
+                    layer.setStyle(style);
                     return layer;
                 }
 
@@ -106,6 +117,7 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
         
         return {
             defaultStyle:defaultStyle,
+            readOnlyStyle:readOnlyStyle,
             countriesStyle:countriesStyle,
             defaultDrawOptions:defaultDrawOptions,
             noDrawOptions:noDrawOptions,

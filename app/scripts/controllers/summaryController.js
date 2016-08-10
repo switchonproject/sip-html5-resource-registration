@@ -21,21 +21,24 @@ angular.module(
         'de.cismet.sip-html5-resource-registration.services.geoTools',
         'de.cismet.sip-html5-resource-registration.services.dataset',
         'leafletData',
+        'de.cismet.sip-html5-resource-registration.services.featureRendererService',
         // Controller Constructor Function
         function (
             $scope,
             AppConfig,
             geoTools,
             dataset,
-            leafletData
+            leafletData,
+            featureRendererService
         ) {
             'use strict';
             var _this, fireResize, wicket, defaultStyle, defaultDrawOptions, noDrawOptions,
-                    readSpatialCoverage, writeSpatialCoverage, layerGroup;
+                    readSpatialCoverage, writeSpatialCoverage, layerGroup, geoserverLayer;
             
             _this = this;
             _this.dataset = dataset;
             _this.config = AppConfig;
+            _this.readOnly = dataset.$geoserverUploaded;
             
             
             wicket = geoTools.wicket;
@@ -83,6 +86,16 @@ angular.module(
                                 });}, 100);
                        });
                     }
+                    
+                    if(_this.readOnly && geoserverLayer === undefined) {
+                         geoserverLayer = featureRendererService.getFeatureRenderer(_this.dataset);
+                            if (geoserverLayer) {
+                                geoserverLayer.setOpacity(1.0);
+                                leafletData.getMap('summarymap').then(function (map) {
+                                    map.addLayer(geoserverLayer);
+                                });
+                            }
+                    } 
                 }
                 
                 return context.valid;

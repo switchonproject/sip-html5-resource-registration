@@ -24,6 +24,7 @@ angular.module(
         'de.cismet.sip-html5-resource-registration.services.geoTools',
         'de.cismet.sip-html5-resource-registration.services.dataset',
         'de.cismet.sip-html5-resource-registration.services.CountriesService',
+        'de.cismet.sip-html5-resource-registration.services.featureRendererService',
         // Controller Constructor Function
         function (
             $scope,
@@ -32,7 +33,8 @@ angular.module(
             leafletData,
             geoTools,
             dataset,
-            countriesService
+            countriesService,
+            featureRendererService
         ) {
             'use strict';
 
@@ -40,9 +42,9 @@ angular.module(
                     drawControls, layerGroup, defaultStyle, countriesStyle, 
                     defaultDrawOptions, noDrawOptions, writeSpatialCoverage,
                     readSpatialCoverage, drawControlsEnabled,
-                    countriesResource, countriesLayer;
+                    countriesResource, countriesLayer, geoserverLayer;
             
-            defaultStyle = geoTools.defaultStyle;
+            defaultStyle = dataset.$geoserverUploaded ? geoTools.readOnlyStyle : geoTools.defaultStyle;
             countriesStyle = geoTools.countriesStyle;
             defaultDrawOptions = geoTools.defaultDrawOptions;
             noDrawOptions = geoTools.noDrawOptions;
@@ -58,6 +60,7 @@ angular.module(
              * overall Form data
              */
             _this.dataset = dataset;
+            _this.readOnly = dataset.$geoserverUploaded;
           
             _this.contentLocation = {};
             _this.contentLocation.name = '';
@@ -124,6 +127,7 @@ angular.module(
                     $scope.message.type = 'success';
                     
                     fireResize('mainmap');
+                    
                     var layer = readSpatialCoverage(_this.dataset);
                     if(layer !== undefined && layer !== null) {
                         layerGroup.clearLayers();
@@ -135,8 +139,18 @@ angular.module(
                                     zoom: {animate: true}
                                 });}, 100);
                        });
-                    }
-                }
+                    }   
+
+                    if(_this.readOnly && geoserverLayer === undefined) {
+                         geoserverLayer = featureRendererService.getFeatureRenderer(_this.dataset);
+                            if (geoserverLayer) {
+                                geoserverLayer.setOpacity(1.0);
+                                leafletData.getMap('mainmap').then(function (map) {
+                                    map.addLayer(geoserverLayer);
+                                });
+                            }
+                    } 
+               }
                 
                 return context.valid;
             };            
@@ -180,7 +194,6 @@ angular.module(
                     } else {
                          wkt = new Wkt.Wkt().fromObject(layerGroup.getLayers()[0]);
                     }
-                    console.log(wkt.write());
                     writeSpatialCoverage(_this.dataset, wkt.write());
                 }
                 
@@ -354,42 +367,46 @@ angular.module(
             });
             drawControlsEnabled = true;
             
+            
             leafletData.getMap('mainmap').then(function (map) {
                 map.addLayer(layerGroup);
-               
-                map.addControl(drawControls);
-                map.on('draw:created', function (event) {
-                    //console.log(event.layerType + ' created'); 
-                    layerGroup.clearLayers();
-                    layerGroup.addLayer(event.layer);
-                    
-                    //wicket.fromObject(event.layer);
-                    _this.contentLocation = {};
-                    _this.contentLocation.name = 'New ' + event.layerType;
-                    //_this.contentLocation.type = event.layerType;
-                    //_this.contentLocation.layer = event.layer;
-                    //_this.contentLocation.wkt = wicket.write();
-                    
-                });
-                
-                map.on('draw:edited', function () {
-                    //console.log(event.layers.getLayers().length + ' edited'); 
-                    //layerGroup.addLayer(event.layers.getLayers()[0]);
-                    
-                    //wicket.fromObject(event.layers.getLayers()[0]);
-                    _this.contentLocation = Object.create(_this.contentLocation);
-                    if(_this.contentLocation.name.indexOf('(edited)') === -1) {
-                        _this.contentLocation.name += ' (edited)';
-                    }
-                    //_this.contentLocation.layer = event.layers.getLayers()[0];
-                    //_this.contentLocation.wkt = wicket.write();
-                });
+                if(!_this.readOnly)
+                {
 
-                map.on('draw:deleted', function (event) {
-                    console.log(event.layers.getLayers().length + ' deleted'); 
-                    layerGroup.clearLayers();
-                    _this.contentLocation = null;
-                });
+                    map.addControl(drawControls);
+                    map.on('draw:created', function (event) {
+                        //console.log(event.layerType + ' created'); 
+                        layerGroup.clearLayers();
+                        layerGroup.addLayer(event.layer);
+
+                        //wicket.fromObject(event.layer);
+                        _this.contentLocation = {};
+                        _this.contentLocation.name = 'New ' + event.layerType;
+                        //_this.contentLocation.type = event.layerType;
+                        //_this.contentLocation.layer = event.layer;
+                        //_this.contentLocation.wkt = wicket.write();
+
+                    });
+
+                    map.on('draw:edited', function () {
+                        //console.log(event.layers.getLayers().length + ' edited'); 
+                        //layerGroup.addLayer(event.layers.getLayers()[0]);
+
+                        //wicket.fromObject(event.layers.getLayers()[0]);
+                        _this.contentLocation = Object.create(_this.contentLocation);
+                        if(_this.contentLocation.name.indexOf('(edited)') === -1) {
+                            _this.contentLocation.name += ' (edited)';
+                        }
+                        //_this.contentLocation.layer = event.layers.getLayers()[0];
+                        //_this.contentLocation.wkt = wicket.write();
+                    });
+
+                    map.on('draw:deleted', function (event) {
+                        console.log(event.layers.getLayers().length + ' deleted'); 
+                        layerGroup.clearLayers();
+                        _this.contentLocation = null;
+                    });
+                }
             });
             
             

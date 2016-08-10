@@ -34,6 +34,7 @@ angular.module(
  */
 
 /* global L */
+/* global Wkt */
 /*jshint sub:true*/
 
 angular.module(
@@ -42,29 +43,34 @@ angular.module(
     'de.cismet.sip-html5-resource-registration.controllers.geoLocationController',
     [
         '$scope',
+        '$resource',
         'AppConfig',
         'leafletData',
         'de.cismet.sip-html5-resource-registration.services.geoTools',
         'de.cismet.sip-html5-resource-registration.services.dataset',
         'de.cismet.sip-html5-resource-registration.services.CountriesService',
+        'de.cismet.sip-html5-resource-registration.services.featureRendererService',
         // Controller Constructor Function
         function (
             $scope,
+            $resource,
             AppConfig,
             leafletData,
             geoTools,
             dataset,
-            countriesService
+            countriesService,
+            featureRendererService
         ) {
             'use strict';
 
-            var _this, config, fireResize, southWest, northEast, maxBounds,
-                    drawControls, layerGroup, wicket, defaultStyle, defaultDrawOptions,
-                    noDrawOptions, writeSpatialCoverage,
-                    readSpatialCoverage, drawControlsEnabled;
+            var _this, fireResize, southWest, northEast, maxBounds,
+                    drawControls, layerGroup, defaultStyle, countriesStyle, 
+                    defaultDrawOptions, noDrawOptions, writeSpatialCoverage,
+                    readSpatialCoverage, drawControlsEnabled,
+                    countriesResource, countriesLayer, geoserverLayer;
             
-            wicket = geoTools.wicket;
-            defaultStyle = geoTools.defaultStyle;
+            defaultStyle = dataset.$geoserverUploaded ? geoTools.readOnlyStyle : geoTools.defaultStyle;
+            countriesStyle = geoTools.countriesStyle;
             defaultDrawOptions = geoTools.defaultDrawOptions;
             noDrawOptions = geoTools.noDrawOptions;
             readSpatialCoverage = geoTools.readSpatialCoverage;
@@ -79,6 +85,7 @@ angular.module(
              * overall Form data
              */
             _this.dataset = dataset;
+            _this.readOnly = dataset.$geoserverUploaded;
           
             _this.contentLocation = {};
             _this.contentLocation.name = '';
@@ -97,6 +104,7 @@ angular.module(
             //},3000);
             
            _this.onSelectedCountry = function(item) {
+                var wicket = new Wkt.Wkt();
                 wicket.read(item.wkt);
                 var layer = wicket.toObject(defaultStyle);
                // _this.contentLocation.layer = layer;
@@ -144,6 +152,7 @@ angular.module(
                     $scope.message.type = 'success';
                     
                     fireResize('mainmap');
+                    
                     var layer = readSpatialCoverage(_this.dataset);
                     if(layer !== undefined && layer !== null) {
                         layerGroup.clearLayers();
@@ -155,8 +164,18 @@ angular.module(
                                     zoom: {animate: true}
                                 });}, 100);
                        });
-                    }
-                }
+                    }   
+
+                    if(_this.readOnly && geoserverLayer === undefined) {
+                         geoserverLayer = featureRendererService.getFeatureRenderer(_this.dataset);
+                            if (geoserverLayer) {
+                                geoserverLayer.setOpacity(1.0);
+                                leafletData.getMap('mainmap').then(function (map) {
+                                    map.addLayer(geoserverLayer);
+                                });
+                            }
+                    } 
+               }
                 
                 return context.valid;
             };            
@@ -181,9 +200,26 @@ angular.module(
                 
                 if(context.valid === true) {
                     $scope.wizard.hasError = null;
-                    var wkt = wicket.fromObject(layerGroup.getLayers()[0]);
-                    wkt.write();
-                    writeSpatialCoverage(_this.dataset, wkt);
+                    var wkt;
+                    
+                    if(layerGroup.getLayers().length > 1) {
+                        layerGroup.getLayers().forEach(function (layer) {
+                            if(!wkt) {
+                                wkt = new Wkt.Wkt().fromObject(layer);
+                            } else {
+                                var additionalWkt = new Wkt.Wkt().fromObject(layer);
+                                if(additionalWkt.type === 'multipolygon' && wkt.type === 'polygon') {
+                                    additionalWkt.merge(wkt);
+                                    wkt = additionalWkt;
+                                } else {
+                                    wkt.merge(additionalWkt);
+                                } 
+                            }
+                        });
+                    } else {
+                         wkt = new Wkt.Wkt().fromObject(layerGroup.getLayers()[0]);
+                    }
+                    writeSpatialCoverage(_this.dataset, wkt.write());
                 }
                 
                 return context.valid;
@@ -198,6 +234,7 @@ angular.module(
             _this.mode.selectEC = false;
             _this.mode.selectWC = false;
             _this.mode.defineBBox = false;
+            _this.mode.selectCountry = false;
             
             _this.switchMode = function (selectedMode) {
                 // simulate option group
@@ -232,6 +269,18 @@ angular.module(
                      drawControlsEnabled = false;
                 }
                 
+                if(_this.mode.selectCountry === true) {
+                    leafletData.getMap('mainmap').then(function (map) {
+                        map.addLayer(countriesLayer);
+                    });
+                    $scope.message.text='Select one or more countries that represents the spatial extent of the dataset.';
+                } else {
+                    leafletData.getMap('mainmap').then(function (map) {
+                        map.removeLayer(countriesLayer);
+                    });
+                }
+
+                // deprecated -------------------------------------------------- 
                 if(_this.mode.selectEC === true) {
                     $scope.message.text='Select a European country or region that represents the spatial extent of the dataset.';
                 }
@@ -239,7 +288,8 @@ angular.module(
                 if(this.mode.selectWC === true) {
                     $scope.message.text='Select a World country or region that represents the spatial extent of the dataset.';
                 }
-                
+                 // deprecated -------------------------------------------------- 
+                 
                 if(_this.mode.defineBBox === true) {
                     $scope.message.text='Please enter a bounding box with westbound and eastbound longitudes, and southbound and northbound latitudes in decimal degrees, with a precision of at least two decimals.';
                     
@@ -288,17 +338,50 @@ angular.module(
             };
        
             // leaflet initialisation
-            southWest = (_this.config.maxBounds && angular.isArray(_this.config.maxBounds.southWest)) ?
-                            L.latLng(config.maxBounds.southWest[0], _this.config.maxBounds.southWest[1]) :
+            southWest = (_this.config.mapView.maxBounds && angular.isArray(_this.config.mapView.maxBounds.southWest)) ?
+                            L.latLng(_this.config.mapView.maxBounds.southWest[0], _this.config.mapView.maxBounds.southWest[1]) :
                             L.latLng(90, -180);
-            northEast = (_this.config.maxBounds && angular.isArray(_this.config.maxBounds.northEast)) ?
-                            L.latLng(_this.config.maxBounds.northEast[0], _this.config.maxBounds.northEast[1]) :
+            northEast = (_this.config.mapView.maxBounds && angular.isArray(_this.config.mapView.maxBounds.northEast)) ?
+                            L.latLng(_this.config.mapView.maxBounds.northEast[0], _this.config.mapView.maxBounds.northEast[1]) :
                             L.latLng(-90, 180);
             maxBounds = L.latLngBounds(southWest, northEast);
             leafletData.getMap('mainmap').then(function (map) {
                 map.setMaxBounds($scope.maxBounds);
             });
             
+            
+            // countries layer initialisation ----------------------------------
+            countriesResource = $resource(_this.config.mapView.countriesLayer);
+            countriesResource.get(function(data) {
+                var onEachFeature = function (feature, featureLayer) {
+                    featureLayer.bindPopup(feature.properties.name);
+                    
+                    featureLayer.on('click', function (e) {
+                        var addFeature = true;
+                        layerGroup.getLayers().forEach(function (layer) {
+                            if(!layer.properties) {
+                                layerGroup.removeLayer(layer);
+                            } else if(e.target.feature.properties.name === layer.properties.name) {
+                                 addFeature = false;
+                                 layerGroup.removeLayer(layer);
+                            }
+                        });
+                        
+                        if(addFeature) {
+                            var wicket = new Wkt.Wkt();
+                            var wkt = wicket.read(JSON.stringify(e.target.feature));
+                            var polygon = wicket.toObject(wkt);
+                            polygon.on('click', function (e) {
+                                layerGroup.removeLayer(e.target);
+                            });
+                            layerGroup.addLayer(polygon);
+                        }
+                    });
+                };
+                
+                countriesLayer = new L.GeoJSON(data, {style:countriesStyle, onEachFeature:onEachFeature});
+              });
+
             //draw control initialisation
             layerGroup = new L.FeatureGroup();
             drawControls = new L.Control.Draw({
@@ -309,41 +392,46 @@ angular.module(
             });
             drawControlsEnabled = true;
             
+            
             leafletData.getMap('mainmap').then(function (map) {
                 map.addLayer(layerGroup);
-                map.addControl(drawControls);
-                map.on('draw:created', function (event) {
-                    //console.log(event.layerType + ' created'); 
-                    layerGroup.clearLayers();
-                    layerGroup.addLayer(event.layer);
-                    
-                    //wicket.fromObject(event.layer);
-                    _this.contentLocation = {};
-                    _this.contentLocation.name = 'New ' + event.layerType;
-                    //_this.contentLocation.type = event.layerType;
-                    //_this.contentLocation.layer = event.layer;
-                    //_this.contentLocation.wkt = wicket.write();
-                    
-                });
-                
-                map.on('draw:edited', function () {
-                    //console.log(event.layers.getLayers().length + ' edited'); 
-                    //layerGroup.addLayer(event.layers.getLayers()[0]);
-                    
-                    //wicket.fromObject(event.layers.getLayers()[0]);
-                    _this.contentLocation = Object.create(_this.contentLocation);
-                    if(_this.contentLocation.name.indexOf('(edited)') === -1) {
-                        _this.contentLocation.name += ' (edited)';
-                    }
-                    //_this.contentLocation.layer = event.layers.getLayers()[0];
-                    //_this.contentLocation.wkt = wicket.write();
-                });
+                if(!_this.readOnly)
+                {
 
-                map.on('draw:deleted', function (event) {
-                    console.log(event.layers.getLayers().length + ' deleted'); 
-                    layerGroup.clearLayers();
-                    _this.contentLocation = null;
-                });
+                    map.addControl(drawControls);
+                    map.on('draw:created', function (event) {
+                        //console.log(event.layerType + ' created'); 
+                        layerGroup.clearLayers();
+                        layerGroup.addLayer(event.layer);
+
+                        //wicket.fromObject(event.layer);
+                        _this.contentLocation = {};
+                        _this.contentLocation.name = 'New ' + event.layerType;
+                        //_this.contentLocation.type = event.layerType;
+                        //_this.contentLocation.layer = event.layer;
+                        //_this.contentLocation.wkt = wicket.write();
+
+                    });
+
+                    map.on('draw:edited', function () {
+                        //console.log(event.layers.getLayers().length + ' edited'); 
+                        //layerGroup.addLayer(event.layers.getLayers()[0]);
+
+                        //wicket.fromObject(event.layers.getLayers()[0]);
+                        _this.contentLocation = Object.create(_this.contentLocation);
+                        if(_this.contentLocation.name.indexOf('(edited)') === -1) {
+                            _this.contentLocation.name += ' (edited)';
+                        }
+                        //_this.contentLocation.layer = event.layers.getLayers()[0];
+                        //_this.contentLocation.wkt = wicket.write();
+                    });
+
+                    map.on('draw:deleted', function (event) {
+                        console.log(event.layers.getLayers().length + ' deleted'); 
+                        layerGroup.clearLayers();
+                        _this.contentLocation = null;
+                    });
+                }
             });
             
             
@@ -1183,21 +1271,24 @@ angular.module(
         'de.cismet.sip-html5-resource-registration.services.geoTools',
         'de.cismet.sip-html5-resource-registration.services.dataset',
         'leafletData',
+        'de.cismet.sip-html5-resource-registration.services.featureRendererService',
         // Controller Constructor Function
         function (
             $scope,
             AppConfig,
             geoTools,
             dataset,
-            leafletData
+            leafletData,
+            featureRendererService
         ) {
             'use strict';
             var _this, fireResize, wicket, defaultStyle, defaultDrawOptions, noDrawOptions,
-                    readSpatialCoverage, writeSpatialCoverage, layerGroup;
+                    readSpatialCoverage, writeSpatialCoverage, layerGroup, geoserverLayer;
             
             _this = this;
             _this.dataset = dataset;
             _this.config = AppConfig;
+            _this.readOnly = dataset.$geoserverUploaded;
             
             
             wicket = geoTools.wicket;
@@ -1245,6 +1336,16 @@ angular.module(
                                 });}, 100);
                        });
                     }
+                    
+                    if(_this.readOnly && geoserverLayer === undefined) {
+                         geoserverLayer = featureRendererService.getFeatureRenderer(_this.dataset);
+                            if (geoserverLayer) {
+                                geoserverLayer.setOpacity(1.0);
+                                leafletData.getMap('summarymap').then(function (map) {
+                                    map.addLayer(geoserverLayer);
+                                });
+                            }
+                    } 
                 }
                 
                 return context.valid;
@@ -1289,9 +1390,9 @@ angular.module(
         var appConfig = {};
         
         appConfig.cidsRestApi = {};
-        appConfig.cidsRestApi.host = 'http://localhost:8890';
-        //appConfig.cidsRestApi.host = 'http://switchon.cismet.de/legacy-rest1';
-        //appConfig.cidsRestApi.host = 'http://tl-243.xtr.deltares.nl/switchon_server_rest';
+        //appConfig.cidsRestApi.host = 'http://localhost:8890';
+        appConfig.cidsRestApi.host = 'http://switchon.cismet.de/legacy-rest1';
+        //appConfig.cidsRestApi.host = 'http://data.water-switch-on.eu/switchon_server_rest';
         
         appConfig.searchService = {};
         appConfig.searchService.username = 'admin@SWITCHON';
@@ -1302,6 +1403,7 @@ angular.module(
         
         appConfig.mapView = {};
         appConfig.mapView.backgroundLayer = 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png';
+        appConfig.mapView.countriesLayer = 'https://raw.githubusercontent.com/switchonproject/world.geo.json/master/countries.geo.json';
         appConfig.mapView.home = {};
         appConfig.mapView.home.lat = 49.245166;
         appConfig.mapView.home.lng = 6.936809;
@@ -1320,10 +1422,10 @@ angular.module(
         appConfig.searchService.username + ':' +
         appConfig.searchService.password + '@' +
         appConfig.searchService.host.replace(/.*?:\/\//g, '');
-        appConfig.objectInfo.resourceXmlUrl = 'http://tl-243.xtr.deltares.nl/csw?request=GetRecordById&service=CSW&version=2.0.2&namespace=xmlns%28csw=http://www.opengis.net/cat/csw/2.0.2%29&resultType=results&outputSchema=http://www.isotc211.org/2005/gmd&outputFormat=application/xml&ElementSetName=full&id=';
+        appConfig.objectInfo.resourceXmlUrl = 'http://data.water-switch-on.eu/csw?request=GetRecordById&service=CSW&version=2.0.2&namespace=xmlns%28csw=http://www.opengis.net/cat/csw/2.0.2%29&resultType=results&outputSchema=http://www.isotc211.org/2005/gmd&outputFormat=application/xml&ElementSetName=full&id=';
 
         appConfig.byod = {};
-        //appConfig.byod.baseUrl = 'http://tl-243.xtr.deltares.nl/byod';
+        //appConfig.byod.baseUrl = 'http://www.water-switch-on.eu/sip-webclient/byod';
         appConfig.byod.baseUrl = 'http://switchon.cismet.de/sip-snapshot';
         
         appConfig.uploadtool = {};
@@ -1554,6 +1656,8 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                         }).query();
 
                         datasetTemplate.$promise.then(function (dataset) {
+                            dataset.$uploaded = false;
+                            dataset.$geoserverUploaded = false;
 
                             // check request parameters for representations, parse and add to
                             // the dataset's representation array
@@ -1569,6 +1673,7 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                                         // WKT BBox from Data upload Tool (SHP -> Geoserver)
                                         if(representation.wktboundingbox && !dataset.spatialcoverage.geo_field) { // jshint ignore:line
                                             dataset.spatialcoverage.geo_field = representation.wktboundingbox; // jshint ignore:line
+                                            dataset.$geoserverUploaded = true;
                                         }
                                     });
                                 }
@@ -1603,6 +1708,148 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
  * ***************************************************
  */
 
+/* global L */
+/* global Wkt */
+
+angular.module(
+    'de.cismet.sip-html5-resource-registration.services'
+).factory(
+    'de.cismet.sip-html5-resource-registration.services.featureRendererService',
+    [
+        // would depend on a provider for features, to be specified
+        function () {
+            'use strict';
+
+            var getFeatureRenderer, wicket, defaultStyle, highlightStyle;
+
+            wicket = new Wkt.Wkt();
+
+            defaultStyle = {color: '#0000FF', fill: false, weight: 2, riseOnHover: true, clickable: false};
+            highlightStyle = {fillOpacity: 0.4, fill: true, fillColor: '#1589FF', riseOnHover: true, clickable: false};
+
+            /**
+             * Returns a "Feature Renderer" (Leaflet Layer) for a resource.
+             * If the resources contains a WMS preview representation a WMS Layer
+             * is instantiated and returned, otherwise, the spatialextent (geom)
+             * of the resourc eis used.
+             *
+             * @param {type} obj
+             * @returns {L.TileLayer.WMS|featureRendererService_L7.getFeatureRenderer.renderer}
+             */
+            getFeatureRenderer = function (obj) {
+                // this is only an indirection to hide the conrete implementation
+                // however, as not specified yet, we hardcode this for now
+
+                var ewkt, renderer, objectStyle;
+
+                renderer = null;
+                if (obj &&
+                        obj.$self &&
+                        obj.$self.substr(0, 18).toLowerCase() === '/switchon.resource') {
+                    if (obj.representation) {
+                        obj.representation.every(function (representation) {
+                            var capabilities, layername;
+
+                            if (representation.name && representation.contentlocation &&
+                                    representation.type && representation.type.name === 'aggregated data' &&
+                                    representation['function'] && representation['function'].name === 'service' &&
+                                    representation.protocol) {
+
+                                // PRIORITY on TMS!
+                                if (representation.protocol.name === 'WWW:TILESERVER') {
+                                    renderer = L.tileLayer(representation.contentlocation,
+                                        {
+                                            // FIXME: make configurable per layer
+                                            tms: 'true'
+                                        });
+
+                                    // unfortunately leaflet does not parse the capabilities, etc, thus no bounds present :(
+                                    // todo: resolve performance problems with multipoint / multipolygon!
+                                    renderer.getBounds = function () {
+                                        // the geo_field property comes from the server so ...  
+                                        if (obj.spatialcoverage && obj.spatialcoverage.geo_field) { // jshint ignore:line
+                                            ewkt = obj.spatialcoverage.geo_field; // jshint ignore:line
+                                            wicket.read(ewkt.substr(ewkt.indexOf(';') + 1));
+
+                                            return wicket.toObject().getBounds();
+                                        }
+                                    };
+
+                                    // disable the layer by default and show it only when it is selected!
+                                    renderer.setOpacity(0.0);
+                                    //renderer.bringToBack();
+                                } else if (representation.protocol.name === 'OGC:WMS-1.1.1-http-get-capabilities') {
+                                    capabilities = representation.contentlocation;
+                                    layername = representation.name;
+                                    renderer = L.tileLayer.wms(
+                                        capabilities,
+                                        {
+                                            layers: layername,
+                                            format: 'image/png',
+                                            transparent: true,
+                                            version: '1.1.1'
+                                        }
+                                    );
+
+                                    // unfortunately leaflet does not parse the capabilities, etc, thus no bounds present :(
+                                    // todo: resolve performance problems with multipoint / multipolygon!
+                                    renderer.getBounds = function () {
+                                        // the geo_field property comes from the server so ...  
+                                        if (obj.spatialcoverage && obj.spatialcoverage.geo_field) { // jshint ignore:line
+                                            ewkt = obj.spatialcoverage.geo_field; // jshint ignore:line
+                                            wicket.read(ewkt.substr(ewkt.indexOf(';') + 1));
+
+                                            return wicket.toObject().getBounds();
+                                        }
+                                    };
+
+                                    // disable the layer by default and show it only when it is selected!
+                                    renderer.setOpacity(0.0);
+                                    //renderer.bringToBack();
+                                }
+                            }
+
+                            // execute callback function until renderer is found 
+                            return renderer === null;
+                        });
+                    }
+
+                    // the geo_field property comes from the server so ...  
+                    // if no preview (WMS layer representation) is found,
+                    // use the spatial extent
+                    if (!renderer && obj.spatialcoverage && obj.spatialcoverage.geo_field) { // jshint ignore:line
+                        ewkt = obj.spatialcoverage.geo_field; // jshint ignore:line
+                        wicket.read(ewkt.substr(ewkt.indexOf(';') + 1));
+                        objectStyle = Object.create(defaultStyle);
+                        if (obj.name) {
+                            objectStyle.title = obj.name;
+                        }
+                        renderer = wicket.toObject(objectStyle);
+                        renderer.setStyle(defaultStyle);
+                    }
+                }
+
+                return renderer;
+            };
+
+            return {
+                getFeatureRenderer: getFeatureRenderer,
+                defaultStyle: defaultStyle,
+                highlightStyle: highlightStyle
+            };
+        }
+    ]
+);
+/* 
+ * ***************************************************
+ * 
+ * cismet GmbH, Saarbruecken, Germany
+ * 
+ *               ... and it just works.
+ * 
+ * ***************************************************
+ */
+
 /* global Wkt */
 
 angular.module('de.cismet.sip-html5-resource-registration.services')
@@ -1610,12 +1857,38 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
         ['leafletData',
     function (leafletData) {
             'use strict';
-            var wicket, defaultStyle, noDrawOptions, defaultDrawOptions, 
+            var defaultStyle, countriesStyle, noDrawOptions, defaultDrawOptions, 
                     readSpatialCoverageFunction, writeSpatialCoverageFunction, 
-                    fireResizeFunction;
+                    fireResizeFunction, readOnlyStyle;
             
-            wicket = new Wkt.Wkt();
-            defaultStyle = {color: '#0000FF', fillOpacity: 0.3, weight: 2, fill: true, fillColor: '#1589FF', riseOnHover: true, clickable: true};
+            defaultStyle = {
+                color: '#0000FF', 
+                fillOpacity: 0.3, 
+                weight: 2, 
+                fill: true, 
+                fillColor: '#1589FF', 
+                riseOnHover: true, 
+                clickable: true
+            };
+            
+            readOnlyStyle = {
+                color: '#0000FF', 
+                weight: 2, 
+                opacity: 0.25,
+                fill: false, 
+                riseOnHover: false, 
+                clickable: false
+            };
+            
+            countriesStyle = {
+                color: '#ff7800',
+                weight: 2,
+                opacity: 0.65,
+                fill: true,
+                fillOpacity: 0,
+                clickable: true,
+                riseOnHover: true
+            };
             
             defaultDrawOptions = {
                     polyline: false,
@@ -1654,13 +1927,16 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                     
                     // WKT from REST API contains EPSG definition. 
                     // WKT from data upload tool does not!
+                    var wicket = new Wkt.Wkt();
                     if(wktString.indexOf(';') !== -1) {
                         wicket.read(wktString.substr(wktString.indexOf(';') + 1));
                     } else {
                         wicket.read(wktString);
                     }
-                    var layer = wicket.toObject(defaultStyle);
-                    layer.setStyle(defaultStyle);
+                    
+                    var style = dataset.$geoserverUploaded ? readOnlyStyle : defaultStyle;
+                    var layer = wicket.toObject(style);
+                    layer.setStyle(style);
                     return layer;
                 }
 
@@ -1682,8 +1958,9 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
             
         
         return {
-            wicket:wicket,
             defaultStyle:defaultStyle,
+            readOnlyStyle:readOnlyStyle,
+            countriesStyle:countriesStyle,
             defaultDrawOptions:defaultDrawOptions,
             noDrawOptions:noDrawOptions,
             readSpatialCoverage:readSpatialCoverageFunction,

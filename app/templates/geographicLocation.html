@@ -7,7 +7,8 @@
         </leaflet>
     </div>
     
-    <div class="col-md-3">
+    <div class="col-md-3" 
+         ng-if="!geoController.readOnly">
         
         <div class="row">
             <div class="col-md-12">
@@ -21,14 +22,16 @@
                     <label class="btn btn-primary" 
                            ng-model="geoController.mode.drawBBox" 
                            ng-click="geoController.switchMode('drawBBox')"
-                           btn-radio="true">Define bounding box or polygon
+                           btn-radio="true"
+                           ng-disabled="geoController.readOnly">Define bounding box or polygon
                            
                     </label>
                     
                     <label class="btn btn-primary" 
                            ng-model="geoController.mode.selectEC" 
                            ng-click="geoController.switchMode('selectCountry')"
-                           btn-radio="true">Select countries</label>
+                           btn-radio="true"
+                           ng-disabled="geoController.readOnly">Select countries</label>
                     
                     <!--
                     <label class="btn btn-primary" 
@@ -45,7 +48,8 @@
                     <label class="btn btn-primary" 
                            ng-model="geoController.mode.defineBBox" 
                            ng-click="geoController.switchMode('defineBBox')"
-                           btn-radio="true">Enter bounding box coordinates</label>
+                           btn-radio="true"
+                           ng-disabled="geoController.readOnly">Enter bounding box coordinates</label>
                 </div>
              <div class="col-md-12">
         </div>

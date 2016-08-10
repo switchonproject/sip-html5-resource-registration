@@ -9,6 +9,7 @@
  */
 
 /* global L */
+/* global Wkt */
 /*jshint sub:true*/
 
 angular.module(
@@ -17,6 +18,7 @@ angular.module(
     'de.cismet.sip-html5-resource-registration.controllers.geoLocationController',
     [
         '$scope',
+        '$resource',
         'AppConfig',
         'leafletData',
         'de.cismet.sip-html5-resource-registration.services.geoTools',
@@ -25,6 +27,7 @@ angular.module(
         // Controller Constructor Function
         function (
             $scope,
+            $resource,
             AppConfig,
             leafletData,
             geoTools,
@@ -33,13 +36,14 @@ angular.module(
         ) {
             'use strict';
 
-            var _this, config, fireResize, southWest, northEast, maxBounds,
-                    drawControls, layerGroup, wicket, defaultStyle, defaultDrawOptions,
-                    noDrawOptions, writeSpatialCoverage,
-                    readSpatialCoverage, drawControlsEnabled;
+            var _this, fireResize, southWest, northEast, maxBounds,
+                    drawControls, layerGroup, defaultStyle, countriesStyle, 
+                    defaultDrawOptions, noDrawOptions, writeSpatialCoverage,
+                    readSpatialCoverage, drawControlsEnabled,
+                    countriesResource, countriesLayer;
             
-            wicket = geoTools.wicket;
             defaultStyle = geoTools.defaultStyle;
+            countriesStyle = geoTools.countriesStyle;
             defaultDrawOptions = geoTools.defaultDrawOptions;
             noDrawOptions = geoTools.noDrawOptions;
             readSpatialCoverage = geoTools.readSpatialCoverage;
@@ -72,6 +76,7 @@ angular.module(
             //},3000);
             
            _this.onSelectedCountry = function(item) {
+                var wicket = new Wkt.Wkt();
                 wicket.read(item.wkt);
                 var layer = wicket.toObject(defaultStyle);
                // _this.contentLocation.layer = layer;
@@ -156,9 +161,27 @@ angular.module(
                 
                 if(context.valid === true) {
                     $scope.wizard.hasError = null;
-                    var wkt = wicket.fromObject(layerGroup.getLayers()[0]);
-                    wkt.write();
-                    writeSpatialCoverage(_this.dataset, wkt);
+                    var wkt;
+                    
+                    if(layerGroup.getLayers().length > 1) {
+                        layerGroup.getLayers().forEach(function (layer) {
+                            if(!wkt) {
+                                wkt = new Wkt.Wkt().fromObject(layer);
+                            } else {
+                                var additionalWkt = new Wkt.Wkt().fromObject(layer);
+                                if(additionalWkt.type === 'multipolygon' && wkt.type === 'polygon') {
+                                    additionalWkt.merge(wkt);
+                                    wkt = additionalWkt;
+                                } else {
+                                    wkt.merge(additionalWkt);
+                                } 
+                            }
+                        });
+                    } else {
+                         wkt = new Wkt.Wkt().fromObject(layerGroup.getLayers()[0]);
+                    }
+                    console.log(wkt.write());
+                    writeSpatialCoverage(_this.dataset, wkt.write());
                 }
                 
                 return context.valid;
@@ -173,6 +196,7 @@ angular.module(
             _this.mode.selectEC = false;
             _this.mode.selectWC = false;
             _this.mode.defineBBox = false;
+            _this.mode.selectCountry = false;
             
             _this.switchMode = function (selectedMode) {
                 // simulate option group
@@ -207,6 +231,18 @@ angular.module(
                      drawControlsEnabled = false;
                 }
                 
+                if(_this.mode.selectCountry === true) {
+                    leafletData.getMap('mainmap').then(function (map) {
+                        map.addLayer(countriesLayer);
+                    });
+                    $scope.message.text='Select one or more countries that represents the spatial extent of the dataset.';
+                } else {
+                    leafletData.getMap('mainmap').then(function (map) {
+                        map.removeLayer(countriesLayer);
+                    });
+                }
+
+                // deprecated -------------------------------------------------- 
                 if(_this.mode.selectEC === true) {
                     $scope.message.text='Select a European country or region that represents the spatial extent of the dataset.';
                 }
@@ -214,7 +250,8 @@ angular.module(
                 if(this.mode.selectWC === true) {
                     $scope.message.text='Select a World country or region that represents the spatial extent of the dataset.';
                 }
-                
+                 // deprecated -------------------------------------------------- 
+                 
                 if(_this.mode.defineBBox === true) {
                     $scope.message.text='Please enter a bounding box with westbound and eastbound longitudes, and southbound and northbound latitudes in decimal degrees, with a precision of at least two decimals.';
                     
@@ -263,17 +300,50 @@ angular.module(
             };
        
             // leaflet initialisation
-            southWest = (_this.config.maxBounds && angular.isArray(_this.config.maxBounds.southWest)) ?
-                            L.latLng(config.maxBounds.southWest[0], _this.config.maxBounds.southWest[1]) :
+            southWest = (_this.config.mapView.maxBounds && angular.isArray(_this.config.mapView.maxBounds.southWest)) ?
+                            L.latLng(_this.config.mapView.maxBounds.southWest[0], _this.config.mapView.maxBounds.southWest[1]) :
                             L.latLng(90, -180);
-            northEast = (_this.config.maxBounds && angular.isArray(_this.config.maxBounds.northEast)) ?
-                            L.latLng(_this.config.maxBounds.northEast[0], _this.config.maxBounds.northEast[1]) :
+            northEast = (_this.config.mapView.maxBounds && angular.isArray(_this.config.mapView.maxBounds.northEast)) ?
+                            L.latLng(_this.config.mapView.maxBounds.northEast[0], _this.config.mapView.maxBounds.northEast[1]) :
                             L.latLng(-90, 180);
             maxBounds = L.latLngBounds(southWest, northEast);
             leafletData.getMap('mainmap').then(function (map) {
                 map.setMaxBounds($scope.maxBounds);
             });
             
+            
+            // countries layer initialisation ----------------------------------
+            countriesResource = $resource(_this.config.mapView.countriesLayer);
+            countriesResource.get(function(data) {
+                var onEachFeature = function (feature, featureLayer) {
+                    featureLayer.bindPopup(feature.properties.name);
+                    
+                    featureLayer.on('click', function (e) {
+                        var addFeature = true;
+                        layerGroup.getLayers().forEach(function (layer) {
+                            if(!layer.properties) {
+                                layerGroup.removeLayer(layer);
+                            } else if(e.target.feature.properties.name === layer.properties.name) {
+                                 addFeature = false;
+                                 layerGroup.removeLayer(layer);
+                            }
+                        });
+                        
+                        if(addFeature) {
+                            var wicket = new Wkt.Wkt();
+                            var wkt = wicket.read(JSON.stringify(e.target.feature));
+                            var polygon = wicket.toObject(wkt);
+                            polygon.on('click', function (e) {
+                                layerGroup.removeLayer(e.target);
+                            });
+                            layerGroup.addLayer(polygon);
+                        }
+                    });
+                };
+                
+                countriesLayer = new L.GeoJSON(data, {style:countriesStyle, onEachFeature:onEachFeature});
+              });
+
             //draw control initialisation
             layerGroup = new L.FeatureGroup();
             drawControls = new L.Control.Draw({
@@ -286,6 +356,7 @@ angular.module(
             
             leafletData.getMap('mainmap').then(function (map) {
                 map.addLayer(layerGroup);
+               
                 map.addControl(drawControls);
                 map.on('draw:created', function (event) {
                     //console.log(event.layerType + ' created'); 

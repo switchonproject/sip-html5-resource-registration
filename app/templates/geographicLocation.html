@@ -24,6 +24,13 @@
                            btn-radio="true">Define bounding box or polygon
                            
                     </label>
+                    
+                    <label class="btn btn-primary" 
+                           ng-model="geoController.mode.selectEC" 
+                           ng-click="geoController.switchMode('selectCountry')"
+                           btn-radio="true">Select countries</label>
+                    
+                    <!--
                     <label class="btn btn-primary" 
                            ng-model="geoController.mode.selectEC" 
                            ng-click="geoController.switchMode('selectEC')"
@@ -33,6 +40,7 @@
                            ng-model="geoController.mode.selectWC" 
                            ng-click="geoController.switchMode('selectWC')"
                            btn-radio="true">Select World country or region</label>
+                    -->
                     
                     <label class="btn btn-primary" 
                            ng-model="geoController.mode.defineBBox" 
@@ -42,7 +50,7 @@
              <div class="col-md-12">
         </div>
 
-        <!-- CONTROL SELECT EUROPE -->
+        <!-- CONTROL SELECT EUROPE 
         <div class="row" ng-show="geoController.mode.selectEC">
             <div class="col-md-12">
                 <hr>
@@ -60,9 +68,9 @@
                     </ui-select-choices>
                 </ui-select>
             </div>
-        </div>
+        </div>-->
 
-        <!-- CONTROL SELECT WORLD -->
+        <!-- CONTROL SELECT WORLD 
         <div class="row" ng-show="geoController.mode.selectWC">
             <div class="col-md-12">
                 <hr>
@@ -80,7 +88,7 @@
                     </ui-select-choices>
                 </ui-select>
             </div>
-        </div>
+        </div>-->
         
         <!-- CONTROL ENTER COORDINATES -->
         <div class="row" ng-show="geoController.mode.defineBBox">

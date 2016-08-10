@@ -15,12 +15,29 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
         ['leafletData',
     function (leafletData) {
             'use strict';
-            var wicket, defaultStyle, noDrawOptions, defaultDrawOptions, 
+            var defaultStyle, countriesStyle, noDrawOptions, defaultDrawOptions, 
                     readSpatialCoverageFunction, writeSpatialCoverageFunction, 
                     fireResizeFunction;
             
-            wicket = new Wkt.Wkt();
-            defaultStyle = {color: '#0000FF', fillOpacity: 0.3, weight: 2, fill: true, fillColor: '#1589FF', riseOnHover: true, clickable: true};
+            defaultStyle = {
+                color: '#0000FF', 
+                fillOpacity: 0.3, 
+                weight: 2, 
+                fill: true, 
+                fillColor: '#1589FF', 
+                riseOnHover: true, 
+                clickable: true
+            };
+            
+            countriesStyle = {
+                color: '#ff7800',
+                weight: 2,
+                opacity: 0.65,
+                fill: true,
+                fillOpacity: 0,
+                clickable: true,
+                riseOnHover: true
+            };
             
             defaultDrawOptions = {
                     polyline: false,
@@ -59,6 +76,7 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                     
                     // WKT from REST API contains EPSG definition. 
                     // WKT from data upload tool does not!
+                    var wicket = new Wkt.Wkt();
                     if(wktString.indexOf(';') !== -1) {
                         wicket.read(wktString.substr(wktString.indexOf(';') + 1));
                     } else {
@@ -87,8 +105,8 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
             
         
         return {
-            wicket:wicket,
             defaultStyle:defaultStyle,
+            countriesStyle:countriesStyle,
             defaultDrawOptions:defaultDrawOptions,
             noDrawOptions:noDrawOptions,
             readSpatialCoverage:readSpatialCoverageFunction,

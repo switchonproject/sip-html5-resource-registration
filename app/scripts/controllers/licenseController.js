@@ -34,7 +34,7 @@ angular.module(
             // validation functions
             $scope.wizard.enterValidators['License and Conditions'] = function(context){
                 if(context.valid === true){
-                    $scope.message.text='Please select a predefined license for regulating the conditions for access and use of the resource and provide a brief statement or URL to the license which applies to the usage of the dataset. This statement should provide additional information.';
+                    $scope.message.text='Please select a predefined license for regulating the conditions for access and use of the dataset and / or provide a brief statement or URL to the license which applies to the usage of the dataset. This statement should provide additional information.';
                     $scope.message.icon='fa-info-circle';
                     $scope.message.type = 'success';
                 }
@@ -72,7 +72,7 @@ angular.module(
                     context.valid =  false;
                 } else if ($scope.licenseForm.datasetContactemail.$error.email) {
                     // CONTENT LOCATION       
-                    $scope.message.text = 'The email address to the contact person is not a valid.';
+                    $scope.message.text = 'The email address of the contact person is not a valid.';
                     $scope.message.icon = 'fa-warning';
                     $scope.message.type = 'warning';
 
@@ -80,7 +80,7 @@ angular.module(
                     context.valid = false;
                 } else if ($scope.licenseForm.datasetOrganisationurl.$error.url) {
                     // CONTENT LOCATION       
-                    $scope.message.text = 'The website url of the orgaisation is not a valid <a href=\'https://en.wikipedia.org/wiki/Uniform_Resource_Locator#Syntax\' target=\'_blank\' title=\'Uniform Resource Locator\'>URL</a>.';
+                    $scope.message.text = 'The website url of the organisation is not a valid <a href=\'https://en.wikipedia.org/wiki/Uniform_Resource_Locator#Syntax\' target=\'_blank\' title=\'Uniform Resource Locator\'>URL</a>.';
                     $scope.message.icon = 'fa-warning';
                     $scope.message.type = 'warning';
 

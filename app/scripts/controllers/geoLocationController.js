@@ -117,10 +117,12 @@ angular.module(
             $scope.wizard.enterValidators['Geographic Location'] = function(context){
                 if(context.valid === true)
                 {
-                    if(_this.mode.drawBBox === true) {
-                        $scope.message.text='Please specify the extent of the dataset in the map <br>Use the map controls to draw a bounding box or a polygon that represents the spatial extent of the dataset.';
+                    if(_this.readOnly) {
+                        $scope.message.text='The spatial extent of the dataset has already been defined by the uploaded spatial dataset (e.g. SHP File) It cannot be changed afterwards.';  
+                    } else if(_this.mode.drawBBox === true) {
+                        $scope.message.text='Please specify the spatial extent of the dataset in the map <br>Use the map controls to draw a bounding box or a polygon that represents the spatial extent of the dataset.';
                     } else {
-                        $scope.message.text='Please specify the extent of the dataset in the map.';
+                        $scope.message.text='Please specify the spatial extent of the dataset in the map.';
                     }
 
                     $scope.message.icon='fa-info-circle';
@@ -159,14 +161,14 @@ angular.module(
             $scope.wizard.exitValidators['Geographic Location'] = function(context){
                 context.valid = true;
                 if(_this.mode.defineBBox === true && $scope.coordinatesForm.$invalid) {
-                    $scope.message.text='Please specify a valid bounding box or use an other option to  specify the geographic location of the dataset!';
+                    $scope.message.text='Please specify a valid bounding box or use an other option to specify the geographic location of the dataset!';
                     $scope.message.icon='fa-warning';
                     $scope.message.type = 'warning';
                     
                     context.valid = false;
                 } else if(!layerGroup || !layerGroup.getLayers() || layerGroup.getLayers().length === 0) {
                     
-                    $scope.message.text='Please specify the geographic location of the dataset!';
+                    $scope.message.text='Please specify the geographic location (spatial extent) of the dataset!';
                     $scope.message.icon='fa-warning';
                     $scope.message.type = 'warning';
                     
@@ -248,7 +250,7 @@ angular.module(
                     leafletData.getMap('mainmap').then(function (map) {
                         map.addLayer(countriesLayer);
                     });
-                    $scope.message.text='Select one or more countries that represents the spatial extent of the dataset.';
+                    $scope.message.text='Select one or more countries that represent the spatial extent of the dataset.';
                 } else {
                     leafletData.getMap('mainmap').then(function (map) {
                         map.removeLayer(countriesLayer);

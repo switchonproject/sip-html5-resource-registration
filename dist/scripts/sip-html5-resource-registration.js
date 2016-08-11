@@ -1007,7 +1007,6 @@ angular.module(
             '$http',
             '$window',
             '$interval',
-            '$location',
             '$modalInstance',
             'rfc4122',
             'AppConfig',
@@ -1020,7 +1019,6 @@ angular.module(
                     $http,
                     $window,
                     $interval,
-                    $location,
                     $modalInstance,
                     rfc4122,
                     AppConfig,
@@ -2303,6 +2301,7 @@ angular.module(
 
                     // remove uploaded flag (unavailable in cids bean);
                     delete dataset.$uploaded;
+                    delete dataset.$geoserverUploaded;
 
                     // result of the remote store operation (promise)
                     // starting the store!

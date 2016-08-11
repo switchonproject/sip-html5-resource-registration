@@ -100,6 +100,9 @@ angular.module(
                    //_this.contentLocation.layer = layer;
            };
                 
+            // ugly workaround for forms in ng-if child scope!
+            $scope.forms = {};
+            
             /**
              * Map init data
              */
@@ -160,7 +163,7 @@ angular.module(
             // on exit: write spatial coverage to dataset
             $scope.wizard.exitValidators['Geographic Location'] = function(context){
                 context.valid = true;
-                if(_this.mode.defineBBox === true && $scope.coordinatesForm.$invalid) {
+                if(_this.mode.defineBBox === true && $scope.forms.coordinatesForm.$invalid) {
                     $scope.message.text='Please specify a valid bounding box or use an other option to specify the geographic location of the dataset!';
                     $scope.message.icon='fa-warning';
                     $scope.message.type = 'warning';

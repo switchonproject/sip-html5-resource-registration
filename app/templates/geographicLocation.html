@@ -22,16 +22,16 @@
                     <label class="btn btn-primary" 
                            ng-model="geoController.mode.drawBBox" 
                            ng-click="geoController.switchMode('drawBBox')"
-                           btn-radio="true"
-                           ng-disabled="geoController.readOnly">Define bounding box or polygon
-                           
+                           btn-radio="true">
+                        Define bounding box or polygon
                     </label>
                     
                     <label class="btn btn-primary" 
-                           ng-model="geoController.mode.selectEC" 
+                           ng-model="geoController.mode.selectCountry" 
                            ng-click="geoController.switchMode('selectCountry')"
-                           btn-radio="true"
-                           ng-disabled="geoController.readOnly">Select countries</label>
+                           btn-radio="true">
+                        Select countries
+                    </label>
                     
                     <!--
                     <label class="btn btn-primary" 
@@ -48,10 +48,11 @@
                     <label class="btn btn-primary" 
                            ng-model="geoController.mode.defineBBox" 
                            ng-click="geoController.switchMode('defineBBox')"
-                           btn-radio="true"
-                           ng-disabled="geoController.readOnly">Enter bounding box coordinates</label>
+                           btn-radio="true">
+                        Enter bounding box coordinates
+                    </label>
                 </div>
-             <div class="col-md-12">
+            </div>
         </div>
 
         <!-- CONTROL SELECT EUROPE 
@@ -91,14 +92,13 @@
                         <div ng-bind-html="country.name | highlight: $select.search"></div>
                     </ui-select-choices>
                 </ui-select>
-            </div>
-        </div>-->
+            </div>-->
         
         <!-- CONTROL ENTER COORDINATES -->
         <div class="row" ng-show="geoController.mode.defineBBox">
-        <div class="col-md-10">
+            <div class="col-md-10">
                 <hr>
-                <form class="form-horizontal" name="coordinatesForm" id="coordinatesForm" novalidate> 
+                <form class="form-horizontal" name="forms.coordinatesForm" id="forms.coordinatesForm" novalidate> 
                     <!-- North Bound Latitude -->
                     <div class="row">
                         <div class="col-md-12">
@@ -106,8 +106,8 @@
                         </div>
                     </div>
                     <div class="row form-group" 
-                         ng-class="{'has-error': !coordinatesForm.north.$error.required && coordinatesForm.north.$invalid,
-                                    'has-success': !coordinatesForm.north.$error.required && !coordinatesForm.north.$invalid}">
+                         ng-class="{'has-error': !forms.coordinatesForm.north.$error.required && forms.coordinatesForm.north.$invalid,
+                                    'has-success': !forms.coordinatesForm.north.$error.required && !forms.coordinatesForm.north.$invalid}">
                         <div class="col-md-12">
                             <input type="number" class="form-control" id="north" name="north" 
                                    ng-model="geoController.contentLocation.bounds.north" 
@@ -123,8 +123,8 @@
                         </div>
                     </div>
                     <div class="row form-group" 
-                         ng-class="{'has-error': !coordinatesForm.east.$error.required && coordinatesForm.east.$invalid,
-                                    'has-success': !coordinatesForm.east.$error.required && !coordinatesForm.east.$invalid}">
+                         ng-class="{'has-error': !forms.coordinatesForm.east.$error.required && forms.coordinatesForm.east.$invalid,
+                                    'has-success': !forms.coordinatesForm.east.$error.required && !forms.coordinatesForm.east.$invalid}">
                         <div class="col-md-12">
                             <input class="form-control" type="number" id="east" name="east" 
                                    ng-model="geoController.contentLocation.bounds.east" 
@@ -140,8 +140,8 @@
                         </div>
                     </div>
                     <div class="row form-group"  
-                         ng-class="{'has-error': !coordinatesForm.south.$error.required && coordinatesForm.south.$invalid,
-                                    'has-success': !coordinatesForm.south.$error.required && !coordinatesForm.south.$invalid}">
+                         ng-class="{'has-error': !forms.coordinatesForm.south.$error.required && forms.coordinatesForm.south.$invalid,
+                                    'has-success': !forms.coordinatesForm.south.$error.required && !forms.coordinatesForm.south.$invalid}">
                         <div class="col-md-12">
                             <input type="number" class="form-control" id="south" name="south" 
                                    ng-model="geoController.contentLocation.bounds.south" 
@@ -157,8 +157,8 @@
                         </div>
                     </div>
                     <div class="row form-group"  
-                         ng-class="{'has-error': !coordinatesForm.west.$error.required && coordinatesForm.west.$invalid,
-                                    'has-success': !coordinatesForm.west.$error.required && !coordinatesForm.west.$invalid}">
+                         ng-class="{'has-error': !forms.coordinatesForm.west.$error.required && forms.coordinatesForm.west.$invalid,
+                                    'has-success': !forms.coordinatesForm.west.$error.required && !forms.coordinatesForm.west.$invalid}">
                         <div class="col-md-12">
                             <input type="number" class="form-control" id="west" name="west" 
                                    ng-model="geoController.contentLocation.bounds.west" 

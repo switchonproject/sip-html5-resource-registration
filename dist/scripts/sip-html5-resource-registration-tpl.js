@@ -93,11 +93,9 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                           ng-click=\"geoController.switchMode('drawBBox')\"\r" +
     "\n" +
-    "                           btn-radio=\"true\"\r" +
+    "                           btn-radio=\"true\">\r" +
     "\n" +
-    "                           ng-disabled=\"geoController.readOnly\">Define bounding box or polygon\r" +
-    "\n" +
-    "                           \r" +
+    "                        Define bounding box or polygon\r" +
     "\n" +
     "                    </label>\r" +
     "\n" +
@@ -105,13 +103,15 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                    <label class=\"btn btn-primary\" \r" +
     "\n" +
-    "                           ng-model=\"geoController.mode.selectEC\" \r" +
+    "                           ng-model=\"geoController.mode.selectCountry\" \r" +
     "\n" +
     "                           ng-click=\"geoController.switchMode('selectCountry')\"\r" +
     "\n" +
-    "                           btn-radio=\"true\"\r" +
+    "                           btn-radio=\"true\">\r" +
     "\n" +
-    "                           ng-disabled=\"geoController.readOnly\">Select countries</label>\r" +
+    "                        Select countries\r" +
+    "\n" +
+    "                    </label>\r" +
     "\n" +
     "                    \r" +
     "\n" +
@@ -145,13 +145,15 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                           ng-click=\"geoController.switchMode('defineBBox')\"\r" +
     "\n" +
-    "                           btn-radio=\"true\"\r" +
+    "                           btn-radio=\"true\">\r" +
     "\n" +
-    "                           ng-disabled=\"geoController.readOnly\">Enter bounding box coordinates</label>\r" +
+    "                        Enter bounding box coordinates\r" +
+    "\n" +
+    "                    </label>\r" +
     "\n" +
     "                </div>\r" +
     "\n" +
-    "             <div class=\"col-md-12\">\r" +
+    "            </div>\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
@@ -231,9 +233,7 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                </ui-select>\r" +
     "\n" +
-    "            </div>\r" +
-    "\n" +
-    "        </div>-->\r" +
+    "            </div>-->\r" +
     "\n" +
     "        \r" +
     "\n" +
@@ -241,11 +241,11 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "        <div class=\"row\" ng-show=\"geoController.mode.defineBBox\">\r" +
     "\n" +
-    "        <div class=\"col-md-10\">\r" +
+    "            <div class=\"col-md-10\">\r" +
     "\n" +
     "                <hr>\r" +
     "\n" +
-    "                <form class=\"form-horizontal\" name=\"coordinatesForm\" id=\"coordinatesForm\" novalidate> \r" +
+    "                <form class=\"form-horizontal\" name=\"forms.coordinatesForm\" id=\"forms.coordinatesForm\" novalidate> \r" +
     "\n" +
     "                    <!-- North Bound Latitude -->\r" +
     "\n" +
@@ -261,9 +261,9 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                    <div class=\"row form-group\" \r" +
     "\n" +
-    "                         ng-class=\"{'has-error': !coordinatesForm.north.$error.required && coordinatesForm.north.$invalid,\r" +
+    "                         ng-class=\"{'has-error': !forms.coordinatesForm.north.$error.required && forms.coordinatesForm.north.$invalid,\r" +
     "\n" +
-    "                                    'has-success': !coordinatesForm.north.$error.required && !coordinatesForm.north.$invalid}\">\r" +
+    "                                    'has-success': !forms.coordinatesForm.north.$error.required && !forms.coordinatesForm.north.$invalid}\">\r" +
     "\n" +
     "                        <div class=\"col-md-12\">\r" +
     "\n" +
@@ -295,9 +295,9 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                    <div class=\"row form-group\" \r" +
     "\n" +
-    "                         ng-class=\"{'has-error': !coordinatesForm.east.$error.required && coordinatesForm.east.$invalid,\r" +
+    "                         ng-class=\"{'has-error': !forms.coordinatesForm.east.$error.required && forms.coordinatesForm.east.$invalid,\r" +
     "\n" +
-    "                                    'has-success': !coordinatesForm.east.$error.required && !coordinatesForm.east.$invalid}\">\r" +
+    "                                    'has-success': !forms.coordinatesForm.east.$error.required && !forms.coordinatesForm.east.$invalid}\">\r" +
     "\n" +
     "                        <div class=\"col-md-12\">\r" +
     "\n" +
@@ -329,9 +329,9 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                    <div class=\"row form-group\"  \r" +
     "\n" +
-    "                         ng-class=\"{'has-error': !coordinatesForm.south.$error.required && coordinatesForm.south.$invalid,\r" +
+    "                         ng-class=\"{'has-error': !forms.coordinatesForm.south.$error.required && forms.coordinatesForm.south.$invalid,\r" +
     "\n" +
-    "                                    'has-success': !coordinatesForm.south.$error.required && !coordinatesForm.south.$invalid}\">\r" +
+    "                                    'has-success': !forms.coordinatesForm.south.$error.required && !forms.coordinatesForm.south.$invalid}\">\r" +
     "\n" +
     "                        <div class=\"col-md-12\">\r" +
     "\n" +
@@ -363,9 +363,9 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                    <div class=\"row form-group\"  \r" +
     "\n" +
-    "                         ng-class=\"{'has-error': !coordinatesForm.west.$error.required && coordinatesForm.west.$invalid,\r" +
+    "                         ng-class=\"{'has-error': !forms.coordinatesForm.west.$error.required && forms.coordinatesForm.west.$invalid,\r" +
     "\n" +
-    "                                    'has-success': !coordinatesForm.west.$error.required && !coordinatesForm.west.$invalid}\">\r" +
+    "                                    'has-success': !forms.coordinatesForm.west.$error.required && !forms.coordinatesForm.west.$invalid}\">\r" +
     "\n" +
     "                        <div class=\"col-md-12\">\r" +
     "\n" +

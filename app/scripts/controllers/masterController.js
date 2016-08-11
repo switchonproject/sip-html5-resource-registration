@@ -15,16 +15,12 @@ angular.module(
         [
             '$scope',
             'AppConfig',
-            'WizardHandler',
             'de.cismet.sip-html5-resource-registration.services.dataset',
-            'de.cismet.sip-html5-resource-registration.services.TagGroupService',
             '$modal',
             function (
                     $scope,
                     AppConfig,
-                    WizardHandler,
                     dataset,
-                    tagGroupService,
                     $modal
                     ) {
                 'use strict';

@@ -58,7 +58,7 @@ angular.module(
                 _this.progress.finished = false;
                 _this.progress.error = null;
                 _this.progress.type = 'primary';
-                _this.progress.message = 'The dataset is now added to the SWITCH-ON Meta-Data Repository. <br>Please do not close this browser window until the uploaded has been completed';
+                _this.progress.message = 'The dataset is now beeing added to the SWITCH-ON Meta-Data Repository. <br>Please do not close this browser window until the upload has been completed';
 
                 _this.close = function () {
                     $modalInstance.close();

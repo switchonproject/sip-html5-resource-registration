@@ -991,7 +991,7 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                   ng-model=\"dataset.representation[0].contentlocation\"\r" +
     "\n" +
-    "                   ng-focus=\"(wizard.hasError === 'datasetContentlocation') ? showInfoMessage('This dataset is alredy registered in the SWITCH-ON Spatial Information Platform', 'info', 'fa-warning') : showInfoMessage('Please provide a download link to the dataset or a link to additional information about the dataset.');\"\r" +
+    "                   ng-focus=\"(wizard.hasError === 'datasetContentlocation') ? showInfoMessage('This dataset is already registered in the SWITCH-ON Spatial Information Platform', 'info', 'fa-warning') : showInfoMessage('Please provide a download link to the dataset or a link to additional information about the dataset.');\"\r" +
     "\n" +
     "                   ng-change=\"odRegistrationController.checkLink(dataset.representation[0].contentlocation)\"\r" +
     "\n" +
@@ -1055,13 +1055,13 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                      name=\"datasetDescription\" \r" +
     "\n" +
-    "                      placeholder=\"Description of the dataset\"\r" +
+    "                      placeholder=\"Please describe the dataset. Use between 100 and 500 words.\"\r" +
     "\n" +
     "                      rows=\"8\"\r" +
     "\n" +
     "                      ng-model=\"dataset.description\" \r" +
     "\n" +
-    "                      ng-focus=\"showInfoMessage('Please provide a brief narrative summary of the content of the dataset.')\"\r" +
+    "                      ng-focus=\"showInfoMessage('Please provide a brief narrative summary of the content of the dataset. Use between 100 and 500 words.')\"\r" +
     "\n" +
     "                      required></textarea>\r" +
     "\n" +

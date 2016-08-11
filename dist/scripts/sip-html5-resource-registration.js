@@ -142,10 +142,12 @@ angular.module(
             $scope.wizard.enterValidators['Geographic Location'] = function(context){
                 if(context.valid === true)
                 {
-                    if(_this.mode.drawBBox === true) {
-                        $scope.message.text='Please specify the extent of the dataset in the map <br>Use the map controls to draw a bounding box or a polygon that represents the spatial extent of the dataset.';
+                    if(_this.readOnly) {
+                        $scope.message.text='The spatial extent of the dataset has already been defined by the uploaded spatial dataset (e.g. SHP File) It cannot be changed afterwards.';  
+                    } else if(_this.mode.drawBBox === true) {
+                        $scope.message.text='Please specify the spatial extent of the dataset in the map <br>Use the map controls to draw a bounding box or a polygon that represents the spatial extent of the dataset.';
                     } else {
-                        $scope.message.text='Please specify the extent of the dataset in the map.';
+                        $scope.message.text='Please specify the spatial extent of the dataset in the map.';
                     }
 
                     $scope.message.icon='fa-info-circle';
@@ -184,14 +186,14 @@ angular.module(
             $scope.wizard.exitValidators['Geographic Location'] = function(context){
                 context.valid = true;
                 if(_this.mode.defineBBox === true && $scope.coordinatesForm.$invalid) {
-                    $scope.message.text='Please specify a valid bounding box or use an other option to  specify the geographic location of the dataset!';
+                    $scope.message.text='Please specify a valid bounding box or use an other option to specify the geographic location of the dataset!';
                     $scope.message.icon='fa-warning';
                     $scope.message.type = 'warning';
                     
                     context.valid = false;
                 } else if(!layerGroup || !layerGroup.getLayers() || layerGroup.getLayers().length === 0) {
                     
-                    $scope.message.text='Please specify the geographic location of the dataset!';
+                    $scope.message.text='Please specify the geographic location (spatial extent) of the dataset!';
                     $scope.message.icon='fa-warning';
                     $scope.message.type = 'warning';
                     
@@ -273,7 +275,7 @@ angular.module(
                     leafletData.getMap('mainmap').then(function (map) {
                         map.addLayer(countriesLayer);
                     });
-                    $scope.message.text='Select one or more countries that represents the spatial extent of the dataset.';
+                    $scope.message.text='Select one or more countries that represent the spatial extent of the dataset.';
                 } else {
                     leafletData.getMap('mainmap').then(function (map) {
                         map.removeLayer(countriesLayer);
@@ -539,7 +541,7 @@ angular.module(
             // validation functions
             $scope.wizard.enterValidators['License and Conditions'] = function(context){
                 if(context.valid === true){
-                    $scope.message.text='Please select a predefined license for regulating the conditions for access and use of the resource and provide a brief statement or URL to the license which applies to the usage of the dataset. This statement should provide additional information.';
+                    $scope.message.text='Please select a predefined license for regulating the conditions for access and use of the dataset and / or provide a brief statement or URL to the license which applies to the usage of the dataset. This statement should provide additional information.';
                     $scope.message.icon='fa-info-circle';
                     $scope.message.type = 'success';
                 }
@@ -577,7 +579,7 @@ angular.module(
                     context.valid =  false;
                 } else if ($scope.licenseForm.datasetContactemail.$error.email) {
                     // CONTENT LOCATION       
-                    $scope.message.text = 'The email address to the contact person is not a valid.';
+                    $scope.message.text = 'The email address of the contact person is not a valid.';
                     $scope.message.icon = 'fa-warning';
                     $scope.message.type = 'warning';
 
@@ -585,7 +587,7 @@ angular.module(
                     context.valid = false;
                 } else if ($scope.licenseForm.datasetOrganisationurl.$error.url) {
                     // CONTENT LOCATION       
-                    $scope.message.text = 'The website url of the orgaisation is not a valid <a href=\'https://en.wikipedia.org/wiki/Uniform_Resource_Locator#Syntax\' target=\'_blank\' title=\'Uniform Resource Locator\'>URL</a>.';
+                    $scope.message.text = 'The website url of the organisation is not a valid <a href=\'https://en.wikipedia.org/wiki/Uniform_Resource_Locator#Syntax\' target=\'_blank\' title=\'Uniform Resource Locator\'>URL</a>.';
                     $scope.message.icon = 'fa-warning';
                     $scope.message.type = 'warning';
 
@@ -620,16 +622,12 @@ angular.module(
         [
             '$scope',
             'AppConfig',
-            'WizardHandler',
             'de.cismet.sip-html5-resource-registration.services.dataset',
-            'de.cismet.sip-html5-resource-registration.services.TagGroupService',
             '$modal',
             function (
                     $scope,
                     AppConfig,
-                    WizardHandler,
                     dataset,
-                    tagGroupService,
                     $modal
                     ) {
                 'use strict';
@@ -1048,7 +1046,7 @@ angular.module(
                 _this.progress.finished = false;
                 _this.progress.error = null;
                 _this.progress.type = 'primary';
-                _this.progress.message = 'The dataset is now added to the SWITCH-ON Meta-Data Repository. <br>Please do not close this browser window until the uploaded has been completed';
+                _this.progress.message = 'The dataset is now beeing added to the SWITCH-ON Meta-Data Repository. <br>Please do not close this browser window until the upload has been completed';
 
                 _this.close = function () {
                     $modalInstance.close();

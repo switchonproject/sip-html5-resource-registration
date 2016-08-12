@@ -1655,7 +1655,7 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                         }).query();
 
                         datasetTemplate.$promise.then(function (dataset) {
-                            dataset.$uploaded = false;
+                            dataset.$uploaded = undefined;
                             dataset.$geoserverUploaded = false;
 
                             // check request parameters for representations, parse and add to

@@ -18,8 +18,8 @@ angular.module(
         
         appConfig.cidsRestApi = {};
         //appConfig.cidsRestApi.host = 'http://localhost:8890';
-        appConfig.cidsRestApi.host = 'http://switchon.cismet.de/legacy-rest1';
-        //appConfig.cidsRestApi.host = 'http://data.water-switch-on.eu/switchon_server_rest';
+        //appConfig.cidsRestApi.host = 'http://switchon.cismet.de/legacy-rest1';
+        appConfig.cidsRestApi.host = 'http://data.water-switch-on.eu/switchon_server_rest';
         
         appConfig.searchService = {};
         appConfig.searchService.username = 'admin@SWITCHON';
@@ -108,8 +108,8 @@ angular.module(
         appConfig.objectInfo.resourceXmlUrl = 'http://data.water-switch-on.eu/csw?request=GetRecordById&service=CSW&version=2.0.2&namespace=xmlns%28csw=http://www.opengis.net/cat/csw/2.0.2%29&resultType=results&outputSchema=http://www.isotc211.org/2005/gmd&outputFormat=application/xml&ElementSetName=full&id=';
 
         appConfig.byod = {};
-        //appConfig.byod.baseUrl = 'http://www.water-switch-on.eu/sip-webclient/byod';
-        appConfig.byod.baseUrl = 'http://switchon.cismet.de/sip-snapshot';
+        appConfig.byod.baseUrl = 'http://www.water-switch-on.eu/sip-webclient/byod';
+        //appConfig.byod.baseUrl = 'http://switchon.cismet.de/sip-snapshot';
         
         appConfig.uploadtool = {};
         appConfig.uploadtool.baseUrl = 'http://dl-ng003.xtr.deltares.nl';

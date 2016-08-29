@@ -8,7 +8,7 @@
  * ***************************************************
  */
 
-/* global L */
+/* global angular,L */
 /*jshint sub:true*/
 
 angular.module(
@@ -55,6 +55,10 @@ angular.module(
             leafletData.getMap('summarymap').then(function (map) {
                 map.addLayer(layerGroup);
             });
+            
+            $scope.mapData.layers = {
+                    baselayers: _this.config.mapView.baselayers
+                };
 
 //            $scope.mapData.center = _this.config.mapView.home;
 //            $scope.mapData.defaults = {

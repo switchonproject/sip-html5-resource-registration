@@ -138,9 +138,11 @@ angular.module(
                     //maxZoom: 14,
                     minZoom: _this.config.minZoom,
                     path: defaultStyle
+                }; 
+            $scope.mapData.layers = {
+                    baselayers: _this.config.mapView.baselayers
                 };
                 
-            
             // resize the map on enter, read spatial coverage from dataset
             $scope.wizard.enterValidators['Geographic Location'] = function(context){
                 if(context.valid === true)
@@ -1257,7 +1259,7 @@ angular.module(
  * ***************************************************
  */
 
-/* global L */
+/* global angular,L */
 /*jshint sub:true*/
 
 angular.module(
@@ -1304,6 +1306,10 @@ angular.module(
             leafletData.getMap('summarymap').then(function (map) {
                 map.addLayer(layerGroup);
             });
+            
+            $scope.mapData.layers = {
+                    baselayers: _this.config.mapView.baselayers
+                };
 
 //            $scope.mapData.center = _this.config.mapView.home;
 //            $scope.mapData.defaults = {
@@ -1401,7 +1407,63 @@ angular.module(
         appConfig.searchService.host = appConfig.cidsRestApi.host;
         
         appConfig.mapView = {};
-        appConfig.mapView.backgroundLayer = 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png';
+        appConfig.mapView.backgroundLayer = {};
+        appConfig.mapView.baselayers = {
+                    agtopo: {
+                            name: 'ArcGis World Topographic',
+                            type: 'agsBase',
+                            layer: 'Topographic',
+                            visible: false
+                    },
+                    agimagery: {
+                        name: 'ArcGis Imagery',
+                        type: 'agsBase',
+                        layer: 'Imagery',
+                        visible: false
+                    },
+                    opentopo: {
+                        name: 'OpenTopoMap',
+                        url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+                        type: 'xyz',
+                        visible: false,
+                        layerOptions: {
+                            subdomains: ['a', 'b', 'c'],
+                            attribution: 'Map data © <a href="http://openstreetmap.org" target="_blank">OpenStreetMap</a> contributors, SRTM | Rendering: © <a href="http://opentopomap.org" target="_blank">OpenTopoMap</a> (CC-BY-SA)'
+                        }
+                    },
+                    osm: {
+                        name: 'OpenStreetMap',
+                        url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        type: 'xyz',
+                        visible: false,
+                        layerOptions: {
+                            //noWrap: true,
+                            //maxZoom: 14,
+                            subdomains: ['a', 'b', 'c'],
+                            //continuousWorld: true,
+                            attribution: 'Map data © <a href="http://openstreetmap.org" target="_blank">OpenStreetMap</a> contributors'
+                        }
+                    },
+                    thunderforest: {
+                        name: 'Thunderforest Landscape',
+                        url: 'https://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=7feb2dce64d744278b638428463c452f',
+                        type: 'xyz',
+                        visible: false,
+                        layerOptions: {
+                            subdomains: ['a', 'b', 'c'],
+                            attribution: 'Map data © <a href="http://openstreetmap.org" target="_blank">OpenStreetMap</a> contributors, | Rendering: © <a href="http://thunderforest.com" target="_blank">Thunderforest</a>'
+                        }
+                    },
+                    streets: {
+                            name: 'ArcGis Streets',
+                            type: 'agsBase',
+                            layer: 'Streets',
+                            visible: false,
+                            layerOptions: {
+                                 attribution: 'Esri'
+                            }
+                    }
+                };
         appConfig.mapView.countriesLayer = 'https://raw.githubusercontent.com/switchonproject/world.geo.json/master/countries.geo.json';
         appConfig.mapView.home = {};
         appConfig.mapView.home.lat = 49.245166;

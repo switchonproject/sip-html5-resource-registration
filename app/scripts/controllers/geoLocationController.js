@@ -113,9 +113,11 @@ angular.module(
                     //maxZoom: 14,
                     minZoom: _this.config.minZoom,
                     path: defaultStyle
+                }; 
+            $scope.mapData.layers = {
+                    baselayers: _this.config.mapView.baselayers
                 };
                 
-            
             // resize the map on enter, read spatial coverage from dataset
             $scope.wizard.enterValidators['Geographic Location'] = function(context){
                 if(context.valid === true)

@@ -53,6 +53,8 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                 defaults=\"mapData.defaults\" \r" +
     "\n" +
+    "                 layers=\"mapData.layers\"\r" +
+    "\n" +
     "                 center=\"mapData.center\"\r" +
     "\n" +
     "                 height=\"600px\" width=\"820px\">   \r" +
@@ -1398,6 +1400,8 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "            <leaflet id=\"summarymap\" \r" +
     "\n" +
     "                 defaults=\"mapData.defaults\" \r" +
+    "\n" +
+    "                 layers=\"mapData.layers\"\r" +
     "\n" +
     "                 center=\"mapData.center\"\r" +
     "\n" +

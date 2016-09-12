@@ -1388,27 +1388,25 @@ angular.module(
 
 angular.module(
     'de.cismet.sip-html5-resource-registration.factories'
-).factory('AppConfig',
+).service('AppConfig',
     [function () {
         'use strict'; 
 
-        var appConfig = {};
+        this.cidsRestApi = {};
+        //this.cidsRestApi.host = 'http://localhost:8890';
+        this.cidsRestApi.host = 'http://switchon.cismet.de/legacy-rest1';
+        //this.cidsRestApi.host = 'http://data.water-switch-on.eu/switchon_server_rest';
         
-        appConfig.cidsRestApi = {};
-        //appConfig.cidsRestApi.host = 'http://localhost:8890';
-        appConfig.cidsRestApi.host = 'http://switchon.cismet.de/legacy-rest1';
-        //appConfig.cidsRestApi.host = 'http://data.water-switch-on.eu/switchon_server_rest';
+        this.searchService = {};
+        this.searchService.username = 'admin@SWITCHON';
+        this.searchService.password = 'cismet';
+        this.searchService.defautLimit = 10;
+        this.searchService.maxLimit = 50;
+        this.searchService.host = this.cidsRestApi.host;
         
-        appConfig.searchService = {};
-        appConfig.searchService.username = 'admin@SWITCHON';
-        appConfig.searchService.password = 'cismet';
-        appConfig.searchService.defautLimit = 10;
-        appConfig.searchService.maxLimit = 50;
-        appConfig.searchService.host = appConfig.cidsRestApi.host;
-        
-        appConfig.mapView = {};
-        appConfig.mapView.backgroundLayer = {};
-        appConfig.mapView.baselayers = {
+        this.mapView = {};
+        this.mapView.backgroundLayer = {};
+        this.mapView.baselayers = {
                     agtopo: {
                             name: 'ArcGis World Topographic',
                             type: 'agsBase',
@@ -1464,35 +1462,33 @@ angular.module(
                             }
                     }
                 };
-        appConfig.mapView.countriesLayer = 'https://raw.githubusercontent.com/switchonproject/world.geo.json/master/countries.geo.json';
-        appConfig.mapView.home = {};
-        appConfig.mapView.home.lat = 49.245166;
-        appConfig.mapView.home.lng = 6.936809;
-        appConfig.mapView.home.zoom = 4;
-        appConfig.mapView.maxBounds = {};
-        appConfig.mapView.maxBounds.southWest = [90, -180]; // top left corner of map
-        appConfig.mapView.maxBounds.northEast = [-90, 180];  // bottom right corner  
-        appConfig.mapView.minZoom = 2;
+        this.mapView.countriesLayer = 'https://raw.githubusercontent.com/switchonproject/world.geo.json/master/countries.geo.json';
+        this.mapView.home = {};
+        this.mapView.home.lat = 49.245166;
+        this.mapView.home.lng = 6.936809;
+        this.mapView.home.zoom = 4;
+        this.mapView.maxBounds = {};
+        this.mapView.maxBounds.southWest = [90, -180]; // top left corner of map
+        this.mapView.maxBounds.northEast = [-90, 180];  // bottom right corner  
+        this.mapView.minZoom = 2;
 
-        appConfig.gui = {};
+        this.gui = {};
         // Development Mode (e.g. enable untested features)
-        appConfig.gui.dev = false;
+        this.gui.dev = false;
 
-        appConfig.objectInfo = {};
-        appConfig.objectInfo.resourceJsonUrl = 'http://' +
-        appConfig.searchService.username + ':' +
-        appConfig.searchService.password + '@' +
-        appConfig.searchService.host.replace(/.*?:\/\//g, '');
-        appConfig.objectInfo.resourceXmlUrl = 'http://data.water-switch-on.eu/csw?request=GetRecordById&service=CSW&version=2.0.2&namespace=xmlns%28csw=http://www.opengis.net/cat/csw/2.0.2%29&resultType=results&outputSchema=http://www.isotc211.org/2005/gmd&outputFormat=application/xml&ElementSetName=full&id=';
+        this.objectInfo = {};
+        this.objectInfo.resourceJsonUrl = 'http://' +
+        this.searchService.username + ':' +
+        this.searchService.password + '@' +
+        this.searchService.host.replace(/.*?:\/\//g, '');
+        this.objectInfo.resourceXmlUrl = 'http://data.water-switch-on.eu/csw?request=GetRecordById&service=CSW&version=2.0.2&namespace=xmlns%28csw=http://www.opengis.net/cat/csw/2.0.2%29&resultType=results&outputSchema=http://www.isotc211.org/2005/gmd&outputFormat=application/xml&ElementSetName=full&id=';
 
-        appConfig.byod = {};
-        //appConfig.byod.baseUrl = 'http://www.water-switch-on.eu/sip-webclient/byod';
-        appConfig.byod.baseUrl = 'http://switchon.cismet.de/sip-snapshot';
+        this.byod = {};
+        //this.byod.baseUrl = 'http://www.water-switch-on.eu/sip-webclient/byod';
+        this.byod.baseUrl = 'http://switchon.cismet.de/sip-snapshot';
         
-        appConfig.uploadtool = {};
-        appConfig.uploadtool.baseUrl = 'http://dl-ng003.xtr.deltares.nl';
-        
-        return appConfig;
+        this.uploadtool = {};
+        this.uploadtool.baseUrl = 'http://dl-ng003.xtr.deltares.nl';
     }]);
 angular.module(
     'de.cismet.sip-html5-resource-registration.filters',

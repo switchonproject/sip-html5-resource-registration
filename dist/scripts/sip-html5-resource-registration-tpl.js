@@ -1441,7 +1441,7 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "            <a class=\"btn btn-primary pull-left\"\r" +
     "\n" +
-    "               href=\"mailto:switchon.wm@gmail.com?subject=Open-Data Registration Tool\">\r" +
+    "               href=\"mailto:switchon.odr@gmail.com?subject=Open-Data Registration Tool\">\r" +
     "\n" +
     "                <span class=\"fa fa-fw fa-envelope\"></span>\r" +
     "\n" +

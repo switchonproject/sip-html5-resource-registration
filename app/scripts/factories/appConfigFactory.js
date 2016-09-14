@@ -16,8 +16,8 @@ angular.module(
 
         this.cidsRestApi = {};
         //this.cidsRestApi.host = 'http://localhost:8890';
-        this.cidsRestApi.host = 'http://switchon.cismet.de/legacy-rest1';
-        //this.cidsRestApi.host = 'http://data.water-switch-on.eu/switchon_server_rest';
+        //this.cidsRestApi.host = 'http://switchon.cismet.de/legacy-rest1';
+        this.cidsRestApi.host = 'http://data.water-switch-on.eu/switchon_server_rest';
         
         this.searchService = {};
         this.searchService.username = 'admin@SWITCHON';
@@ -106,8 +106,8 @@ angular.module(
         this.objectInfo.resourceXmlUrl = 'http://data.water-switch-on.eu/csw?request=GetRecordById&service=CSW&version=2.0.2&namespace=xmlns%28csw=http://www.opengis.net/cat/csw/2.0.2%29&resultType=results&outputSchema=http://www.isotc211.org/2005/gmd&outputFormat=application/xml&ElementSetName=full&id=';
 
         this.byod = {};
-        //this.byod.baseUrl = 'http://www.water-switch-on.eu/sip-webclient/byod';
-        this.byod.baseUrl = 'http://switchon.cismet.de/sip-snapshot';
+        this.byod.baseUrl = 'http://www.water-switch-on.eu/sip-webclient/byod';
+        //this.byod.baseUrl = 'http://switchon.cismet.de/sip-snapshot';
         
         this.uploadtool = {};
         this.uploadtool.baseUrl = 'http://dl-ng003.xtr.deltares.nl';

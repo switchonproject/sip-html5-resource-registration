@@ -50,7 +50,7 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
 
                             // choose the name of the first representation as name of the dataset
                             if (dataset.representation.length > 0 && dataset.representation[0].name !== null) {
-                                if (dataset.representation.length > 1 && dataset.representation[0].name === 'shape') {
+                                if (dataset.representation.length > 1 && dataset.$geoserverUploaded === true) {
                                     // HOTFIX #26: pick the last representation (swap elements)
                                     // FIXME: name property is lost!
                                     var tmpElement = dataset.representation[0];

@@ -33,14 +33,14 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                             var tmpRepresentations = [];
                             var representationJson = ($location.search()).representations;
                             if (representationJson) {
-                                tmpRepresentations =  JSON.parse(representationJson);
+                                tmpRepresentations = JSON.parse(representationJson);
                                 if (Array.isArray(tmpRepresentations)) {
                                     tmpRepresentations.forEach(function (representation) {
                                         //invoke representation constructor
                                         dataset.representation.push(new Representation(representation));
-                                        
+
                                         // WKT BBox from Data upload Tool (SHP -> Geoserver)
-                                        if(representation.wktboundingbox && !dataset.spatialcoverage.geo_field) { // jshint ignore:line
+                                        if (representation.wktboundingbox && !dataset.spatialcoverage.geo_field) { // jshint ignore:line
                                             dataset.spatialcoverage.geo_field = representation.wktboundingbox; // jshint ignore:line
                                             dataset.$geoserverUploaded = true;
                                         }
@@ -50,6 +50,13 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
 
                             // choose the name of the first representation as name of the dataset
                             if (dataset.representation.length > 0 && dataset.representation[0].name !== null) {
+                                if (dataset.representation.length > 1 && dataset.representation[0].name === 'shape') {
+                                    // HOTFIX #26: pick the last representation (swap elements)
+                                    // FIXME: name property is lost!
+                                    var tmpElement = dataset.representation[0];
+                                    dataset.representation[0] = dataset.representation[dataset.representation.length - 1];
+                                    dataset.representation[dataset.representation.length - 1] = tmpElement;
+                                }
                                 dataset.name = dataset.representation[0].name;
                                 if (dataset.representation[0].contentlocation &&
                                         dataset.representation[0].function.name &&

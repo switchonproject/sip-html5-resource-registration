@@ -6,14 +6,22 @@ body {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 45px;
-    margin-top: 40px;
+    margin-bottom: 35px;
+    margin-top: 10px;
     text-align: center;
 }
 
 .switchon-header h1 {
-     display:inline;
-         margin-left: 15px;
+    display:inline;
+    margin-left: 15px;
+}
+
+.switchon-viewbutton {
+    padding-top:10px; 
+    margin-top:10px; 
+    min-width:175px;
+    float:right;
+    clear:both
 }
 
 .switchon-keywords-form {
@@ -38,9 +46,9 @@ body {
 }
 
 .ui-select-multiple.ui-select-bootstrap .ui-select-match-item {
-  background-color: #337ab7;
-  border-color: #204d74;
-  color: #fff;
+    background-color: #337ab7;
+    border-color: #204d74;
+    color: #fff;
 }
 
 .ui-select-multiple.ui-select-bootstrap {

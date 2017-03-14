@@ -40,6 +40,7 @@ angular.module(
                 _this = this;
                 _this.dataset = dataset;
                 _this.config = AppConfig;
+                _this.generateDOI = false;
 
                 _this.groupBy = function (item) {
 

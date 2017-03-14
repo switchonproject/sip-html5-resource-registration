@@ -16,39 +16,71 @@
                        required
                        ng-disabled="dataset.name && dataset.$uploaded === true"
                        ng-focus="showInfoMessage('Please provide a characteristic, and often unique, name by which the dataset is known.');">
-                </div>
             </div>
+        </div>
     </div>
-    
+
     <!-- Link Buttons-->
     <div class="row form-group"
          ng-class="{'has-error':wizard.hasError === 'datasetUploadchoice'}"
          ng-show = "dataset.$uploaded === undefined">
             <label for="datasetUploadchoice" class="col-md-1 form-control-label">Link to Data</label>
-            <div class="col-md-10">
-                <button class="btn btn-primary" 
-                          type="button"
-                          ng-class="{'btn-danger':wizard.hasError === 'datasetUploadchoice'}"
-                          ng-click="dataset.$uploaded = false">Provide Link to existing Dataset</button>
-                <span>or</span>
-                    <!-- Fake disabled button -->
-                    <button class="btn btn-primary disabled" 
-                              type="button"
-                              ng-class="{'btn-danger':(wizard.hasError === 'datasetUploadchoice' || wizard.hasError === 'datasetUploadchoiceName')}"
-                              tooltip="{{!dataset.name ? 'Please enter the name of the dataset to enable the Data Upload Tool' : 'Open the Data Upload Tool'}}"
-                              ng-if="!dataset.name">Upload new Dataset
-                    </button>
-                    <!-- Enabled link button -->
-                    <a class="btn btn-primary" 
-                              type="button"
-                              ng-class="{'btn-danger':(wizard.hasError === 'datasetUploadchoice' || wizard.hasError === 'datasetUploadchoiceName')}"
-                              ng-href="{{config.uploadtool.baseUrl}}?datasetname={{dataset.name}}"
-                              tooltip="{{!dataset.name ? 'Please enter the name of the dataset to enable the Data Upload Tool' : 'Open the Data Upload Tool'}}"
-                              ng-if="dataset.name">Upload new Dataset
-                    </a> 
+            
+            <div class="col-md-5">
+            <!-- Fake disabled Link Button (tooltips do not work with ng-disabled!) -->    
+            <button class="btn btn-primary disabled" 
+                    type="button"
+                    tooltip="{{!odRegistrationController.generateDOI ? 'Provide a Link to an existing dataset' : 'Please uncheck \'Generate DOI\' to enable this functionality'}}"
+                    ng-class="{'btn-danger':wizard.hasError === 'datasetUploadchoice'}"
+                    ng-if="odRegistrationController.generateDOI">Provide Link to existing Dataset
+            </button>
+            
+            <!--  Enabled Link Button (tooltips do not work with ng-disabled!) -->    
+            <button class="btn btn-primary" 
+                    type="button"
+                    tooltip="{{!odRegistrationController.generateDOI ? 'Provide a Link to an existing dataset' : 'Please uncheck \'Generate DOI\' to enable this functionality'}}"
+                    ng-class="{'btn-danger':wizard.hasError === 'datasetUploadchoice'}"
+                    ng-click="dataset.$uploaded = false"
+                    ng-if="!odRegistrationController.generateDOI">Provide Link to existing Dataset
+            </button>
+            
+            <!-- HacketyHack! -->
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            
+            <!-- Fake disabled Upload button -->
+            <button class="btn btn-primary disabled" 
+                    type="button"
+                    ng-class="{'btn-danger':(wizard.hasError === 'datasetUploadchoice' || wizard.hasError === 'datasetUploadchoiceName')}"
+                    tooltip="{{!dataset.name ? 'Please enter the name of the dataset to enable the Data Upload Tool' : 'Open the Data Upload Tool'}}"
+                    ng-if="!dataset.name">Upload new Dataset
+            </button>
+            <!-- Enabled Upload button -->
+            <a class="btn btn-primary" 
+               type="button"
+               ng-class="{'btn-danger':(wizard.hasError === 'datasetUploadchoice' || wizard.hasError === 'datasetUploadchoiceName')}"
+               ng-href="{{config.uploadtool.baseUrl}}?datasetname={{dataset.name}}&generateDOI={{odRegistrationController.generateDOI}}"
+               tooltip="{{!dataset.name ? 'Please enter the name of the dataset to enable the Data Upload Tool' : 'Open the Data Upload Tool'}}"
+               ng-if="dataset.name">Upload new Dataset
+            </a> 
+        </div>
+        <div class="col-md-6">
+            <!-- DOI -->
+            <div class="checkbox"
+                 ng-if="dataset.name">
+                <label
+                    tooltip="Use an external service to generate a Digital Object Identifier (DOI)">
+                    <input
+                        id="generateDOI" 
+                        name="generateDOI" 
+                        type="checkbox"
+                        ng-model="odRegistrationController.generateDOI"
+                        ng-focus="showInfoMessage('By selecting \'Generate DOI\' you agree that your dataset is also uploaded to <a href=\'http://help.zenodo.org/features/\' title=\'Zenodo Open Science Services\' target=\'_blank\'>Zenodo</a> in order to obtain a persistent <a href=\'https://en.wikipedia.org/wiki/Digital_object_identifier\' target=\'_blank\'>Digital Object Identifier</a> (DOI).<br/>Zenodo is a research data repository. It was created by <a href=\'https://www.openaire.eu\' target=\'_blank\'>OpenAIRE<a/> and CERN to provide a place for researchers to deposit datasets. For further information please consult Zenodo\'s <a href=\'http://about.zenodo.org/terms\' target=\'_blank\'>Terms of Use</a> and <a href=\'http://about.zenodo.org/policies\' target=\'_blank\'>Policies</a>.');"> 
+                            Generate a DOI   
+                </label>
             </div>
+        </div> 
     </div>
-    
+
     <!-- Link -->
     <div class="row form-group"
          ng-class="{'has-error':wizard.hasError === 'datasetContentlocation'}"
@@ -69,7 +101,7 @@
                     ng-disabled="dataset.$uploaded === true && dataset.representation[0].function"
                     tooltip="{{(dataset.$uploaded === true && dataset.representation[0].function) ? 'The type of the link of an uploaded dataset cannot be changed afterwards.' : null}}"
                     required>
-                    <option style="color:#999999" ng-show="!dataset.representation[0].function" value="">Type of Link</option>
+                <option style="color:#999999" ng-show="!dataset.representation[0].function" value="">Type of Link</option>
             </select>
         </div>
         <!-- Content Location -->
@@ -119,7 +151,7 @@
                       required></textarea>
         </div>
     </div>
-    
+
     <!-- Keywords -->
     <div class="form-group row">
         <label  class="col-md-1 form-control-label">Keywords</label>
@@ -127,10 +159,10 @@
             <div class="form-control switchon-keywords-form"
                  ng-click="showInfoMessage('Please select one or more keywords from the <strong>extended</strong> CUAHSI Hydrologic Ontology for Discovery that best characterize the dataset. <br>Please click <a href=\'http://his.cuahsi.org/ontologyfiles.html\' target=\'_blank\'>here</a> for more information about the CUAHSI ontology. Get in touch with the <a href=\'mailto:switchon.wm@gmail.com\'>SWITCH-ON Consortium</a> if you want to make a proposal for new keywords.'); odRegistrationController.selectKeywords();">
                 <span ng-repeat="tag in dataset.tags">
-                        <span class="label label-primary">{{tag.name}}</span>
+                    <span class="label label-primary">{{tag.name}}</span>
                 </span>
             </div>
-         </div>
+        </div>
     </div>
 
     <!-- disabled as requested in https://github.com/switchonproject/switchon-tools/issues/1#issuecomment-180390096-->

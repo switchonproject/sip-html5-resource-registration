@@ -72,7 +72,12 @@ angular.module(
 
             // validation functions
             $scope.wizard.enterValidators['Summary'] = function(context){
-                 if(context.valid === true){
+                
+                if(_this.config.developmentMode === true) {
+                        return true;
+                }
+                
+                if(context.valid === true){
                     $scope.message.text='Please review the meta-data of the dataset and press <strong>Finish</strong> to register the dataset in the SWITCH-ON Spatial Information Platform.';
                     $scope.message.icon='fa-info-circle';
                     $scope.message.type = 'success';
@@ -105,7 +110,12 @@ angular.module(
                 return context.valid;
             };
             
-            $scope.wizard.exitValidators['Summary'] = function(){
+            $scope.wizard.exitValidators['Summary'] = function() {
+                
+                if(_this.config.developmentMode === true) {
+                        return true;
+                }
+                
                 $scope.wizard.hasError = null;
                 return true;
             };

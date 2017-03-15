@@ -70,7 +70,12 @@ angular.module(
             $scope.tags['accessconditions'] = tagGroupService.getTagList('access conditions', 'Creative Commons (CC BY),Creative Commons (CC BY-NC),Creative Commons (CC BY-NC-ND),Creative Commons (CC BY-NC-SA),Creative Commons (CC BY-ND),Creative Commons (CC BY-SA),for research only,no limitations,other');
                     
             // validation functions
-            $scope.wizard.enterValidators['License and Conditions'] = function(context){
+            $scope.wizard.enterValidators['License and Conditions'] = function(context) {
+                
+                if(_this.config.developmentMode === true) {
+                        return true;
+                }
+                
                 if(context.valid === true){
                     $scope.message.text='Please select a predefined license for regulating the conditions for access and use of the dataset and / or provide a brief statement or URL to the license which applies to the usage of the dataset. This statement should provide additional information.';
                     $scope.message.icon='fa-info-circle';
@@ -82,6 +87,11 @@ angular.module(
 
             $scope.wizard.exitValidators['License and Conditions'] = function(context){
                 context.valid = true;
+                
+                if(_this.config.developmentMode === true) {
+                        return true;
+                }
+                
                 // ACCESS CONDITIONS
                 var isInvalidAccessconditions = $scope.tags['accessconditions'].every(function(element) {
                     if (_this.dataset.accessconditions && _this.dataset.accessconditions.name && 

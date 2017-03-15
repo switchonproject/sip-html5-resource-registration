@@ -138,6 +138,11 @@ angular.module(
 //                        });
 
                 $scope.wizard.enterValidators['Dataset Description'] = function (context) {
+                    
+                    if(_this.config.developmentMode === true) {
+                        return true;
+                    }
+                    
                     if (context.valid === true) {
                         $scope.message.text = 'Please provide some general information about the new dataset such as name, description, a (download) link and keywords.';
                         $scope.message.icon = 'fa-info-circle';
@@ -149,6 +154,10 @@ angular.module(
 
                 $scope.wizard.exitValidators['Dataset Description'] = function (context) {
                     context.valid = true;
+                    
+                    if(_this.config.developmentMode === true) {
+                        return true;
+                    }
 
                     // CONTENT TYPE
                     var isInvalidContenttype = $scope.tags['content type'].every(function (element) {

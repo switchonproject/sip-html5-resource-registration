@@ -13,6 +13,8 @@ angular.module(
 ).service('AppConfig',
     [function () {
         'use strict'; 
+        
+        this.developmentMode = true;
 
         this.cidsRestApi = {};
         //this.cidsRestApi.host = 'http://localhost:8890';
@@ -20,8 +22,9 @@ angular.module(
         this.cidsRestApi.host = 'http://data.water-switch-on.eu/switchon_server_rest';
         
         this.searchService = {};
-        this.searchService.username = 'admin@SWITCHON';
-        this.searchService.password = 'cismet';
+        // public API ;-)
+        this.searchService.username = 'switchon@SWITCHON';
+        this.searchService.password = 'switchon';
         this.searchService.defautLimit = 10;
         this.searchService.maxLimit = 50;
         this.searchService.host = this.cidsRestApi.host;
@@ -111,4 +114,9 @@ angular.module(
         
         this.uploadtool = {};
         this.uploadtool.baseUrl = 'http://dl-ng003.xtr.deltares.nl';
+        
+        this.zenodo = {};
+        this.zenodo.api = 'https://zenodo.org/api/deposit/depositions';
+        // retrieve the token from the server!
+        this.zenodo.token = null;
     }]);

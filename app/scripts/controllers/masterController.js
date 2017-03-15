@@ -16,11 +16,13 @@ angular.module(
             '$scope',
             'AppConfig',
             'de.cismet.sip-html5-resource-registration.services.dataset',
+            'de.cismet.sip-html5-resource-registration.services.TagGroupService',
             '$modal',
             function (
                     $scope,
                     AppConfig,
                     dataset,
+                    tagGroupService,
                     $modal
                     ) {
                 'use strict';
@@ -29,7 +31,25 @@ angular.module(
                 
                 _this = this;
                 _this.config = AppConfig;
-                _this.dataset = dataset;            
+                _this.dataset = dataset;      
+                
+                _this.finishedWizard = function () {
+                    $modal.open({
+                        animation: true,
+                        templateUrl: 'templates/confirmation.html',
+                        controller: 'de.cismet.sip-html5-resource-registration.controllers.storageController',
+                        controllerAs: 'storageController',
+                        keyboard: 'false',
+                        size: 'lg',
+                        backdrop: 'static'
+                    });
+                };
+                
+                // retrieve the access token from server!
+                _this.config.zenodo.token = tagGroupService.getTag('tokens', 'zenodo', function (tag) {
+                        _this.config.zenodo.token = tag.description;
+                        //console.log(_this.config.zenodo.token);
+                });
 
                 // - dataset: the resource meta data, initialized from a template and changed by the app
                 // - tags: list of selectable tags
@@ -100,19 +120,6 @@ angular.module(
                         $scope.wizard.proceedButtonText = 'Next';
                     }
                 });
-
-
-                _this.finishedWizard = function () {
-                    $modal.open({
-                        animation: true,
-                        templateUrl: 'templates/confirmation.html',
-                        controller: 'de.cismet.sip-html5-resource-registration.controllers.storageController',
-                        controllerAs: 'storageController',
-                        keyboard: 'false',
-                        size: 'lg',
-                        backdrop: 'static'
-                    });
-                };
             }
         ]
         );

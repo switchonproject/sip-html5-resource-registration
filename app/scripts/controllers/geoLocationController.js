@@ -119,7 +119,13 @@ angular.module(
                 };
                 
             // resize the map on enter, read spatial coverage from dataset
-            $scope.wizard.enterValidators['Geographic Location'] = function(context){
+            $scope.wizard.enterValidators['Geographic Location'] = function(context) {
+                
+                if(_this.config.developmentMode === true) {
+                        return true;
+                }
+                
+                
                 if(context.valid === true)
                 {
                     if(_this.readOnly) {
@@ -165,6 +171,11 @@ angular.module(
             // on exit: write spatial coverage to dataset
             $scope.wizard.exitValidators['Geographic Location'] = function(context){
                 context.valid = true;
+                
+                if(_this.config.developmentMode === true) {
+                        return true;
+                }
+                
                 if(_this.mode.defineBBox === true && $scope.forms.coordinatesForm.$invalid) {
                     $scope.message.text='Please specify a valid bounding box or use an other option to specify the geographic location of the dataset!';
                     $scope.message.icon='fa-warning';

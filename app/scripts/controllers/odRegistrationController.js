@@ -40,7 +40,7 @@ angular.module(
                 _this = this;
                 _this.dataset = dataset;
                 _this.config = AppConfig;
-                _this.generateDOI = false;
+                _this.generateDOI = (dataset.$depositionId && dataset.$depositionId !== null) ? true : false;
 
                 _this.groupBy = function (item) {
 

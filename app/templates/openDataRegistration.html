@@ -18,6 +18,28 @@
                        ng-focus="showInfoMessage('Please provide a characteristic, and often unique, name by which the dataset is known.');">
             </div>
         </div>
+        
+        <div class="col-md-3">
+            <div class="input-group"
+                tooltip="{{(dataset.$uploaded === true && odRegistrationController.generateDOI === false) ? 'This feature must be enabled before the dataset is uploaded!' : null}}">
+
+                <span class="input-group-addon">
+                  <input type="checkbox" 
+                         ng-model="odRegistrationController.generateDOI" 
+                         ng-disabled="dataset.$uploaded === true"
+                         ng-focus="showInfoMessage('By selecting \'Generate DOI\' you agree that your dataset is also uploaded to <a href=\'http://help.zenodo.org/features/\' title=\'Zenodo Open Science Services\' target=\'_blank\'>Zenodo</a> in order to obtain a persistent <a href=\'https://en.wikipedia.org/wiki/Digital_object_identifier\' target=\'_blank\'>Digital Object Identifier</a> (DOI).<br/>Zenodo is a research data repository. It was created by <a href=\'https://www.openaire.eu\' target=\'_blank\'>OpenAIRE<a/> and CERN to provide a place for researchers to deposit datasets. For further information please consult Zenodo\'s <a href=\'http://about.zenodo.org/terms\' target=\'_blank\'>Terms of Use</a> and <a href=\'http://about.zenodo.org/policies\' target=\'_blank\'>Policies</a>.');"> 
+                </span>
+                <span class="input-group-btn">
+                    <label class="btn btn-success" 
+                                btn-checkbox="true"
+                                ng-model="odRegistrationController.generateDOI" 
+                                ng-click="dataset.$uploaded || (odRegistrationController.generateDOI = !odRegistrationController.generateDOI); showInfoMessage('By selecting \'Generate DOI\' you agree that your dataset is also uploaded to <a href=\'http://help.zenodo.org/features/\' title=\'Zenodo Open Science Services\' target=\'_blank\'>Zenodo</a> in order to obtain a persistent <a href=\'https://en.wikipedia.org/wiki/Digital_object_identifier\' target=\'_blank\'>Digital Object Identifier</a> (DOI).<br/>Zenodo is a research data repository. It was created by <a href=\'https://www.openaire.eu\' target=\'_blank\'>OpenAIRE<a/> and CERN to provide a place for researchers to deposit datasets. For further information please consult Zenodo\'s <a href=\'http://about.zenodo.org/terms\' target=\'_blank\'>Terms of Use</a> and <a href=\'http://about.zenodo.org/policies\' target=\'_blank\'>Policies</a>.');"
+                                ng-disabled="dataset.$uploaded === true"> 
+                             Get Digital Object Identifier
+                    </label>
+                </span>
+            </div>    
+        </div>
     </div>
 
     <!-- Link Buttons-->
@@ -30,7 +52,7 @@
             <!-- Fake disabled Link Button (tooltips do not work with ng-disabled!) -->    
             <button class="btn btn-primary disabled" 
                     type="button"
-                    tooltip="{{!odRegistrationController.generateDOI ? 'Provide a Link to an existing dataset' : 'Please uncheck \'Generate DOI\' to enable this functionality'}}"
+                    tooltip="{{!odRegistrationController.generateDOI ? null : 'Please uncheck \'Generate DOI\' to enable this functionality'}}"
                     ng-class="{'btn-danger':wizard.hasError === 'datasetUploadchoice'}"
                     ng-if="odRegistrationController.generateDOI">Provide Link to existing Dataset
             </button>
@@ -38,7 +60,7 @@
             <!--  Enabled Link Button (tooltips do not work with ng-disabled!) -->    
             <button class="btn btn-primary" 
                     type="button"
-                    tooltip="{{!odRegistrationController.generateDOI ? 'Provide a Link to an existing dataset' : 'Please uncheck \'Generate DOI\' to enable this functionality'}}"
+                    tooltip="{{!odRegistrationController.generateDOI ? null : 'Please uncheck \'Generate DOI\' to enable this functionality'}}"
                     ng-class="{'btn-danger':wizard.hasError === 'datasetUploadchoice'}"
                     ng-click="dataset.$uploaded = false"
                     ng-if="!odRegistrationController.generateDOI">Provide Link to existing Dataset
@@ -63,28 +85,12 @@
                ng-if="dataset.name">Upload new Dataset
             </a> 
         </div>
-        <div class="col-md-6">
-            <!-- DOI -->
-            <div class="checkbox"
-                 ng-if="dataset.name">
-                <label
-                    tooltip="Use an external service to generate a Digital Object Identifier (DOI)">
-                    <input
-                        id="generateDOI" 
-                        name="generateDOI" 
-                        type="checkbox"
-                        ng-model="odRegistrationController.generateDOI"
-                        ng-focus="showInfoMessage('By selecting \'Generate DOI\' you agree that your dataset is also uploaded to <a href=\'http://help.zenodo.org/features/\' title=\'Zenodo Open Science Services\' target=\'_blank\'>Zenodo</a> in order to obtain a persistent <a href=\'https://en.wikipedia.org/wiki/Digital_object_identifier\' target=\'_blank\'>Digital Object Identifier</a> (DOI).<br/>Zenodo is a research data repository. It was created by <a href=\'https://www.openaire.eu\' target=\'_blank\'>OpenAIRE<a/> and CERN to provide a place for researchers to deposit datasets. For further information please consult Zenodo\'s <a href=\'http://about.zenodo.org/terms\' target=\'_blank\'>Terms of Use</a> and <a href=\'http://about.zenodo.org/policies\' target=\'_blank\'>Policies</a>.');"> 
-                            Generate a DOI   
-                </label>
-            </div>
-        </div> 
     </div>
 
     <!-- Link -->
     <div class="row form-group"
          ng-class="{'has-error':wizard.hasError === 'datasetContentlocation'}"
-         ng-show = "dataset.$uploaded !== undefined"
+         ng-show = "dataset.$uploaded === true"
          tooltip="{{(dataset.$uploaded === true && dataset.representation[0].contentlocation) ? 'The link of an uploaded dataset cannot be changed afterwards.' : null}}">
         <label for="datasetContentlocation" class="col-md-1 form-control-label">Link to Data</label>
         <!-- Function -->

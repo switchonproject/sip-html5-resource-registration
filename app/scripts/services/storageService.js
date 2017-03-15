@@ -43,7 +43,7 @@ angular.module(
                     // remove uploaded flag (unavailable in cids bean);
                     delete dataset.$uploaded;
                     delete dataset.$geoserverUploaded;
-                    delete  dataset.$doiGenerated;
+                    delete  dataset.$depositionId;
 
                     // result of the remote store operation (promise)
                     // starting the store!

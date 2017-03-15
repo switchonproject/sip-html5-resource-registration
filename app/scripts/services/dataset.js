@@ -27,7 +27,13 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                         datasetTemplate.$promise.then(function (dataset) {
                             dataset.$uploaded = undefined;
                             dataset.$geoserverUploaded = false;
-                            dataset.$doiGenerated = false;
+                            dataset.$depositionId = null;
+                            
+                            // check request parameters for depositionId
+                            var depositionId = ($location.search()).deposition;
+                            if(depositionId && depositionId !== null) {
+                                dataset.$depositionId = depositionId;
+                            }
 
                             // check request parameters for representations, parse and add to
                             // the dataset's representation array

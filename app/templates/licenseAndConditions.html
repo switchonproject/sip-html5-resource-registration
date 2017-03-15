@@ -91,7 +91,7 @@
                       placeholder="Optional citation information"
                       rows="3"
                       ng-model="dataset.contact.description" 
-                      ng-disabled="dataset.$depositionId === true"
+                      ng-disabled="dataset.$deposition !== null && dataset.$deposition.metadata.prereserve_doi.doi !== null"
                       ng-focus="showInfoMessage('Please provide bibliographic citation or a Digital Object Identifier (<a href=\'https://www.doi.org/\' target=\'_blank\'>DOI</a>).')">  
             </textarea>
         </div>

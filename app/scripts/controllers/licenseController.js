@@ -16,17 +16,20 @@ angular.module(
     'de.cismet.sip-html5-resource-registration.controllers.licenseController',
     [
         '$scope',
+        'AppConfig',
         'de.cismet.sip-html5-resource-registration.services.dataset',
         'de.cismet.sip-html5-resource-registration.services.TagGroupService',
         // Controller Constructor Function
         function (
             $scope,
+            AppConfig,
             dataset,
             tagGroupService
         ) {
             'use strict';
             var _this = this;
             _this.dataset = dataset;
+            _this.config = AppConfig;
             
             _this.generateDoi = function () {
                 //console.log(url);

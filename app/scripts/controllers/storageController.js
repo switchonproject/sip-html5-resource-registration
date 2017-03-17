@@ -16,6 +16,7 @@ angular.module(
         'de.cismet.sip-html5-resource-registration.controllers.storageController',
         [
             '$scope',
+            '$q',
             '$http',
             '$window',
             '$interval',
@@ -28,6 +29,7 @@ angular.module(
             // Controller Constructor Function
             function (
                     $scope,
+                    $q,
                     $http,
                     $window,
                     $interval,
@@ -39,7 +41,8 @@ angular.module(
                     storageService
                     ) {
                 'use strict';
-                var _this, currentdate, userAgent, maxProgress;
+                var _this, currentdate, userAgent, maxProgress, saveDeposition, 
+                        publishDeposition, publishResource, handleError;
 
                 currentdate = new Date().getTime();
                 userAgent = $window.navigator.userAgent;
@@ -62,8 +65,13 @@ angular.module(
                     $modalInstance.close();
                     $window.location.reload();
                 };
+                
+                
 
                 $modalInstance.rendered.then(function () {
+                    
+                    // DEPOSITION / DOI
+                    _this.generateDOI = dataset.$deposition && dataset.$deposition !== null && dataset.$deposition.metadata.prereserve_doi.doi !== null;
 
                     // REPRESENTATIONS
                     _this.dataset.representation.forEach(function (representation) {
@@ -221,36 +229,87 @@ angular.module(
                                 _this.progress.currval += 1;
                             }
                         }, 200, 50);
+                        
+                        function saveDeposition (dataset, deposition) {
+                            deposition.metadata.title = dataset.
+                            deposition.metadata.description = dataset.description;
+                    
+                            // TODO: Populate reminaing fields!
 
-                        storageService.store(dataset).$promise.then(
+                            return deposition.$save().$promise.then(
+                                function saveDepositionSuccess(deposition) {
+                                    _this.progress.message = 'The Meta-Data of the dataset '+  dataset.name 
+                                            + ' has been successfully associated with the Digital Object Identifier "'
+                                            + deposition.doi + '"';
+                                    return deposition;
+                                });
+                        };
+                        
+                        function publishDeposition(deposition){
+                                return deposition.$publish().$promise.then(
+                                function publishDepositionSuccess(deposition) {
+                                    _this.progress.message = 'The Digital Object Identifier "'
+                                            + deposition.doi + '" for dataset '+  dataset.name 
+                                            + ' has successfully been published!';
+                                    return deposition;
+                                });
+                        };
+
+                        function storeDataset(deposition) {
+                            storageService.store(dataset).$promise.then(
                                 function (storedDataset) {
                                     $interval.cancel(timer);
 
-                                    _this.progress.message = 'Your dataset has been successfully registered in the SWITCH-ON Spatial Information Platform. Please click <a href=\'' + AppConfig.byod.baseUrl + '/#/resource/' +
+                                    var progressMessage = 'Your dataset has been successfully registered in the SWITCH-ON Spatial Information Platform. Please click <a href=\'' + AppConfig.byod.baseUrl + '/#/resource/' +
                                             storedDataset.id + '\' title=\'' + storedDataset.name + '\'>here</a> to view the dataset in the SWITCH-ON BYOD Client.';
+                                    
+                                    if(deposition !== null) {
+                                        progressMessage += '<br>The Digital Object Identifier "'
+                                            + deposition.doi + '" for dataset '+  dataset.name 
+                                            + ' has successfully been published!'
+                                    }
+                                    
+                                    _this.progress.message = progressMessage;
 
                                     _this.progress.active = false;
                                     _this.progress.finished = true;
                                     _this.progress.type = 'success';
                                     _this.progress.currval = 200;
-
-                                },
-                                function (error) {
-                                    $interval.cancel(timer);
-
-                                    if (error.data.userMessage) {
-                                        _this.progress.message = 'The dataset could not be saved in the Meta-Data Repository: <br>' +
-                                                error.data.userMessage;
-                                    } else {
-                                        this.progress.message = 'The dataset could not be saved in the Meta-Data Repository.';
-                                    }
-
-                                    _this.progress.active = false;
-                                    _this.progress.finished = true;
-                                    _this.progress.type = 'danger';
-                                    _this.progress.currval = 200;
                                 });
+                        }
+                        
+                        function handleError(error) {
+                            $interval.cancel(timer);
 
+                            if (error.data.userMessage) {
+                                _this.progress.message = 'The dataset could not be saved in the SWITCH-ON Meta-Data Repository: <br>' +
+                                        error.data.userMessage;
+                            } else {
+                                this.progress.message = 'The dataset could not be saved in the SWITCH-ON Meta-Data Repository.';
+                            }
+
+                            _this.progress.active = false;
+                            _this.progress.finished = true;
+                            _this.progress.type = 'danger';
+                            _this.progress.currval = 200;
+                        };    
+
+                        
+                        if(_this.generateDOI) {
+                            saveDeposition(dataset, dataset.$deposition)
+                                .then(publishDeposition())
+                                .then(storeDataset())
+                                .catch(function (error) {
+                                        handleError(error);
+                                    }
+                                );
+                            
+                        } else {
+                            storeDataset(null)
+                                .then (null, function (error) {
+                                    handleError(error);
+                                });
+                        }
                     }
                 });
             }

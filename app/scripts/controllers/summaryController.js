@@ -39,8 +39,20 @@ angular.module(
             _this.dataset = dataset;
             _this.config = AppConfig;
             _this.readOnly = dataset.$geoserverUploaded;
-            
-            
+            _this.generateDOI = false;
+            if(dataset.$deposition && dataset.$deposition !== null) {
+                dataset.$deposition.$promise.then(
+                        function success(deposition) {
+                    if(deposition.metadata.prereserve_doi.doi !== null) {
+                        _this.generateDOI = true;     
+                    } else {
+                        _this.generateDOI = false;     
+                    }
+                }, function error(response) {
+                    _this.generateDOI = false;
+                });
+            }
+
             wicket = geoTools.wicket;
             defaultStyle = geoTools.defaultStyle;
             defaultDrawOptions = geoTools.defaultDrawOptions;

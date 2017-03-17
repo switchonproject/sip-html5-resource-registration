@@ -22,21 +22,21 @@
         <div class="col-md-3">
         <!-- Get DOI -->
             <div class="input-group"
-                tooltip="{{(dataset.$uploaded === true && odRegistrationController.generateDOI === false) ? 'This feature must be enabled before the dataset is uploaded!' : null}}">
+                tooltip="{{(dataset.$uploaded !== undefined && odRegistrationController.generateDOI === false) ? 'This feature must be enabled before the dataset is uploaded!' : null}}">
                 <span class="input-group-addon">
                   <input type="checkbox" 
                          ng-class="{'has-error':wizard.hasError === 'datasetDeposition'}"
                          ng-model="odRegistrationController.generateDOI" 
-                         ng-change="showInfoMessage('By selecting \'Generate DOI\' you agree that your dataset is also uploaded to <a href=\'http://help.zenodo.org/features/\' title=\'Zenodo Open Science Services\' target=\'_blank\'>Zenodo</a> in order to obtain a persistent <a href=\'https://en.wikipedia.org/wiki/Digital_object_identifier\' target=\'_blank\'>Digital Object Identifier</a> (DOI).<br/>Zenodo is a research data repository. It was created by <a href=\'https://www.openaire.eu\' target=\'_blank\'>OpenAIRE<a/> and CERN to provide a place for researchers to deposit datasets. For further information please consult Zenodo\'s <a href=\'http://about.zenodo.org/terms\' target=\'_blank\'>Terms of Use</a> and <a href=\'http://about.zenodo.org/policies\' target=\'_blank\'>Policies</a>.');"
-                         ng-disabled="dataset.$uploaded === true"> 
+                         ng-change="showInfoMessage('By selecting \'Get Digital Object Identifier\' you agree that your dataset is also uploaded to <a href=\'http://help.zenodo.org/features/\' title=\'Zenodo Open Science Services\' target=\'_blank\'>Zenodo</a> in order to obtain a persistent <a href=\'https://en.wikipedia.org/wiki/Digital_object_identifier\' target=\'_blank\'>Digital Object Identifier</a> (DOI).<br/>Zenodo is a research data repository. It was created by <a href=\'https://www.openaire.eu\' target=\'_blank\'>OpenAIRE<a/> and CERN to provide a place for researchers to deposit datasets. For further information please consult Zenodo\'s <a href=\'http://about.zenodo.org/terms\' target=\'_blank\'>Terms of Use</a> and <a href=\'http://about.zenodo.org/policies\' target=\'_blank\'>Policies</a>.');"
+                         ng-disabled="dataset.$uploaded !== undefined"> 
                 </span>
                 <span class="input-group-btn">
                     <label class="btn btn-success" 
                                 btn-checkbox="true"
                                 ng-class="{'btn-danger':wizard.hasError === 'datasetDeposition'}"
                                 ng-model="odRegistrationController.generateDOI" 
-                                ng-click="dataset.$uploaded || (odRegistrationController.generateDOI = !odRegistrationController.generateDOI); showInfoMessage('By selecting \'Generate DOI\' you agree that your dataset is also uploaded to <a href=\'http://help.zenodo.org/features/\' title=\'Zenodo Open Science Services\' target=\'_blank\'>Zenodo</a> in order to obtain a persistent <a href=\'https://en.wikipedia.org/wiki/Digital_object_identifier\' target=\'_blank\'>Digital Object Identifier</a> (DOI).<br/>Zenodo is a research data repository. It was created by <a href=\'https://www.openaire.eu\' target=\'_blank\'>OpenAIRE<a/> and CERN to provide a place for researchers to deposit datasets. For further information please consult Zenodo\'s <a href=\'http://about.zenodo.org/terms\' target=\'_blank\'>Terms of Use</a> and <a href=\'http://about.zenodo.org/policies\' target=\'_blank\'>Policies</a>.');"
-                                ng-disabled="dataset.$uploaded === true"> 
+                                ng-click="dataset.$uploaded !== undefined || (odRegistrationController.generateDOI = !odRegistrationController.generateDOI); showInfoMessage('By selecting \'Generate DOI\' you agree that your dataset is also uploaded to <a href=\'http://help.zenodo.org/features/\' title=\'Zenodo Open Science Services\' target=\'_blank\'>Zenodo</a> in order to obtain a persistent <a href=\'https://en.wikipedia.org/wiki/Digital_object_identifier\' target=\'_blank\'>Digital Object Identifier</a> (DOI).<br/>Zenodo is a research data repository. It was created by <a href=\'https://www.openaire.eu\' target=\'_blank\'>OpenAIRE<a/> and CERN to provide a place for researchers to deposit datasets. For further information please consult Zenodo\'s <a href=\'http://about.zenodo.org/terms\' target=\'_blank\'>Terms of Use</a> and <a href=\'http://about.zenodo.org/policies\' target=\'_blank\'>Policies</a>.');"
+                                ng-disabled="dataset.$uploaded !== undefined"> 
                              Get Digital Object Identifier
                     </label>
                 </span>
@@ -64,7 +64,7 @@
                     type="button"
                     tooltip="{{!odRegistrationController.generateDOI ? null : 'Please uncheck \'GGet Digital Object Identifier\' to enable this functionality'}}"
                     ng-class="{'btn-danger':wizard.hasError === 'datasetUploadchoice'}"
-                    ng-click="dataset.$uploaded = false"
+                    ng-click="dataset.$uploaded = false; odRegistrationController.generateDOI = false;"
                     ng-if="!odRegistrationController.generateDOI">Provide Link to existing Dataset
             </button>
             
@@ -92,7 +92,7 @@
     <!-- Link -->
     <div class="row form-group"
          ng-class="{'has-error':wizard.hasError === 'datasetContentlocation'}"
-         ng-show = "dataset.$uploaded === true"
+         ng-show = "dataset.$uploaded !== undefined"
          tooltip="{{(dataset.$uploaded === true && dataset.representation[0].contentlocation) ? 'The link of an uploaded dataset cannot be changed afterwards.' : null}}">
         <label for="datasetContentlocation" class="col-md-1 form-control-label">Link to Data</label>
         <!-- Function -->

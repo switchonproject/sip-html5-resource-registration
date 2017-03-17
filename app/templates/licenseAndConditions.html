@@ -46,16 +46,17 @@
         <div class="col-md-5">
             <input type="text" class="form-control" 
                    id="datasetContactperson" name="datasetContactperson" 
-                   placeholder="Optional point of contact information"
+                   ng-attr-placeholder="{{licenseController.generateDOI ? 'Required' : 'Optional'}} point of contact information"
                    ng-model="dataset.contact.name"
-                   ng-focus="showInfoMessage('Please provide a name of the contact person responsible for the establishment, management, maintenance and distribution of dataset.');">
+                   ng-focus="showInfoMessage('Please provide a name of the contact person responsible for the establishment, management, maintenance and distribution of dataset or publication in the format Family name, Given name');"
+                   ng-required="licenseController.generateDOI">
         </div>
         <div class="col-md-3">
             <input type="email" class="form-control" 
                    id="datasetContactperson" name="datasetContactemail" 
                    placeholder="Optional email address"
                    ng-model="dataset.contact.email"
-                   ng-focus="showInfoMessage('Please provide an emal address of the contact person.');">
+                   ng-focus="showInfoMessage('Please provide an email address of the contact person.');">
         </div>
     </div>
     
@@ -67,9 +68,10 @@
         <div class="col-md-4">
             <input type="text" class="form-control" 
                    id="datasetOrganisation" name="datasetOrganisation" 
-                   placeholder="Optional name of the institution providing the dataset "
+                   ng-attr-placeholder="{{licenseController.generateDOI ? 'Required' : 'Optional'}} name of the institution providing the dataset"
                    ng-model="dataset.contact.organisation"
-                   ng-focus="showInfoMessage('Please provide a name of the organisation responsible for the establishment, management, maintenance and distribution of dataset.');">
+                   ng-focus="showInfoMessage('Please provide a name of the organisation responsible for the establishment, management, maintenance and distribution of dataset or publication.');"
+                   ng-required="licenseController.generateDOI">
         </div>
         <div class="col-md-4">
             <input type="url" class="form-control" 
@@ -80,32 +82,70 @@
         </div>
     </div>
     
-    <!-- Citation / DOI -->
+    <!-- Citation / self-provided DOI -->
     <div class="row form-group"
-         ng-class="{'has-error':wizard.hasError === 'datasetCitation'}">
+         ng-class="{'has-error':wizard.hasError === 'datasetCitation'}"
+         ng-if="licenseController.generateDOI === false">
         <label for="datasetCitation" class="col-md-2 form-control-label">Citation / DOI</label>
         <div class="col-md-6">
             <textarea class="form-control" 
                       id="datasetDescription" 
                       name="datasetCitation" 
-                      placeholder="Optional citation information"
-                      rows="3"
+                      placeholder="Optional citation information or manually provided Digital Object Identifier (DOI)"
+                      rows="6"
                       ng-model="dataset.contact.description" 
                       ng-disabled="dataset.$deposition !== null && dataset.$deposition.metadata.prereserve_doi.doi !== null"
-                      ng-focus="showInfoMessage('Please provide bibliographic citation or a Digital Object Identifier (<a href=\'https://www.doi.org/\' target=\'_blank\'>DOI</a>).')">  
+                      ng-focus="showInfoMessage('Please enter a bibliographic citation or a manually provided Digital Object Identifier (<a href=\'https://www.doi.org/\' target=\'_blank\'>DOI</a>).<br/> If you want to generate a <strong>new</strong>DOI, you have to enable this Feature under <i>Dataset Description</i> and upload a new dataset.')">  
             </textarea>
         </div>
-        <div class="col-md-2">
-            <div class="col-md-2">
-                <button class="btn btn-primary pull-right" 
-                        type="button" 
-                        ng-disabled="dataset.contact.description"
-                        ng-click="$dismiss()">Generate DOI
-                </button>
-            </div>   
-        </div>
     </div>
-    
+    <!-- Citation / self-provided DOI -->
+    <div class="row form-group"
+         ng-class="{'has-error':wizard.hasError === 'datasetDeposition'}"
+         ng-if="licenseController.generateDOI === true">
+        <div class="col-md-2">
+            <label for="datasetDeposition" 
+                   class="form-control-label">Prereserved DOI
+            </label>
+       </div>
+        
+        <!--<div class="col-md-10">
+            <div class="row form-group">-->
+                <div class="col-md-2">
+                    <span class="label label-danger" 
+                      title="Preresevred DOI">{{dataset.$deposition.metadata.prereserve_doi.doi}}
+                    </span>
+                </div>
+
+                <div class="col-md-2">
+                    <select class="form-control"   
+                        id="depositionUploadType" 
+                        name="depositionUploadType" 
+                        placeholder="DOI Upload Type"
+                        ng-init="dataset.$deposition.metadata.upload_type = 'dataset'" 
+                        ng-model="dataset.$deposition.metadata.upload_type"
+                        size="1"
+                        required 
+                        >
+                    <option value="publication">Publication</option>
+                    <option value="poster">Poster</option>
+                    <option value="presentation">Presentation</option>
+                    <option value="dataset">Dataset</option>
+                    <option value="image">Image</option>
+                    <option value="video">Video/Audio</option>
+                    <option value="software">Software</option>
+                    </select> 
+                </div>
+                <div class="col-md-4">
+                <input type="checkbox" 
+                         ng-class="{'has-error':wizard.hasError === 'datasetDeposition'}"
+                         ng-model="dataset.$deposition.metadata.grants" 
+                         ng-change="showInfoMessage('SWITCH-ON has received funding from the European Union\'s Seventh Programme for research, technological development and demonstration under grant agreement No 603587. If you check this box, the grant agreement number will be associated with the DOI');"> 
+                SWITCH-ON FP7 Result
+                </div>        
+            <!--</div>
+        </div>-->
+    </div>
     <!-- Data Lineage -->
     <div class="row form-group"
          ng-class="{'has-error':wizard.hasError === 'datasetLineage'}">
@@ -115,7 +155,7 @@
                       id="datasetDescription" 
                       name="datasetLineage" 
                       placeholder="Optional data lineage / data provenance information"
-                      rows="6"
+                      rows="3"
                       ng-model="dataset.metadata[1].description" 
                       ng-focus="showInfoMessage('Provide information on the sources used to create datasets. Links and citations can be included.')">  
             </textarea>

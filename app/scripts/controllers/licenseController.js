@@ -30,44 +30,19 @@ angular.module(
             var _this = this;
             _this.dataset = dataset;
             _this.config = AppConfig;
-            
-            _this.generateDoi = function () {
-                //console.log(url);
-                
-                /*if (url) {
-                    var searchResultPromise, searchSuccess, searchError;
-                    searchSuccess = function (searchResult) {
-                        if (searchResult && searchResult.$collection && searchResult.$collection.length > 0) {
-                            duplicateLink = 'This dataset is already registered in the SWITCH-ON Spatial Information Platform under the name </strong>"' +
-                                    searchResult.$collection[0].name + '"</strong>. Click <a href="'+AppConfig.byod.baseUrl+'/#/resource/' +
-                                    searchResult.$collection[0].id + '" title="' +
-                                    searchResult.$collection[0].name + '" target="_blank">here</a> to view the dataset meta-data.';
-
-                            $scope.message.text = duplicateLink;
-                            $scope.message.icon = 'fa-warning';
-                            $scope.message.type = 'info';
-                            $scope.wizard.hasError = 'datasetContentlocation';
-                        } else {
-                            // reset the warning!
-                            if($scope.wizard.hasError === 'datasetContentlocation') {
-                                $scope.wizard.hasError = null;
-                            }
-
-                            //console.log('resource ' + url + ' not in Meta-Data Repository');
-                            duplicateLink = undefined;
-                        }
-                    };
-
-                    searchError = function (data) {
-                        console.error('search error: ' + data);
-                        duplicateLink = undefined;
-                    };
-
-                    searchResultPromise = searchService.search(url).$promise.then(searchSuccess, searchError);
-                }
-
-                duplicateLink = undefined;*/
-            };
+            _this.generateDOI = false;
+            if(dataset.$deposition && dataset.$deposition !== null) {
+                dataset.$deposition.$promise.then(
+                        function success(deposition) {
+                    if(deposition.metadata.prereserve_doi.doi !== null) {
+                        _this.generateDOI = true;     
+                    } else {
+                        _this.generateDOI = false;     
+                    }
+                }, function error(response) {
+                    _this.generateDOI = false;
+                });
+            }
             
             // load taglist
             $scope.tags['accessconditions'] = tagGroupService.getTagList('access conditions', 'Creative Commons (CC BY),Creative Commons (CC BY-NC),Creative Commons (CC BY-NC-ND),Creative Commons (CC BY-NC-SA),Creative Commons (CC BY-ND),Creative Commons (CC BY-SA),for research only,no limitations,other');
@@ -121,6 +96,22 @@ angular.module(
                     
                     $scope.wizard.hasError = 'datasetLicensestatement';
                     context.valid =  false;
+                } else if ($scope.licenseForm.datasetOrganisation.$error.required) {
+                    // CONTENT LOCATION       
+                    $scope.message.text = 'Please provide a name of the organisation responsible for the establishment, management, maintenance and distribution of dataset or publication to be associated with the DOI.';
+                    $scope.message.icon = 'fa-warning';
+                    $scope.message.type = 'warning';
+
+                    $scope.wizard.hasError = 'datasetOrganisation';
+                    context.valid = false;
+                } else if ($scope.licenseForm.datasetContactperson.$error.required) {
+                    // CONTENT LOCATION       
+                    $scope.message.text = 'Please provide a name of the contact person (Family name, Given name) responsible for the establishment, management, maintenance and distribution of dataset or publication to be associated with the DOI.';
+                    $scope.message.icon = 'fa-warning';
+                    $scope.message.type = 'warning';
+
+                    $scope.wizard.hasError = 'datasetContactperson';
+                    context.valid = false;
                 } else if ($scope.licenseForm.datasetContactemail.$error.email) {
                     // CONTENT LOCATION       
                     $scope.message.text = 'The email address of the contact person is not a valid.';

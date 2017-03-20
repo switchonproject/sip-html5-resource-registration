@@ -119,6 +119,9 @@ angular.module(
                         if (_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
                             _this.dataset.metadata[1].language = tags[0];
                         }
+                        if (_this.dataset.metadata[2]) {
+                            _this.dataset.metadata[2].language = tags[0];
+                        }
                         _this.progress.currval += 10; // 30
                         //console.log('LANGUAGE TAG: ' + _this.progress.currval);
                     });
@@ -153,11 +156,15 @@ angular.module(
                     });
 
                     // META-DATA TYPE -> BASIC METADATA, LINEAGE METADATA
-                    tagGroupService.getTagList('meta-data type', 'basic meta-data,lineage meta-data').$promise.then(function (tags) {
+                    tagGroupService.getTagList('meta-data type', 'basic meta-data,lineage meta-data,deposition meta-data').$promise.then(function (tags) {
                         _this.dataset.metadata[0].type = tags.getTagByName('basic meta-data');
                         if (_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
                             _this.dataset.metadata[1].type = tags.getTagByName('lineage meta-data');
                         }
+                        if (_this.dataset.metadata[2]) {
+                            _this.dataset.metadata[2].type = tags.getTagByName('deposition meta-data');
+                        }
+                        
                         _this.progress.currval += 10; // 70
                         //console.log('META-DATA TYPE: ' + _this.progress.currval);
                     });
@@ -177,10 +184,13 @@ angular.module(
                     });
 
                     // META-DATA STANDARD -> BASIC METADATA, LINEAGE METADATA
-                    tagGroupService.getTagList('meta-data standard', 'SWITCH-ON SIM').$promise.then(function (tags) {
-                        _this.dataset.metadata[0].standard = tags[0];
+                    tagGroupService.getTagList('meta-data standard', 'SWITCH-ON SIM,Zenodo Depositions').$promise.then(function (tags) {
+                        _this.dataset.metadata[0].standard = tags.getTagByName('SWITCH-ON SIM');
                         if (_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
-                            _this.dataset.metadata[1].standard = tags[0];
+                            _this.dataset.metadata[1].standard = tags.getTagByName('SWITCH-ON SIM');
+                        }
+                        if (_this.dataset.metadata[2] && _this.dataset.metadata[2].description) {
+                            _this.dataset.metadata[2].standard = tags.getTagByName('Zenodo Depositions');
                         }
                         _this.progress.currval += 10; // 100
                         //console.log('META-DATA STANDARD: ' + _this.progress.currval);
@@ -190,6 +200,9 @@ angular.module(
                     // CONTENT TYPE -> BASIC METADATA
                     _this.dataset.metadata[0].contenttype = tagGroupService.getTag('content type', 'application/json', function (tag) {
                         _this.dataset.metadata[0].contenttype = tag;
+                        if (_this.dataset.metadata[2]) {
+                            _this.dataset.metadata[2].contenttype = tag;
+                        }
                         // callback function might get called or might not get called!
                         //_this.progress.currval += 10; // 110
                         //console.log('CONTENT TYPE: ' + _this.progress.currval);
@@ -217,9 +230,20 @@ angular.module(
                     // CLEANUP
                     _this.dataset.uuid = _this.dataset.uuid || rfc4122.v4();
 
+                    // check optional deposition metadata
+                    if(!_this.generateDOI) {
+                        _this.dataset.metadata.pop();
+                    } else {
+                         _this.dataset.metadata[2].creationdate = currentdate;
+                    }
+
                     // check optional lineage metadata
                     if (!_this.dataset.metadata[1] || !_this.dataset.metadata[1].description) {
-                        _this.dataset.metadata.splice(1, 1);
+                        if(!_this.generateDOI) {
+                            _this.dataset.metadata.pop();
+                        } else {
+                            _this.dataset.metadata.splice(1, 1);
+                        }   
                     } else {
                         _this.dataset.metadata[1].creationdate = currentdate;
                     }
@@ -305,8 +329,26 @@ angular.module(
                             
                             return deposition.$save();
                         };
-
+                        
                         function storeDataset(deposition) {
+                            
+                            if(deposition && deposition !== null) {
+                                var depositionMetadata = null;
+                                if(_this.dataset.metadata[1] && _this.dataset.metadata[1].type && _this.dataset.metadata[1].type.name === 'deposition meta-data') {
+                                    depositionMetadata = _this.dataset.metadata[1];
+                                } else if(_this.dataset.metadata[2] && _this.dataset.metadata[2].type && _this.dataset.metadata[2].type.name === 'deposition meta-data') {
+                                    depositionMetadata = _this.dataset.metadata[2];
+                                }
+                                
+                                if(depositionMetadata !== null) {
+                                    depositionMetadata.contentlocation = deposition.links.record;
+                                    depositionMetadata.content = angular.toJson(deposition);
+                                    depositionMetadata.description = deposition.doi_url;
+                                    depositionMetadata.creationdate = currentdate;
+                                    depositionMetadata.uuid = deposition.doi;
+                                }  
+                            }
+
                             return storageService.store(_this.dataset).$promise.then(
                                 function (storedDataset) {
                                     $interval.cancel(timer);
@@ -379,6 +421,7 @@ angular.module(
                                                     + deposition.doi + '" for dataset ' + dataset.name
                                                     + ' has successfully been published!';
                                             //console.info(_this.progress.message);
+
                                             return storeDataset(deposition);
                                         } else {
                                             _this.progress.message = 'The Digital Object Identifier "'

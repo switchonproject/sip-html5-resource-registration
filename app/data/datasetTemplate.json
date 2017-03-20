@@ -65,6 +65,21 @@
             "creationdate": null,
             "contenttype": null,
             "content": null
+        }, {
+            "$self": "/SWITCHON.METADATA/-1",
+            "id": -1,
+            "name": "Zenodo Deposition Resource",
+            "tags": [],
+            "description": "The Deposition resource is used for uploading and editing records on zenodo.org.",
+            "contact": null,
+            "type": null,
+            "language": null,
+            "standard": null,
+            "uuid": null,
+            "contentlocation": null,
+            "creationdate": null,
+            "contenttype": null,
+            "content": null
         }],
     "accesslimitations": null,
     "uuid": null,

@@ -252,7 +252,7 @@ angular.module(
                             if(deposition.metadata.upload_type === 'publication') {
                                 // Set to fixed value to avoid bothering end users 
                                 deposition.metadata.publication_type = 'conferencepaper';
-                            } if(deposition.metadata.upload_type === 'publication') {
+                            } if(deposition.metadata.upload_type === 'image') {
                                 deposition.metadata.image_type = 'figure';
                             }
                             

@@ -19,7 +19,7 @@ angular.module(
                 config = AppConfig.zenodo;
                 depositionResource = $resource(config.host + '/api/deposit/depositions/:depositionId',
                         {
-                            depositionId: '@depositionId'
+                            depositionId: '@id'
                         }, {
                     delete: {
                         method: 'DELETE',

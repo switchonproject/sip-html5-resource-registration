@@ -16,23 +16,44 @@ angular.module(
     'de.cismet.sip-html5-resource-registration.controllers.licenseController',
     [
         '$scope',
+        'AppConfig',
         'de.cismet.sip-html5-resource-registration.services.dataset',
         'de.cismet.sip-html5-resource-registration.services.TagGroupService',
         // Controller Constructor Function
         function (
             $scope,
+            AppConfig,
             dataset,
             tagGroupService
         ) {
             'use strict';
             var _this = this;
             _this.dataset = dataset;
+            _this.config = AppConfig;
+            _this.generateDOI = false;
+            if(dataset.$deposition && dataset.$deposition !== null) {
+                dataset.$deposition.$promise.then(
+                        function success(deposition) {
+                    if(deposition.metadata.prereserve_doi.doi !== null) {
+                        _this.generateDOI = true;     
+                    } else {
+                        _this.generateDOI = false;     
+                    }
+                }, function error(response) {
+                    _this.generateDOI = false;
+                });
+            }
             
             // load taglist
             $scope.tags['accessconditions'] = tagGroupService.getTagList('access conditions', 'Creative Commons (CC BY),Creative Commons (CC BY-NC),Creative Commons (CC BY-NC-ND),Creative Commons (CC BY-NC-SA),Creative Commons (CC BY-ND),Creative Commons (CC BY-SA),for research only,no limitations,other');
                     
             // validation functions
-            $scope.wizard.enterValidators['License and Conditions'] = function(context){
+            $scope.wizard.enterValidators['License and Conditions'] = function(context) {
+                
+                if(_this.config.developmentMode === true) {
+                        return true;
+                }
+                
                 if(context.valid === true){
                     $scope.message.text='Please select a predefined license for regulating the conditions for access and use of the dataset and / or provide a brief statement or URL to the license which applies to the usage of the dataset. This statement should provide additional information.';
                     $scope.message.icon='fa-info-circle';
@@ -44,6 +65,11 @@ angular.module(
 
             $scope.wizard.exitValidators['License and Conditions'] = function(context){
                 context.valid = true;
+                
+                if(_this.config.developmentMode === true) {
+                        return true;
+                }
+                
                 // ACCESS CONDITIONS
                 var isInvalidAccessconditions = $scope.tags['accessconditions'].every(function(element) {
                     if (_this.dataset.accessconditions && _this.dataset.accessconditions.name && 
@@ -70,6 +96,22 @@ angular.module(
                     
                     $scope.wizard.hasError = 'datasetLicensestatement';
                     context.valid =  false;
+                } else if ($scope.licenseForm.datasetOrganisation.$error.required) {
+                    // CONTENT LOCATION       
+                    $scope.message.text = 'Please provide a name of the organisation responsible for the establishment, management, maintenance and distribution of dataset or publication to be associated with the DOI.';
+                    $scope.message.icon = 'fa-warning';
+                    $scope.message.type = 'warning';
+
+                    $scope.wizard.hasError = 'datasetOrganisation';
+                    context.valid = false;
+                } else if ($scope.licenseForm.datasetContactperson.$error.required) {
+                    // CONTENT LOCATION       
+                    $scope.message.text = 'Please provide a name of the contact person (Family name, Given name) responsible for the establishment, management, maintenance and distribution of dataset or publication to be associated with the DOI.';
+                    $scope.message.icon = 'fa-warning';
+                    $scope.message.type = 'warning';
+
+                    $scope.wizard.hasError = 'datasetContactperson';
+                    context.valid = false;
                 } else if ($scope.licenseForm.datasetContactemail.$error.email) {
                     // CONTENT LOCATION       
                     $scope.message.text = 'The email address of the contact person is not a valid.';

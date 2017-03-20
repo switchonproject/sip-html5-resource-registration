@@ -13,7 +13,8 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                 ['$resource',
                     '$location',
                     'de.cismet.sip-html5-resource-registration.services.RepresentationFactory',
-                    function ($resource, $location, Representation) {
+                    'de.cismet.sip-html5-resource-registration.services.zenodoService',
+                    function ($resource, $location, Representation, zenodoService) {
                         'use strict';
                         var datasetTemplate = $resource('data/datasetTemplate.json', {}, {
                             query: {
@@ -27,6 +28,25 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                         datasetTemplate.$promise.then(function (dataset) {
                             dataset.$uploaded = undefined;
                             dataset.$geoserverUploaded = false;
+                            dataset.$deposition = null;
+                            
+                            // check request parameters for depositionId
+                            var depositionId = ($location.search()).deposition;
+                            //depositionId = 69772;
+                            if(depositionId && depositionId !== null) {
+                                dataset.$deposition = zenodoService.get({depositionId:depositionId});
+                                dataset.$deposition.$promise.then(
+                                        function success(deposition) {
+                                            //console.log('request to zeodo api for deposition #' + depositionId + ' successfull: ' 
+                                            //       + JSON.stringify(deposition.toJSON()));
+                                        },
+                                        function error(errorResponse){
+                                           console.error('request to zeodo api for deposition #' + depositionId + ' failed with: ' 
+                                                   + errorResponse.status + ': ' + errorResponse.statusText);
+                                           //dataset.$deposition = null; 
+                                           dataset.$deposition = null;
+                                        });
+                            }
 
                             // check request parameters for representations, parse and add to
                             // the dataset's representation array

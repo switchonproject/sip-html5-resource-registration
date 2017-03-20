@@ -16,6 +16,7 @@ angular.module(
         'de.cismet.sip-html5-resource-registration.controllers.storageController',
         [
             '$scope',
+            '$q',
             '$http',
             '$window',
             '$interval',
@@ -28,6 +29,7 @@ angular.module(
             // Controller Constructor Function
             function (
                     $scope,
+                    $q,
                     $http,
                     $window,
                     $interval,
@@ -39,11 +41,21 @@ angular.module(
                     storageService
                     ) {
                 'use strict';
-                var _this, currentdate, userAgent, maxProgress;
+                var _this, currentdate, userAgent, maxProgress, saveDeposition,
+                        publishDeposition, publishResource, handleError, accessConditions;
 
                 currentdate = new Date().getTime();
                 userAgent = $window.navigator.userAgent;
                 maxProgress = 120;
+                
+                accessConditions = [];
+                accessConditions['Creative Commons (CC BY)'] = 'CC-BY-4.0';
+                accessConditions['Creative Commons (CC BY-NC)'] = 'CC-BY-NC-4.0';
+                accessConditions['Creative Commons (CC BY-NC-ND)'] = 'CC-BY-NC-4.0';
+                accessConditions['Creative Commons (CC BY-NC-SA)'] = 'CC-BY-NC-4.0';
+                accessConditions['Creative Commons (CC BY-ND)'] = 'CC-BY-4.0'; 
+                accessConditions['Creative Commons (CC BY-SA)'] =  'CC-BY-SA-4.0';
+                accessConditions['no limitations'] = 'other-pd';
 
                 _this = this;
                 _this.dataset = dataset;
@@ -63,24 +75,29 @@ angular.module(
                     $window.location.reload();
                 };
 
+
+
                 $modalInstance.rendered.then(function () {
+
+                    // DEPOSITION / DOI
+                    _this.generateDOI = dataset.$deposition && dataset.$deposition !== null && dataset.$deposition.metadata.prereserve_doi.doi !== null;
 
                     // REPRESENTATIONS
                     _this.dataset.representation.forEach(function (representation) {
-                        maxProgress += 10;  
-                        
+                        maxProgress += 10;
+
                         // TAGS -> REPRESENTATION
                         representation.updateTags().then(function () {
                             _this.progress.currval += 10; // maxProgress + 10
                             //console.log('REPRESENTATIONS: ' + _this.progress.currval);
                         });
-                        
+
                         // the uuid is needed to uniquely indentify the representation 
                         // when the server has to perform an update of the uploadmessage (processing instruction)
                         // UUID -> REPRESENTATION
                         representation.uuid = representation.uuid || rfc4122.v4();
                     });
-                    
+
                     // SRID TAG -> RESOURCE
                     tagGroupService.getTagList('srid', 'EPSG:4326').$promise.then(function (tags) {
                         _this.dataset.srid = tags[0];
@@ -190,23 +207,23 @@ angular.module(
                         _this.progress.currval += 10; // 110
                         //console.log('CONTENT (REQUEST STATUS): ' + _this.progress.currval);
                     });
-                    
-                    
+
+
                     // check first resource name
                     if (!_this.dataset.representation[0].name) {
                         _this.dataset.representation[0].name = _this.dataset.name;
                     }
-                    
+
                     // CLEANUP
                     _this.dataset.uuid = _this.dataset.uuid || rfc4122.v4();
-                    
+
                     // check optional lineage metadata
                     if (!_this.dataset.metadata[1] || !_this.dataset.metadata[1].description) {
                         _this.dataset.metadata.splice(1, 1);
                     } else {
-                         _this.dataset.metadata[1].creationdate = currentdate;
+                        _this.dataset.metadata[1].creationdate = currentdate;
                     }
-                    
+
                     _this.progress.currval += 10; // 120
                     //console.log('CLEANUP: ' + _this.progress.currval);
                 });
@@ -222,35 +239,163 @@ angular.module(
                             }
                         }, 200, 50);
 
-                        storageService.store(dataset).$promise.then(
+                        /**
+                         * Update deposition metadata and save to zenodo
+                         * 
+                         * @param {type} dataset
+                         * @param {type} deposition
+                         * @return {unresolved}
+                         */
+                        function saveDeposition(dataset, deposition) {
+                            // already set in licenseAndConsitions.html:
+                            // deposition.metadata.upload_type
+                            if(deposition.metadata.upload_type === 'publication') {
+                                // Set to fixed value to avoid bothering end users 
+                                deposition.metadata.publication_type = 'conferencepaper';
+                            } if(deposition.metadata.upload_type === 'image') {
+                                deposition.metadata.image_type = 'figure';
+                            }
+                            
+                            //Date of publication in ISO8601 format (YYYY-MM-DD). Defaults to current date.
+                            //deposition.metadata.publication_date
+                            
+                            deposition.metadata.title = dataset.name;
+                            deposition.metadata.description = dataset.description;
+                            
+                            deposition.metadata.creators = [];
+                            
+                            if(dataset.contact) {
+                                deposition.metadata.creators[0] = {
+                                    'name' : dataset.contact.name,
+                                    'affiliation' : dataset.contact.organisation
+                                };
+                            }
+                            
+                            // access_conditions vs access_right vs license
+                            if(dataset.accessconditions.name === 'research only' || dataset.accessconditions.name === 'other') {
+                                deposition.metadata.access_right = 'restricted';
+                                if(dataset.licensestatement && dataset.licensestatement !== null) {
+                                    deposition.metadata.access_conditions = dataset.licensestatement;
+                                } else {
+                                    deposition.metadata.access_conditions = dataset.accessconditions.name;
+                                }
+                            } else {
+                                deposition.metadata.access_right = 'open';
+                                
+                                if(accessConditions[dataset.accessconditions.name]) {
+                                    deposition.metadata.license = accessConditions[dataset.accessconditions.name];
+                                } else {
+                                    deposition.metadata.license = 'other-pd';
+                                }
+                            }
+                            
+                            deposition.metadata.keywords = [];
+                            dataset.tags.forEach(function (tag) {
+                                deposition.metadata.keywords.push(tag.name);
+                            });
+                            
+                            if(dataset.metadata[1] && dataset.metadata[1].description) {
+                                deposition.metadata.notes = dataset.metadata[1].description;
+                            }
+                            
+                            if(deposition.metadata.grants === true) {
+                                deposition.metadata.communities = [{'identifier':'switchon'}];
+                                deposition.metadata.grants = [{'id' : '603587'}];
+                            }
+                            
+                            return deposition.$save();
+                        };
+
+                        function storeDataset(deposition) {
+                            return storageService.store(_this.dataset).$promise.then(
                                 function (storedDataset) {
                                     $interval.cancel(timer);
 
-                                    _this.progress.message = 'Your dataset has been successfully registered in the SWITCH-ON Spatial Information Platform. Please click <a href=\'' + AppConfig.byod.baseUrl + '/#/resource/' +
+                                    var progressMessage = 'Your dataset has been successfully registered in the SWITCH-ON Spatial Information Platform. Please click <a href=\'' + AppConfig.byod.baseUrl + '/#/resource/' +
                                             storedDataset.id + '\' title=\'' + storedDataset.name + '\'>here</a> to view the dataset in the SWITCH-ON BYOD Client.';
+
+                                    if (deposition !== null) {
+                                        progressMessage += '<br><br>The Digital Object Identifier <a href=\'https://doi.org/' 
+                                                + deposition.doi + '\' target=\'_blank\'>' + deposition.doi + '</a> for dataset "' + dataset.name
+                                                + '" has successfully been published!'
+                                    }
+
+                                    _this.progress.message = progressMessage;
 
                                     _this.progress.active = false;
                                     _this.progress.finished = true;
                                     _this.progress.type = 'success';
                                     _this.progress.currval = 200;
 
-                                },
-                                function (error) {
-                                    $interval.cancel(timer);
-
-                                    if (error.data.userMessage) {
-                                        _this.progress.message = 'The dataset could not be saved in the Meta-Data Repository: <br>' +
-                                                error.data.userMessage;
-                                    } else {
-                                        this.progress.message = 'The dataset could not be saved in the Meta-Data Repository.';
-                                    }
-
-                                    _this.progress.active = false;
-                                    _this.progress.finished = true;
-                                    _this.progress.type = 'danger';
-                                    _this.progress.currval = 200;
+                                    return storedDataset;
                                 });
+                        }
 
+                        function handleError(error) {
+                            $interval.cancel(timer);
+
+                            if(error.data) {
+                                console.error(JSON.stringify(error.data));
+                            }
+
+                            if (error.data && error.data.userMessage) {
+                                _this.progress.message = 'The dataset could not be saved in the SWITCH-ON Meta-Data Repository: <br>' +
+                                error.data.userMessage;
+                            } else if (error.data && error.data.message) {
+                                _this.progress.message = 'The dataset could not be saved in the SWITCH-ON Meta-Data Repository: <br>' +
+                                error.data.message;
+                            } else if(error.status && error.statusText) {
+                                _this.progress.message = 'The dataset could not be saved in the SWITCH-ON Meta-Data Repository: <br>' +
+                                error.statusText + ' (' + error.status + ')';
+                            } else {
+                                _this.progress.message = 'The dataset could not be saved in the SWITCH-ON Meta-Data Repository';
+                            }
+
+                            _this.progress.active = false;
+                            _this.progress.finished = true;
+                            _this.progress.type = 'danger';
+                            _this.progress.currval = 200;
+                        };
+
+                        if (_this.generateDOI) {
+                            saveDeposition(dataset, dataset.$deposition)
+                                .then(function saveDepositionSuccess(deposition) {
+                                        if(deposition && deposition !== null) {
+                                            _this.progress.message = 'The Meta-Data of the dataset ' + _this.dataset.name
+                                            + ' has been successfully associated with the Digital Object Identifier "'
+                                            + deposition.doi + '"';
+                                            //console.log(_this.progress.message);
+                                            return deposition.$publish();
+                                        } else {
+                                            _this.progress.message = 'The Meta-Data of the dataset ' + _this.dataset.name
+                                            + ' has been successfully associated with the Digital Object Identifier "'
+                                            + dataset.$deposition.metadata.prereserve_doi.doi + '"';
+                                            console.error(_this.progress.message);
+                                        }  
+                                    })
+                                .then(function publishDepositionSuccess(deposition) {
+                                        if(deposition && deposition !== null) {
+                                            _this.progress.message = 'The Digital Object Identifier "'
+                                                    + deposition.doi + '" for dataset ' + dataset.name
+                                                    + ' has successfully been published!';
+                                            //console.info(_this.progress.message);
+                                            return storeDataset(deposition);
+                                        } else {
+                                            _this.progress.message = 'The Digital Object Identifier "'
+                                            + dataset.$deposition.metadata.prereserve_doi.doi + '" for dataset ' + _this.dataset.name
+                                            + ' could not be published!';
+                                            console.error(_this.progress.message);
+                                        }  
+                                    })
+                                .catch(function (error) {
+                                    handleError(error);
+                                });
+                        } else {
+                            storeDataset(null)
+                                .then(null, function (error) {
+                                    handleError(error);
+                                });
+                        }
                     }
                 });
             }

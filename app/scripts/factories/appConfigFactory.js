@@ -13,15 +13,16 @@ angular.module(
 ).service('AppConfig',
     [function () {
         'use strict'; 
+        
+        this.developmentMode = true;
 
         this.cidsRestApi = {};
-        //this.cidsRestApi.host = 'http://localhost:8890';
-        //this.cidsRestApi.host = 'http://switchon.cismet.de/legacy-rest1';
-        this.cidsRestApi.host = 'http://data.water-switch-on.eu/switchon_server_rest';
+        this.cidsRestApi.host = this.developmentMode ? 'http://localhost:8890' : 'http://data.water-switch-on.eu/switchon_server_rest';
         
         this.searchService = {};
-        this.searchService.username = 'admin@SWITCHON';
-        this.searchService.password = 'cismet';
+        // public API ;-)
+        this.searchService.username = 'switchon@SWITCHON';
+        this.searchService.password = 'switchon';
         this.searchService.defautLimit = 10;
         this.searchService.maxLimit = 50;
         this.searchService.host = this.cidsRestApi.host;
@@ -106,9 +107,13 @@ angular.module(
         this.objectInfo.resourceXmlUrl = 'http://data.water-switch-on.eu/csw?request=GetRecordById&service=CSW&version=2.0.2&namespace=xmlns%28csw=http://www.opengis.net/cat/csw/2.0.2%29&resultType=results&outputSchema=http://www.isotc211.org/2005/gmd&outputFormat=application/xml&ElementSetName=full&id=';
 
         this.byod = {};
-        this.byod.baseUrl = 'http://www.water-switch-on.eu/sip-webclient/byod';
-        //this.byod.baseUrl = 'http://switchon.cismet.de/sip-snapshot';
+        this.byod.baseUrl = this.developmentMode ? 'http://switchon.cismet.de/sip-snapshot' : 'http://www.water-switch-on.eu/sip-webclient/byod';
         
         this.uploadtool = {};
         this.uploadtool.baseUrl = 'http://dl-ng003.xtr.deltares.nl';
+        
+        this.zenodo = {};
+        this.zenodo.host = this.developmentMode ? 'https://sandbox.zenodo.org' : 'https://zenodo.org';
+        // retrieve non-sanbox token from the server!
+        this.zenodo.token = this.developmentMode ? 'A7PpJjp9GmcSs17BXjDzxd1BN5CG1dGGZFRxm5CNzEPPeiaB8HQUdZg5I8Mj' : null;
     }]);

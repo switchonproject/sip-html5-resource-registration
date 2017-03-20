@@ -39,8 +39,20 @@ angular.module(
             _this.dataset = dataset;
             _this.config = AppConfig;
             _this.readOnly = dataset.$geoserverUploaded;
-            
-            
+            _this.generateDOI = false;
+            if(dataset.$deposition && dataset.$deposition !== null) {
+                dataset.$deposition.$promise.then(
+                        function success(deposition) {
+                    if(deposition.metadata.prereserve_doi.doi !== null) {
+                        _this.generateDOI = true;     
+                    } else {
+                        _this.generateDOI = false;     
+                    }
+                }, function error(response) {
+                    _this.generateDOI = false;
+                });
+            }
+
             wicket = geoTools.wicket;
             defaultStyle = geoTools.defaultStyle;
             defaultDrawOptions = geoTools.defaultDrawOptions;
@@ -72,7 +84,12 @@ angular.module(
 
             // validation functions
             $scope.wizard.enterValidators['Summary'] = function(context){
-                 if(context.valid === true){
+                
+                if(_this.config.developmentMode === true) {
+                        return true;
+                }
+                
+                if(context.valid === true){
                     $scope.message.text='Please review the meta-data of the dataset and press <strong>Finish</strong> to register the dataset in the SWITCH-ON Spatial Information Platform.';
                     $scope.message.icon='fa-info-circle';
                     $scope.message.type = 'success';
@@ -105,7 +122,12 @@ angular.module(
                 return context.valid;
             };
             
-            $scope.wizard.exitValidators['Summary'] = function(){
+            $scope.wizard.exitValidators['Summary'] = function() {
+                
+                if(_this.config.developmentMode === true) {
+                        return true;
+                }
+                
                 $scope.wizard.hasError = null;
                 return true;
             };

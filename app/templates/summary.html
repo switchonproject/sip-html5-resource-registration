@@ -98,11 +98,25 @@
                 </div>
             </div>
             
-            <!-- Citation / DOI -->
-            <div class="row" ng-if="dataset.contact && dataset.contact.description">
+            <!-- Citation / manual DOI -->
+            <div class="row" 
+                 ng-if="summaryController.generateDOI === false && dataset.contact && dataset.contact.description">
                 <label class="col-md-3">Citation / DOI</label>
                 <div class="col-md-9">
                     {{dataset.contact.description}}
+                </div>
+            </div>
+            
+            <!-- Citation / DOI -->
+            <div class="row" 
+                 ng-if="summaryController.generateDOI === true">
+                <label class="col-md-3">Prereserved DOI</label>
+                <div class="col-md-9">
+                    <span class="label label-danger" 
+                      title="Preresevred DOI">{{dataset.$deposition.metadata.prereserve_doi.doi}}
+                    </span>
+                    <span>&nbsp;{{dataset.$deposition.metadata.upload_type}}</span>
+                    <span ng-if="dataset.$deposition.metadata.grants === true"> / SWITCH-ON FP7 Result<span>        
                 </div>
             </div>
 

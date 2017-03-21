@@ -17,6 +17,9 @@ angular.module(
                 'use strict';
                 var config, depositionResource;
                 config = AppConfig.zenodo;
+                
+                // FIXME: retrieve non-sanbox token from the server
+                // Promise Synchronisation Problem: depositionResource requires config.token to be resolved!
                 depositionResource = $resource(config.host + '/api/deposit/depositions/:depositionId',
                         {
                             depositionId: '@id'

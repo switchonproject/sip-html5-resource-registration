@@ -75,16 +75,16 @@
             <button class="btn btn-primary disabled" 
                     type="button"
                     ng-class="{'btn-danger':(wizard.hasError === 'datasetUploadchoice' || wizard.hasError === 'datasetUploadchoiceName')}"
-                    tooltip="{{!dataset.name ? 'Please enter the name of the dataset to enable the Data Upload Tool' : 'Open the Data Upload Tool'}}"
-                    ng-if="!dataset.name">Upload new Dataset
+                    tooltip="{{!dataset.name || dataset.name.length < 3 ? 'Please enter the name of the dataset to enable the Data Upload Tool' : 'Open the Data Upload Tool'}}"
+                    ng-if="!dataset.name || dataset.name.length < 3">Upload new Dataset
             </button>
             <!-- Enabled Upload button -->
             <a class="btn btn-primary" 
                type="button"
                ng-class="{'btn-danger':(wizard.hasError === 'datasetUploadchoice' || wizard.hasError === 'datasetUploadchoiceName')}"
                ng-href="{{config.uploadtool.baseUrl}}?datasetname={{dataset.name}}&generateDOI={{odRegistrationController.generateDOI}}"
-               tooltip="{{!dataset.name ? 'Please enter the name of the dataset to enable the Data Upload Tool' : 'Open the Data Upload Tool'}}"
-               ng-if="dataset.name">Upload new Dataset
+               tooltip="{{!dataset.name || dataset.name.length < 3 ? 'Please enter the name of the dataset to enable the Data Upload Tool' : 'Open the Data Upload Tool'}}"
+               ng-if="dataset.name && dataset.name.length >= 3">Upload new Dataset
             </a> 
         </div>
     </div>

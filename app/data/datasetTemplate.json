@@ -42,7 +42,9 @@
             "tags": [],
             "description": null,
             "contact": null,
-            "type": null,
+            "type": {
+                "name": "basic meta-data"
+            },
             "language": null,
             "standard": null,
             "uuid": null,
@@ -57,7 +59,26 @@
             "tags": [],
             "description": null,
             "contact": null,
-            "type": null,
+            "type": {
+                "name": "lineage meta-data"
+            },
+            "language": null,
+            "standard": null,
+            "uuid": null,
+            "contentlocation": null,
+            "creationdate": null,
+            "contenttype": null,
+            "content": null
+        }, {
+            "$self": "/SWITCHON.METADATA/-1",
+            "id": -1,
+            "name": "Zenodo Deposition Resource",
+            "tags": [],
+            "description": null,
+            "contact": null,
+            "type": {
+                "name": "deposition meta-data"
+            },
             "language": null,
             "standard": null,
             "uuid": null,

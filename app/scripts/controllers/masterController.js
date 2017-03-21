@@ -45,11 +45,13 @@ angular.module(
                     });
                 };
                 
-                // retrieve the access token from server!
-                _this.config.zenodo.token = tagGroupService.getTag('tokens', 'zenodo', function (tag) {
-                        _this.config.zenodo.token = tag.description;
-                        //console.log(_this.config.zenodo.token);
-                });
+                // TODO: retrieve the access token from server!
+                // FIXME: Promise synchronisation problem. zenodoSerrvice ($resource) requires token before token promise is resolved
+                // and generateDOI property in controllers is set when $resource promise is resolved !!!
+                
+                //_this.config.zenodo.token = tagGroupService.getTag('tokens', 'zenodo', function (tag) {
+                //        _this.config.zenodo.token = tag.description;
+                //});
 
                 // - dataset: the resource meta data, initialized from a template and changed by the app
                 // - tags: list of selectable tags
@@ -73,9 +75,9 @@ angular.module(
                  * Message text
                  */
                 $scope.message = {};
-                $scope.message.text = '<strong>Welcome to the SWITCH-ON tool for the registration of (hydrological) open-data in the <a href=\'http://www.water-switch-on.eu/sip-webclient/sip-beta/\' title=\'Find open data with the SIP BYOD Client\' target=\'_blank\'>SWITCH-ON Spatial Information Platform</a>!</strong> <br>Please provide some general information about the ' 
-                        + (dataset.$uploaded === true ? '<strong>previously uploaded</strong>' : 'new')
-                        + ' dataset such as name, description, a (download) link and keywords. ';
+                $scope.message.text = '<strong>Welcome to the SWITCH-ON tool for the registration of (hydrological) open-data in the <a href=\'http://www.water-switch-on.eu/sip-webclient/sip-beta/\' title=\'Find open data with the SIP BYOD Client\' target=\'_blank\'>SWITCH-ON Spatial Information Platform</a>!</strong> <br>Please provide some general information about the ' + 
+                        (dataset.$uploaded === true ? '<strong>previously uploaded</strong>' : 'new') + 
+                        ' dataset such as name, description, a (download) link and keywords. ';
                 $scope.message.icon = 'fa-info-circle';
                 $scope.message.type = 'success';
 

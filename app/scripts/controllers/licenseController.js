@@ -9,6 +9,7 @@
  */
 
 /*jshint sub:true*/
+/*jshint camelcase: false */
 
 angular.module(
     'de.cismet.sip-html5-resource-registration.controllers'
@@ -39,7 +40,7 @@ angular.module(
                     } else {
                         _this.generateDOI = false;     
                     }
-                }, function error(response) {
+                }, function error() {
                     _this.generateDOI = false;
                 });
             }
@@ -96,7 +97,38 @@ angular.module(
                     
                     $scope.wizard.hasError = 'datasetLicensestatement';
                     context.valid =  false;
-                } else if ($scope.licenseForm.datasetOrganisation.$error.required) {
+                } else if (dataset.licensestatement && dataset.licensestatement !== null && dataset.licensestatement.length > 0 && dataset.licensestatement.length < 6) {
+                    $scope.message.text = 'Statement or URL to the license which applies to the usage of the dataset is too short.';
+                    $scope.message.icon = 'fa-warning';
+                    $scope.message.type = 'warning';
+
+                    $scope.wizard.hasError = 'datasetLicensestatement';
+                    context.valid = false;
+                } else if (dataset.contact.name && dataset.contact.name !== null && dataset.contact.name.length > 0 && dataset.contact.name.length < 3) {
+                    $scope.message.text = 'Name of the contact person is too short.';
+                    $scope.message.icon = 'fa-warning';
+                    $scope.message.type = 'warning';
+
+                    $scope.wizard.hasError = 'datasetContactperson';
+                    context.valid = false;
+                } 
+                else if (dataset.contact.organisation && dataset.contact.organisation !== null && dataset.contact.organisation.length > 0 && dataset.contact.organisation.length < 3) {
+                    $scope.message.text = 'Name of the organisation is too short.';
+                    $scope.message.icon = 'fa-warning';
+                    $scope.message.type = 'warning';
+
+                    $scope.wizard.hasError = 'datasetOrganisation';
+                    context.valid = false;
+                } 
+                else if (dataset.contact.description && dataset.contact.description !== null && dataset.contact.description.length > 0 && dataset.contact.description.length < 6) {
+                    $scope.message.text = 'Optional citation information is too short.';
+                    $scope.message.icon = 'fa-warning';
+                    $scope.message.type = 'warning';
+
+                    $scope.wizard.hasError = 'datasetCitation';
+                    context.valid = false;
+                } 
+                else if ($scope.licenseForm.datasetOrganisation.$error.required) {
                     // CONTENT LOCATION       
                     $scope.message.text = 'Please provide a name of the organisation responsible for the establishment, management, maintenance and distribution of dataset or publication to be associated with the DOI.';
                     $scope.message.icon = 'fa-warning';
@@ -127,6 +159,13 @@ angular.module(
                     $scope.message.type = 'warning';
 
                     $scope.wizard.hasError = 'datasetOrganisation';
+                    context.valid = false;
+                } else if (dataset.metadata[1].description && dataset.metadata[1].description !== null && dataset.metadata[1].description.length > 0 && dataset.metadata[1].description.length < 10) {
+                    $scope.message.text = 'Optional data lineage / data provenance information is too short.';
+                    $scope.message.icon = 'fa-warning';
+                    $scope.message.type = 'warning';
+
+                    $scope.wizard.hasError = 'datasetLineage';
                     context.valid = false;
                 }
                 

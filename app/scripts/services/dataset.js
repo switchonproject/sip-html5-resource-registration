@@ -7,7 +7,7 @@
  * 
  * ***************************************************
  */
-
+/*global angular*/
 angular.module('de.cismet.sip-html5-resource-registration.services')
         .factory('de.cismet.sip-html5-resource-registration.services.dataset',
                 ['$resource',
@@ -36,13 +36,13 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                             if(depositionId && depositionId !== null) {
                                 dataset.$deposition = zenodoService.get({depositionId:depositionId});
                                 dataset.$deposition.$promise.then(
-                                        function success(deposition) {
+                                        function success() {
                                             //console.log('request to zeodo api for deposition #' + depositionId + ' successfull: ' 
                                             //       + JSON.stringify(deposition.toJSON()));
                                         },
                                         function error(errorResponse){
-                                           console.error('request to zeodo api for deposition #' + depositionId + ' failed with: ' 
-                                                   + errorResponse.status + ': ' + errorResponse.statusText);
+                                           console.error('request to zeodo api for deposition #' + depositionId + ' failed with: ' + 
+                                                   errorResponse.status + ': ' + errorResponse.statusText);
                                            //dataset.$deposition = null; 
                                            dataset.$deposition = null;
                                         });

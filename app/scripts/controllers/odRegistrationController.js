@@ -9,7 +9,7 @@
  */
 
 /*jshint sub:true*/
-
+/*jshint camelcase: false */
 angular.module(
         'de.cismet.sip-html5-resource-registration.controllers'
         ).controller(
@@ -46,10 +46,10 @@ angular.module(
                             function success(deposition) {
                         if(deposition.metadata.prereserve_doi.doi !== null) {
                             _this.generateDOI = true;     
-                            $scope.message.text = 'The preliminary <a href=\'https://en.wikipedia.org/wiki/Digital_object_identifier\' target=\'_blank\'>Digital Object Identifier</a> (DOI) \'<strong>'
-                                    + deposition.metadata.prereserve_doi.doi 
-                                    + '</strong>\' for this dataset was successfully prereserved at <a href=\'http://help.zenodo.org/features/\' title=\'Zenodo Open Science Services\' target=\'_blank\'>Zenodo</a>.'
-                                    + '<br/>To publish the DOI, please complete all steps of the Open-Data Registration Tool.'
+                            $scope.message.text = 'The preliminary <a href=\'https://en.wikipedia.org/wiki/Digital_object_identifier\' target=\'_blank\'>Digital Object Identifier</a> (DOI) \'<strong>' + 
+                                    deposition.metadata.prereserve_doi.doi + 
+                                    '</strong>\' for this dataset was successfully prereserved at <a href=\'http://help.zenodo.org/features/\' title=\'Zenodo Open Science Services\' target=\'_blank\'>Zenodo</a>.' + 
+                                    '<br/>To publish the DOI, please complete all steps of the Open-Data Registration Tool.';
                             $scope.message.icon = 'fa-success';
                             $scope.message.type = 'success';
                         } else {
@@ -63,8 +63,8 @@ angular.module(
                     }, function error(response) {
                         _this.generateDOI = false;
                         
-                        $scope.message.text = 'The <a href=\'https://en.wikipedia.org/wiki/Digital_object_identifier\' target=\'_blank\'>Digital Object Identifier</a> (DOI) for this dataset could not be obtained from <a href=\'http://help.zenodo.org/features/\' title=\'Zenodo Open Science Services\' target=\'_blank\'>Zenodo</a>: <strong>'
-                            + response.statusText + ' (' + response.status + ')</strong>';
+                        $scope.message.text = 'The <a href=\'https://en.wikipedia.org/wiki/Digital_object_identifier\' target=\'_blank\'>Digital Object Identifier</a> (DOI) for this dataset could not be obtained from <a href=\'http://help.zenodo.org/features/\' title=\'Zenodo Open Science Services\' target=\'_blank\'>Zenodo</a>: <strong>' +
+                            response.statusText + ' (' + response.status + ')</strong>';
                         $scope.message.icon = 'fa-warning';
                         $scope.message.type = 'warning';
                         $scope.wizard.hasError = 'datasetDeposition';
@@ -218,6 +218,13 @@ angular.module(
 
                         $scope.wizard.hasError = 'datasetName';
                         context.valid = false;
+                    } else if (dataset.name.length < 3) {
+                        $scope.message.text = 'The name / title of the dataset is too short.';
+                        $scope.message.icon = 'fa-warning';
+                        $scope.message.type = 'warning';
+
+                        $scope.wizard.hasError = 'datasetName';
+                        context.valid = false;
                     } else if (dataset.$uploaded === undefined) {
                         $scope.message.text = 'Please chose wheter you want to upload a new dataset or to provide a link to anexisting dataset.';
                         $scope.message.icon = 'fa-warning';
@@ -278,6 +285,14 @@ angular.module(
                     } else if (!dataset.description) {
                         // DESCRIPTION
                         $scope.message.text = 'Please provide a description of the dataset.';
+                        $scope.message.icon = 'fa-warning';
+                        $scope.message.type = 'warning';
+
+                        $scope.wizard.hasError = 'datasetDescription';
+                        context.valid = false;
+                    } else if (dataset.description.length < 12) {
+                        // DESCRIPTION
+                        $scope.message.text = 'The description of the dataset is too short. Use between 100 and 500 words.';
                         $scope.message.icon = 'fa-warning';
                         $scope.message.type = 'warning';
 

@@ -144,7 +144,13 @@ angular.module(
                 };
                 
             // resize the map on enter, read spatial coverage from dataset
-            $scope.wizard.enterValidators['Geographic Location'] = function(context){
+            $scope.wizard.enterValidators['Geographic Location'] = function(context) {
+                
+                if(_this.config.developmentMode === true) {
+                        return true;
+                }
+                
+                
                 if(context.valid === true)
                 {
                     if(_this.readOnly) {
@@ -190,6 +196,11 @@ angular.module(
             // on exit: write spatial coverage to dataset
             $scope.wizard.exitValidators['Geographic Location'] = function(context){
                 context.valid = true;
+                
+                if(_this.config.developmentMode === true) {
+                        return true;
+                }
+                
                 if(_this.mode.defineBBox === true && $scope.forms.coordinatesForm.$invalid) {
                     $scope.message.text='Please specify a valid bounding box or use an other option to specify the geographic location of the dataset!';
                     $scope.message.icon='fa-warning';
@@ -521,6 +532,7 @@ angular.module(
  */
 
 /*jshint sub:true*/
+/*jshint camelcase: false */
 
 angular.module(
     'de.cismet.sip-html5-resource-registration.controllers'
@@ -528,23 +540,44 @@ angular.module(
     'de.cismet.sip-html5-resource-registration.controllers.licenseController',
     [
         '$scope',
+        'AppConfig',
         'de.cismet.sip-html5-resource-registration.services.dataset',
         'de.cismet.sip-html5-resource-registration.services.TagGroupService',
         // Controller Constructor Function
         function (
             $scope,
+            AppConfig,
             dataset,
             tagGroupService
         ) {
             'use strict';
             var _this = this;
             _this.dataset = dataset;
+            _this.config = AppConfig;
+            _this.generateDOI = false;
+            if(dataset.$deposition && dataset.$deposition !== null) {
+                dataset.$deposition.$promise.then(
+                        function success(deposition) {
+                    if(deposition.metadata.prereserve_doi.doi !== null) {
+                        _this.generateDOI = true;     
+                    } else {
+                        _this.generateDOI = false;     
+                    }
+                }, function error() {
+                    _this.generateDOI = false;
+                });
+            }
             
             // load taglist
             $scope.tags['accessconditions'] = tagGroupService.getTagList('access conditions', 'Creative Commons (CC BY),Creative Commons (CC BY-NC),Creative Commons (CC BY-NC-ND),Creative Commons (CC BY-NC-SA),Creative Commons (CC BY-ND),Creative Commons (CC BY-SA),for research only,no limitations,other');
                     
             // validation functions
-            $scope.wizard.enterValidators['License and Conditions'] = function(context){
+            $scope.wizard.enterValidators['License and Conditions'] = function(context) {
+                
+                if(_this.config.developmentMode === true) {
+                        return true;
+                }
+                
                 if(context.valid === true){
                     $scope.message.text='Please select a predefined license for regulating the conditions for access and use of the dataset and / or provide a brief statement or URL to the license which applies to the usage of the dataset. This statement should provide additional information.';
                     $scope.message.icon='fa-info-circle';
@@ -556,6 +589,11 @@ angular.module(
 
             $scope.wizard.exitValidators['License and Conditions'] = function(context){
                 context.valid = true;
+                
+                if(_this.config.developmentMode === true) {
+                        return true;
+                }
+                
                 // ACCESS CONDITIONS
                 var isInvalidAccessconditions = $scope.tags['accessconditions'].every(function(element) {
                     if (_this.dataset.accessconditions && _this.dataset.accessconditions.name && 
@@ -582,6 +620,53 @@ angular.module(
                     
                     $scope.wizard.hasError = 'datasetLicensestatement';
                     context.valid =  false;
+                } else if (dataset.licensestatement && dataset.licensestatement !== null && dataset.licensestatement.length > 0 && dataset.licensestatement.length < 6) {
+                    $scope.message.text = 'Statement or URL to the license which applies to the usage of the dataset is too short.';
+                    $scope.message.icon = 'fa-warning';
+                    $scope.message.type = 'warning';
+
+                    $scope.wizard.hasError = 'datasetLicensestatement';
+                    context.valid = false;
+                } else if (dataset.contact.name && dataset.contact.name !== null && dataset.contact.name.length > 0 && dataset.contact.name.length < 3) {
+                    $scope.message.text = 'Name of the contact person is too short.';
+                    $scope.message.icon = 'fa-warning';
+                    $scope.message.type = 'warning';
+
+                    $scope.wizard.hasError = 'datasetContactperson';
+                    context.valid = false;
+                } 
+                else if (dataset.contact.organisation && dataset.contact.organisation !== null && dataset.contact.organisation.length > 0 && dataset.contact.organisation.length < 3) {
+                    $scope.message.text = 'Name of the organisation is too short.';
+                    $scope.message.icon = 'fa-warning';
+                    $scope.message.type = 'warning';
+
+                    $scope.wizard.hasError = 'datasetOrganisation';
+                    context.valid = false;
+                } 
+                else if (dataset.contact.description && dataset.contact.description !== null && dataset.contact.description.length > 0 && dataset.contact.description.length < 6) {
+                    $scope.message.text = 'Optional citation information is too short.';
+                    $scope.message.icon = 'fa-warning';
+                    $scope.message.type = 'warning';
+
+                    $scope.wizard.hasError = 'datasetCitation';
+                    context.valid = false;
+                } 
+                else if ($scope.licenseForm.datasetOrganisation.$error.required) {
+                    // CONTENT LOCATION       
+                    $scope.message.text = 'Please provide a name of the organisation responsible for the establishment, management, maintenance and distribution of dataset or publication to be associated with the DOI.';
+                    $scope.message.icon = 'fa-warning';
+                    $scope.message.type = 'warning';
+
+                    $scope.wizard.hasError = 'datasetOrganisation';
+                    context.valid = false;
+                } else if ($scope.licenseForm.datasetContactperson.$error.required) {
+                    // CONTENT LOCATION       
+                    $scope.message.text = 'Please provide a name of the contact person (Family name, Given name) responsible for the establishment, management, maintenance and distribution of dataset or publication to be associated with the DOI.';
+                    $scope.message.icon = 'fa-warning';
+                    $scope.message.type = 'warning';
+
+                    $scope.wizard.hasError = 'datasetContactperson';
+                    context.valid = false;
                 } else if ($scope.licenseForm.datasetContactemail.$error.email) {
                     // CONTENT LOCATION       
                     $scope.message.text = 'The email address of the contact person is not a valid.';
@@ -597,6 +682,13 @@ angular.module(
                     $scope.message.type = 'warning';
 
                     $scope.wizard.hasError = 'datasetOrganisation';
+                    context.valid = false;
+                } else if (dataset.metadata[1].description && dataset.metadata[1].description !== null && dataset.metadata[1].description.length > 0 && dataset.metadata[1].description.length < 10) {
+                    $scope.message.text = 'Optional data lineage / data provenance information is too short.';
+                    $scope.message.icon = 'fa-warning';
+                    $scope.message.type = 'warning';
+
+                    $scope.wizard.hasError = 'datasetLineage';
                     context.valid = false;
                 }
                 
@@ -628,11 +720,13 @@ angular.module(
             '$scope',
             'AppConfig',
             'de.cismet.sip-html5-resource-registration.services.dataset',
+            'de.cismet.sip-html5-resource-registration.services.TagGroupService',
             '$modal',
             function (
                     $scope,
                     AppConfig,
                     dataset,
+                    tagGroupService,
                     $modal
                     ) {
                 'use strict';
@@ -641,7 +735,27 @@ angular.module(
                 
                 _this = this;
                 _this.config = AppConfig;
-                _this.dataset = dataset;            
+                _this.dataset = dataset;      
+                
+                _this.finishedWizard = function () {
+                    $modal.open({
+                        animation: true,
+                        templateUrl: 'templates/confirmation.html',
+                        controller: 'de.cismet.sip-html5-resource-registration.controllers.storageController',
+                        controllerAs: 'storageController',
+                        keyboard: 'false',
+                        size: 'lg',
+                        backdrop: 'static'
+                    });
+                };
+                
+                // TODO: retrieve the access token from server!
+                // FIXME: Promise synchronisation problem. zenodoSerrvice ($resource) requires token before token promise is resolved
+                // and generateDOI property in controllers is set when $resource promise is resolved !!!
+                
+                //_this.config.zenodo.token = tagGroupService.getTag('tokens', 'zenodo', function (tag) {
+                //        _this.config.zenodo.token = tag.description;
+                //});
 
                 // - dataset: the resource meta data, initialized from a template and changed by the app
                 // - tags: list of selectable tags
@@ -665,7 +779,9 @@ angular.module(
                  * Message text
                  */
                 $scope.message = {};
-                $scope.message.text = '<strong>Welcome to the SWITCH-ON tool for the registration of (hydrological) open-data in the <a href=\'http://www.water-switch-on.eu/sip-webclient/sip-beta/\' title=\'Find open data with the SIP BYOD Client\' target=\'_blank\'>SWITCH-ON Spatial Information Platform</a>!</strong> <br>Please provide some general information about the new dataset such as name, description, a (download) link and keywords. ';
+                $scope.message.text = '<strong>Welcome to the SWITCH-ON tool for the registration of (hydrological) open-data in the <a href=\'http://www.water-switch-on.eu/sip-webclient/sip-beta/\' title=\'Find open data with the SIP BYOD Client\' target=\'_blank\'>SWITCH-ON Spatial Information Platform</a>!</strong> <br>Please provide some general information about the ' + 
+                        (dataset.$uploaded === true ? '<strong>previously uploaded</strong>' : 'new') + 
+                        ' dataset such as name, description, a (download) link and keywords. ';
                 $scope.message.icon = 'fa-info-circle';
                 $scope.message.type = 'success';
 
@@ -710,19 +826,6 @@ angular.module(
                         $scope.wizard.proceedButtonText = 'Next';
                     }
                 });
-
-
-                _this.finishedWizard = function () {
-                    $modal.open({
-                        animation: true,
-                        templateUrl: 'templates/confirmation.html',
-                        controller: 'de.cismet.sip-html5-resource-registration.controllers.storageController',
-                        controllerAs: 'storageController',
-                        keyboard: 'false',
-                        size: 'lg',
-                        backdrop: 'static'
-                    });
-                };
             }
         ]
         );
@@ -737,7 +840,7 @@ angular.module(
  */
 
 /*jshint sub:true*/
-
+/*jshint camelcase: false */
 angular.module(
         'de.cismet.sip-html5-resource-registration.controllers'
         ).controller(
@@ -768,6 +871,36 @@ angular.module(
                 _this = this;
                 _this.dataset = dataset;
                 _this.config = AppConfig;
+                _this.generateDOI = false;
+                if(dataset.$deposition && dataset.$deposition !== null) {
+                    dataset.$deposition.$promise.then(
+                            function success(deposition) {
+                        if(deposition.metadata.prereserve_doi.doi !== null) {
+                            _this.generateDOI = true;     
+                            $scope.message.text = 'The preliminary <a href=\'https://en.wikipedia.org/wiki/Digital_object_identifier\' target=\'_blank\'>Digital Object Identifier</a> (DOI) \'<strong>' + 
+                                    deposition.metadata.prereserve_doi.doi + 
+                                    '</strong>\' for this dataset was successfully prereserved at <a href=\'http://help.zenodo.org/features/\' title=\'Zenodo Open Science Services\' target=\'_blank\'>Zenodo</a>.' + 
+                                    '<br/>To publish the DOI, please complete all steps of the Open-Data Registration Tool.';
+                            $scope.message.icon = 'fa-success';
+                            $scope.message.type = 'success';
+                        } else {
+                            _this.generateDOI = false;     
+                            dataset.$deposition = null;
+                            $scope.message.text = 'A preliminary <a href=\'https://en.wikipedia.org/wiki/Digital_object_identifier\' target=\'_blank\'>Digital Object Identifier</a> (DOI) for this dataset could not be prereserved at <a href=\'http://help.zenodo.org/features/\' title=\'Zenodo Open Science Services\' target=\'_blank\'>Zenodo</a>.';
+                            $scope.message.icon = 'fa-warning';
+                            $scope.message.type = 'warning';
+                            $scope.wizard.hasError = 'datasetDeposition';
+                        }
+                    }, function error(response) {
+                        _this.generateDOI = false;
+                        
+                        $scope.message.text = 'The <a href=\'https://en.wikipedia.org/wiki/Digital_object_identifier\' target=\'_blank\'>Digital Object Identifier</a> (DOI) for this dataset could not be obtained from <a href=\'http://help.zenodo.org/features/\' title=\'Zenodo Open Science Services\' target=\'_blank\'>Zenodo</a>: <strong>' +
+                            response.statusText + ' (' + response.status + ')</strong>';
+                        $scope.message.icon = 'fa-warning';
+                        $scope.message.type = 'warning';
+                        $scope.wizard.hasError = 'datasetDeposition';
+                    });
+                }
 
                 _this.groupBy = function (item) {
 
@@ -865,6 +998,11 @@ angular.module(
 //                        });
 
                 $scope.wizard.enterValidators['Dataset Description'] = function (context) {
+                    
+                    if(_this.config.developmentMode === true) {
+                        return true;
+                    }
+                    
                     if (context.valid === true) {
                         $scope.message.text = 'Please provide some general information about the new dataset such as name, description, a (download) link and keywords.';
                         $scope.message.icon = 'fa-info-circle';
@@ -876,6 +1014,10 @@ angular.module(
 
                 $scope.wizard.exitValidators['Dataset Description'] = function (context) {
                     context.valid = true;
+                    
+                    if(_this.config.developmentMode === true) {
+                        return true;
+                    }
 
                     // CONTENT TYPE
                     var isInvalidContenttype = $scope.tags['content type'].every(function (element) {
@@ -902,6 +1044,13 @@ angular.module(
                     // NAME
                     if (!dataset.name) {
                         $scope.message.text = 'Please enter the name / title of the dataset.';
+                        $scope.message.icon = 'fa-warning';
+                        $scope.message.type = 'warning';
+
+                        $scope.wizard.hasError = 'datasetName';
+                        context.valid = false;
+                    } else if (dataset.name.length < 3) {
+                        $scope.message.text = 'The name / title of the dataset is too short.';
                         $scope.message.icon = 'fa-warning';
                         $scope.message.type = 'warning';
 
@@ -972,6 +1121,14 @@ angular.module(
 
                         $scope.wizard.hasError = 'datasetDescription';
                         context.valid = false;
+                    } else if (dataset.description.length < 12) {
+                        // DESCRIPTION
+                        $scope.message.text = 'The description of the dataset is too short. Use between 100 and 500 words.';
+                        $scope.message.icon = 'fa-warning';
+                        $scope.message.type = 'warning';
+
+                        $scope.wizard.hasError = 'datasetDescription';
+                        context.valid = false;
                     } else if (!_this.dataset.tags || _this.dataset.tags.length === 0) {
                         $scope.message.text = 'Please assign at least one keyword to the Dataset.';
                         $scope.message.icon = 'fa-warning';
@@ -1001,7 +1158,9 @@ angular.module(
  * ***************************************************
  */
 
+/*global angular*/
 /*jshint sub:true*/
+/*jshint camelcase: false */
 
 angular.module(
         'de.cismet.sip-html5-resource-registration.controllers'
@@ -1032,11 +1191,158 @@ angular.module(
                     storageService
                     ) {
                 'use strict';
-                var _this, currentdate, userAgent, maxProgress;
+                
+                var _this, currentdate, userAgent, maxProgress, accessConditions, 
+                    timer;
+                
+                /**
+                * Update deposition metadata and save to zenodo
+                * 
+                * @param {type} dataset
+                * @param {type} deposition
+                * @return {unresolved}
+                */
+               function saveDeposition(dataset, deposition) {
+                   // already set in licenseAndConsitions.html:
+                   // deposition.metadata.upload_type
+                   if(deposition.metadata.upload_type === 'publication') {
+                       // Set to fixed value to avoid bothering end users 
+                       deposition.metadata.publication_type = 'conferencepaper';
+                   } if(deposition.metadata.upload_type === 'image') {
+                       deposition.metadata.image_type = 'figure';
+                   }
+
+                   //Date of publication in ISO8601 format (YYYY-MM-DD). Defaults to current date.
+                   //deposition.metadata.publication_date
+
+                   deposition.metadata.title = dataset.name;
+                   deposition.metadata.description = dataset.description;
+
+                   deposition.metadata.creators = [];
+
+                   if(dataset.contact) {
+                       deposition.metadata.creators[0] = {
+                           'name' : dataset.contact.name,
+                           'affiliation' : dataset.contact.organisation
+                       };
+                   }
+
+                   // access_conditions vs access_right vs license
+                   if(dataset.accessconditions.name === 'research only' || dataset.accessconditions.name === 'other') {
+                       deposition.metadata.access_right = 'restricted';
+                       if(dataset.licensestatement && dataset.licensestatement !== null) {
+                           deposition.metadata.access_conditions = dataset.licensestatement;
+                       } else {
+                           deposition.metadata.access_conditions = dataset.accessconditions.name;
+                       }
+                   } else {
+                       deposition.metadata.access_right = 'open';
+
+                       if(accessConditions[dataset.accessconditions.name]) {
+                           deposition.metadata.license = accessConditions[dataset.accessconditions.name];
+                       } else {
+                           deposition.metadata.license = 'other-pd';
+                       }
+                   }
+
+                   deposition.metadata.keywords = [];
+                   dataset.tags.forEach(function (tag) {
+                       deposition.metadata.keywords.push(tag.name);
+                   });
+
+                   if(dataset.metadata[1] && dataset.metadata[1].description && dataset.metadata[1].type.name === 'lineage meta-data') {
+                       deposition.metadata.notes = dataset.metadata[1].description;
+                   }
+
+                   if(deposition.metadata.grants === true) {
+                       deposition.metadata.communities = [{'identifier':'switchon'}];
+                       deposition.metadata.grants = [{'id' : '603587'}];
+                   }
+
+                   return deposition.$save();
+               }
+
+               function storeDataset(deposition) {
+
+                   if(deposition && deposition !== null) {
+                       var depositionMetadata = null;
+                       if(_this.dataset.metadata[1] && _this.dataset.metadata[1].type && _this.dataset.metadata[1].type.name === 'deposition meta-data') {
+                           depositionMetadata = _this.dataset.metadata[1];
+                       } else if(_this.dataset.metadata[2] && _this.dataset.metadata[2].type && _this.dataset.metadata[2].type.name === 'deposition meta-data') {
+                           depositionMetadata = _this.dataset.metadata[2];
+                       }
+
+                       if(depositionMetadata !== null) {
+                           depositionMetadata.contentlocation = deposition.links.record;
+                           depositionMetadata.content = angular.toJson(deposition);
+                           depositionMetadata.description = deposition.doi_url;
+                           depositionMetadata.creationdate = currentdate;
+                           depositionMetadata.uuid = deposition.doi;
+                       }  
+                   }
+
+                   return storageService.store(_this.dataset).$promise.then(
+                       function (storedDataset) {
+                           $interval.cancel(timer);
+
+                           var progressMessage = 'Your dataset has been successfully registered in the SWITCH-ON Spatial Information Platform. Please click <a href=\'' + AppConfig.byod.baseUrl + '/#/resource/' +
+                                   storedDataset.id + '\' title=\'' + storedDataset.name + '\'>here</a> to view the dataset in the SWITCH-ON BYOD Client.';
+
+                           if (deposition !== null) {
+                               progressMessage += '<br><br>The Digital Object Identifier <a href=\'https://doi.org/' + 
+                                       deposition.doi + '\' target=\'_blank\'>' + deposition.doi + '</a> for dataset "' + dataset.name + 
+                                       '" has successfully been published!';
+                           }
+
+                           _this.progress.message = progressMessage;
+
+                           _this.progress.active = false;
+                           _this.progress.finished = true;
+                           _this.progress.type = 'success';
+                           _this.progress.currval = 200;
+
+                           return storedDataset;
+                       });
+               }
+
+                function handleError(error) {
+                    $interval.cancel(timer);
+
+                    if(error.data) {
+                        console.error(JSON.stringify(error.data));
+                    }
+
+                    if (error.data && error.data.userMessage) {
+                        _this.progress.message = 'The dataset could not be saved in the SWITCH-ON Meta-Data Repository: <br>' +
+                        error.data.userMessage;
+                    } else if (error.data && error.data.message) {
+                        _this.progress.message = 'The dataset could not be saved in the SWITCH-ON Meta-Data Repository: <br>' +
+                        error.data.message;
+                    } else if(error.status && error.statusText) {
+                        _this.progress.message = 'The dataset could not be saved in the SWITCH-ON Meta-Data Repository: <br>' +
+                        error.statusText + ' (' + error.status + ')';
+                    } else {
+                        _this.progress.message = 'The dataset could not be saved in the SWITCH-ON Meta-Data Repository';
+                    }
+
+                    _this.progress.active = false;
+                    _this.progress.finished = true;
+                    _this.progress.type = 'danger';
+                    _this.progress.currval = 200;
+                }
 
                 currentdate = new Date().getTime();
                 userAgent = $window.navigator.userAgent;
                 maxProgress = 120;
+                
+                accessConditions = [];
+                accessConditions['Creative Commons (CC BY)'] = 'CC-BY-4.0';
+                accessConditions['Creative Commons (CC BY-NC)'] = 'CC-BY-NC-4.0';
+                accessConditions['Creative Commons (CC BY-NC-ND)'] = 'CC-BY-NC-4.0';
+                accessConditions['Creative Commons (CC BY-NC-SA)'] = 'CC-BY-NC-4.0';
+                accessConditions['Creative Commons (CC BY-ND)'] = 'CC-BY-4.0'; 
+                accessConditions['Creative Commons (CC BY-SA)'] =  'CC-BY-SA-4.0';
+                accessConditions['no limitations'] = 'other-pd';
 
                 _this = this;
                 _this.dataset = dataset;
@@ -1056,24 +1362,29 @@ angular.module(
                     $window.location.reload();
                 };
 
+
+
                 $modalInstance.rendered.then(function () {
+
+                    // DEPOSITION / DOI
+                    _this.generateDOI = dataset.$deposition && dataset.$deposition !== null && dataset.$deposition.metadata.prereserve_doi.doi !== null;
 
                     // REPRESENTATIONS
                     _this.dataset.representation.forEach(function (representation) {
-                        maxProgress += 10;  
-                        
+                        maxProgress += 10;
+
                         // TAGS -> REPRESENTATION
                         representation.updateTags().then(function () {
                             _this.progress.currval += 10; // maxProgress + 10
                             //console.log('REPRESENTATIONS: ' + _this.progress.currval);
                         });
-                        
+
                         // the uuid is needed to uniquely indentify the representation 
                         // when the server has to perform an update of the uploadmessage (processing instruction)
                         // UUID -> REPRESENTATION
                         representation.uuid = representation.uuid || rfc4122.v4();
                     });
-                    
+
                     // SRID TAG -> RESOURCE
                     tagGroupService.getTagList('srid', 'EPSG:4326').$promise.then(function (tags) {
                         _this.dataset.srid = tags[0];
@@ -1094,6 +1405,9 @@ angular.module(
                         _this.dataset.metadata[0].language = tags[0];
                         if (_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
                             _this.dataset.metadata[1].language = tags[0];
+                        }
+                        if (_this.dataset.metadata[2]) {
+                            _this.dataset.metadata[2].language = tags[0];
                         }
                         _this.progress.currval += 10; // 30
                         //console.log('LANGUAGE TAG: ' + _this.progress.currval);
@@ -1129,11 +1443,15 @@ angular.module(
                     });
 
                     // META-DATA TYPE -> BASIC METADATA, LINEAGE METADATA
-                    tagGroupService.getTagList('meta-data type', 'basic meta-data,lineage meta-data').$promise.then(function (tags) {
+                    tagGroupService.getTagList('meta-data type', 'basic meta-data,lineage meta-data,deposition meta-data').$promise.then(function (tags) {
                         _this.dataset.metadata[0].type = tags.getTagByName('basic meta-data');
                         if (_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
                             _this.dataset.metadata[1].type = tags.getTagByName('lineage meta-data');
                         }
+                        if (_this.dataset.metadata[2]) {
+                            _this.dataset.metadata[2].type = tags.getTagByName('deposition meta-data');
+                        }
+                        
                         _this.progress.currval += 10; // 70
                         //console.log('META-DATA TYPE: ' + _this.progress.currval);
                     });
@@ -1153,10 +1471,13 @@ angular.module(
                     });
 
                     // META-DATA STANDARD -> BASIC METADATA, LINEAGE METADATA
-                    tagGroupService.getTagList('meta-data standard', 'SWITCH-ON SIM').$promise.then(function (tags) {
-                        _this.dataset.metadata[0].standard = tags[0];
+                    tagGroupService.getTagList('meta-data standard', 'SWITCH-ON SIM,Zenodo Depositions').$promise.then(function (tags) {
+                        _this.dataset.metadata[0].standard = tags.getTagByName('SWITCH-ON SIM');
                         if (_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
-                            _this.dataset.metadata[1].standard = tags[0];
+                            _this.dataset.metadata[1].standard = tags.getTagByName('SWITCH-ON SIM');
+                        }
+                        if (_this.dataset.metadata[2] && _this.dataset.metadata[2].description) {
+                            _this.dataset.metadata[2].standard = tags.getTagByName('Zenodo Depositions');
                         }
                         _this.progress.currval += 10; // 100
                         //console.log('META-DATA STANDARD: ' + _this.progress.currval);
@@ -1166,6 +1487,9 @@ angular.module(
                     // CONTENT TYPE -> BASIC METADATA
                     _this.dataset.metadata[0].contenttype = tagGroupService.getTag('content type', 'application/json', function (tag) {
                         _this.dataset.metadata[0].contenttype = tag;
+                        if (_this.dataset.metadata[2]) {
+                            _this.dataset.metadata[2].contenttype = tag;
+                        }
                         // callback function might get called or might not get called!
                         //_this.progress.currval += 10; // 110
                         //console.log('CONTENT TYPE: ' + _this.progress.currval);
@@ -1183,23 +1507,34 @@ angular.module(
                         _this.progress.currval += 10; // 110
                         //console.log('CONTENT (REQUEST STATUS): ' + _this.progress.currval);
                     });
-                    
-                    
+
+
                     // check first resource name
                     if (!_this.dataset.representation[0].name) {
                         _this.dataset.representation[0].name = _this.dataset.name;
                     }
-                    
+
                     // CLEANUP
                     _this.dataset.uuid = _this.dataset.uuid || rfc4122.v4();
-                    
+
+                    // check optional deposition metadata
+                    if(!_this.generateDOI) {
+                        _this.dataset.metadata.pop();
+                    } else {
+                         _this.dataset.metadata[2].creationdate = currentdate;
+                    }
+
                     // check optional lineage metadata
                     if (!_this.dataset.metadata[1] || !_this.dataset.metadata[1].description) {
-                        _this.dataset.metadata.splice(1, 1);
+                        if(!_this.generateDOI) {
+                            _this.dataset.metadata.pop();
+                        } else {
+                            _this.dataset.metadata.splice(1, 1);
+                        }   
                     } else {
-                         _this.dataset.metadata[1].creationdate = currentdate;
+                        _this.dataset.metadata[1].creationdate = currentdate;
                     }
-                    
+
                     _this.progress.currval += 10; // 120
                     //console.log('CLEANUP: ' + _this.progress.currval);
                 });
@@ -1209,41 +1544,52 @@ angular.module(
                     return(_this.progress.currval);
                 }, function (newProgress) {
                     if (newProgress && newProgress === maxProgress) {
-                        var timer = $interval(function () {
+                        timer = $interval(function () {
                             if (_this.progress.currval < 190) {
                                 _this.progress.currval += 1;
                             }
                         }, 200, 50);
 
-                        storageService.store(dataset).$promise.then(
-                                function (storedDataset) {
-                                    $interval.cancel(timer);
+                        if (_this.generateDOI) {
+                            saveDeposition(dataset, dataset.$deposition)
+                                .then(function saveDepositionSuccess(deposition) {
+                                        if(deposition && deposition !== null) {
+                                            _this.progress.message = 'The Meta-Data of the dataset ' + _this.dataset.name + 
+                                            ' has been successfully associated with the Digital Object Identifier "' + 
+                                            deposition.doi + '"';
+                                            //console.log(_this.progress.message);
+                                            return deposition.$publish();
+                                        } else {
+                                            _this.progress.message = 'The Meta-Data of the dataset ' + _this.dataset.name + 
+                                                ' has been successfully associated with the Digital Object Identifier "' + 
+                                                dataset.$deposition.metadata.prereserve_doi.doi + '"';
+                                            console.error(_this.progress.message);
+                                        }  
+                                    })
+                                .then(function publishDepositionSuccess(deposition) {
+                                        if(deposition && deposition !== null) {
+                                            _this.progress.message = 'The Digital Object Identifier "' + 
+                                                deposition.doi + '" for dataset ' + dataset.name + 
+                                                ' has successfully been published!';
+                                            //console.info(_this.progress.message);
 
-                                    _this.progress.message = 'Your dataset has been successfully registered in the SWITCH-ON Spatial Information Platform. Please click <a href=\'' + AppConfig.byod.baseUrl + '/#/resource/' +
-                                            storedDataset.id + '\' title=\'' + storedDataset.name + '\'>here</a> to view the dataset in the SWITCH-ON BYOD Client.';
-
-                                    _this.progress.active = false;
-                                    _this.progress.finished = true;
-                                    _this.progress.type = 'success';
-                                    _this.progress.currval = 200;
-
-                                },
-                                function (error) {
-                                    $interval.cancel(timer);
-
-                                    if (error.data.userMessage) {
-                                        _this.progress.message = 'The dataset could not be saved in the Meta-Data Repository: <br>' +
-                                                error.data.userMessage;
-                                    } else {
-                                        this.progress.message = 'The dataset could not be saved in the Meta-Data Repository.';
-                                    }
-
-                                    _this.progress.active = false;
-                                    _this.progress.finished = true;
-                                    _this.progress.type = 'danger';
-                                    _this.progress.currval = 200;
+                                            return storeDataset(deposition);
+                                        } else {
+                                            _this.progress.message = 'The Digital Object Identifier "' + 
+                                                dataset.$deposition.metadata.prereserve_doi.doi + '" for dataset ' + _this.dataset.name + 
+                                                ' could not be published!';
+                                            console.error(_this.progress.message);
+                                        }  
+                                    })
+                                .catch(function (error) {
+                                    handleError(error);
                                 });
-
+                        } else {
+                            storeDataset(null)
+                                .then(null, function (error) {
+                                    handleError(error);
+                                });
+                        }
                     }
                 });
             }
@@ -1259,8 +1605,9 @@ angular.module(
  * ***************************************************
  */
 
-/* global angular,L */
+/*global angular,L */
 /*jshint sub:true*/
+/*jshint camelcase: false */
 
 angular.module(
     'de.cismet.sip-html5-resource-registration.controllers'
@@ -1290,8 +1637,20 @@ angular.module(
             _this.dataset = dataset;
             _this.config = AppConfig;
             _this.readOnly = dataset.$geoserverUploaded;
-            
-            
+            _this.generateDOI = false;
+            if(dataset.$deposition && dataset.$deposition !== null) {
+                dataset.$deposition.$promise.then(
+                        function success(deposition) {
+                    if(deposition.metadata.prereserve_doi.doi !== null) {
+                        _this.generateDOI = true;     
+                    } else {
+                        _this.generateDOI = false;     
+                    }
+                }, function error() {
+                    _this.generateDOI = false;
+                });
+            }
+
             wicket = geoTools.wicket;
             defaultStyle = geoTools.defaultStyle;
             defaultDrawOptions = geoTools.defaultDrawOptions;
@@ -1323,7 +1682,12 @@ angular.module(
 
             // validation functions
             $scope.wizard.enterValidators['Summary'] = function(context){
-                 if(context.valid === true){
+                
+                if(_this.config.developmentMode === true) {
+                        return true;
+                }
+                
+                if(context.valid === true){
                     $scope.message.text='Please review the meta-data of the dataset and press <strong>Finish</strong> to register the dataset in the SWITCH-ON Spatial Information Platform.';
                     $scope.message.icon='fa-info-circle';
                     $scope.message.type = 'success';
@@ -1356,7 +1720,12 @@ angular.module(
                 return context.valid;
             };
             
-            $scope.wizard.exitValidators['Summary'] = function(){
+            $scope.wizard.exitValidators['Summary'] = function() {
+                
+                if(_this.config.developmentMode === true) {
+                        return true;
+                }
+                
                 $scope.wizard.hasError = null;
                 return true;
             };
@@ -1391,15 +1760,16 @@ angular.module(
 ).service('AppConfig',
     [function () {
         'use strict'; 
+        
+        this.developmentMode = false;
 
         this.cidsRestApi = {};
-        //this.cidsRestApi.host = 'http://localhost:8890';
-        //this.cidsRestApi.host = 'http://switchon.cismet.de/legacy-rest1';
-        this.cidsRestApi.host = 'http://data.water-switch-on.eu/switchon_server_rest';
+        this.cidsRestApi.host = this.developmentMode ? 'http://localhost:8890' : 'http://data.water-switch-on.eu/switchon_server_rest';
         
         this.searchService = {};
-        this.searchService.username = 'admin@SWITCHON';
-        this.searchService.password = 'cismet';
+        // public API ;-)
+        this.searchService.username = 'switchon@SWITCHON';
+        this.searchService.password = 'switchon';
         this.searchService.defautLimit = 10;
         this.searchService.maxLimit = 50;
         this.searchService.host = this.cidsRestApi.host;
@@ -1484,11 +1854,15 @@ angular.module(
         this.objectInfo.resourceXmlUrl = 'http://data.water-switch-on.eu/csw?request=GetRecordById&service=CSW&version=2.0.2&namespace=xmlns%28csw=http://www.opengis.net/cat/csw/2.0.2%29&resultType=results&outputSchema=http://www.isotc211.org/2005/gmd&outputFormat=application/xml&ElementSetName=full&id=';
 
         this.byod = {};
-        this.byod.baseUrl = 'http://www.water-switch-on.eu/sip-webclient/byod';
-        //this.byod.baseUrl = 'http://switchon.cismet.de/sip-snapshot';
+        this.byod.baseUrl = this.developmentMode ? 'http://switchon.cismet.de/sip-snapshot' : 'http://www.water-switch-on.eu/sip-webclient/byod';
         
         this.uploadtool = {};
         this.uploadtool.baseUrl = 'http://dl-ng003.xtr.deltares.nl';
+        
+        this.zenodo = {};
+        this.zenodo.host = this.developmentMode ? 'https://sandbox.zenodo.org' : 'https://zenodo.org';
+        // FIXME: retrieve non-sanbox token from the server when promise synchronisation Problem is resolved
+        this.zenodo.token = this.developmentMode ? 'A7PpJjp9GmcSs17BXjDzxd1BN5CG1dGGZFRxm5CNzEPPeiaB8HQUdZg5I8Mj' : '3B5R7pGxHueMoI4mgo16kYHRb97Upcnd9B3eXPRetD5V1isgJ2BqlToBSYVi';
     }]);
 angular.module(
     'de.cismet.sip-html5-resource-registration.filters',
@@ -1695,13 +2069,14 @@ angular.module(
  * 
  * ***************************************************
  */
-
+/*global angular*/
 angular.module('de.cismet.sip-html5-resource-registration.services')
         .factory('de.cismet.sip-html5-resource-registration.services.dataset',
                 ['$resource',
                     '$location',
                     'de.cismet.sip-html5-resource-registration.services.RepresentationFactory',
-                    function ($resource, $location, Representation) {
+                    'de.cismet.sip-html5-resource-registration.services.zenodoService',
+                    function ($resource, $location, Representation, zenodoService) {
                         'use strict';
                         var datasetTemplate = $resource('data/datasetTemplate.json', {}, {
                             query: {
@@ -1715,6 +2090,25 @@ angular.module('de.cismet.sip-html5-resource-registration.services')
                         datasetTemplate.$promise.then(function (dataset) {
                             dataset.$uploaded = undefined;
                             dataset.$geoserverUploaded = false;
+                            dataset.$deposition = null;
+                            
+                            // check request parameters for depositionId
+                            var depositionId = ($location.search()).deposition;
+                            //depositionId = 69772;
+                            if(depositionId && depositionId !== null) {
+                                dataset.$deposition = zenodoService.get({depositionId:depositionId});
+                                dataset.$deposition.$promise.then(
+                                        function success() {
+                                            //console.log('request to zeodo api for deposition #' + depositionId + ' successfull: ' 
+                                            //       + JSON.stringify(deposition.toJSON()));
+                                        },
+                                        function error(errorResponse){
+                                           console.error('request to zeodo api for deposition #' + depositionId + ' failed with: ' + 
+                                                   errorResponse.status + ': ' + errorResponse.statusText);
+                                           //dataset.$deposition = null; 
+                                           dataset.$deposition = null;
+                                        });
+                            }
 
                             // check request parameters for representations, parse and add to
                             // the dataset's representation array
@@ -2370,6 +2764,7 @@ angular.module(
                     // remove uploaded flag (unavailable in cids bean);
                     delete dataset.$uploaded;
                     delete dataset.$geoserverUploaded;
+                    delete dataset.$deposition;
 
                     // result of the remote store operation (promise)
                     // starting the store!
@@ -2559,3 +2954,63 @@ angular.module(
                 };
             }]
         );
+
+/* 
+ * ***************************************************
+ * 
+ * cismet GmbH, Saarbruecken, Germany
+ * 
+ *               ... and it just works.
+ * 
+ * ***************************************************
+ */
+
+angular.module(
+        'de.cismet.sip-html5-resource-registration.services'
+        ).factory('de.cismet.sip-html5-resource-registration.services.zenodoService',
+        ['$resource',
+            'AppConfig',
+            function ($resource, AppConfig) {
+                'use strict';
+                var config, depositionResource;
+                config = AppConfig.zenodo;
+                
+                // FIXME: retrieve non-sanbox token from the server
+                // Promise Synchronisation Problem: depositionResource requires config.token to be resolved!
+                depositionResource = $resource(config.host + '/api/deposit/depositions/:depositionId',
+                        {
+                            depositionId: '@id'
+                        }, {
+                    delete: {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': 'Bearer ' + config.token
+                        }
+                    },
+                    get: {
+                        method: 'GET',
+                        isArray: false,
+                        headers: {
+                            'Authorization': 'Bearer ' + config.token
+                        }
+                    },
+                    save: {
+                        method: 'PUT',
+                        isArray: false,
+                        headers: {
+                            'Authorization': 'Bearer ' + config.token
+                        }
+                    },
+                    publish: {
+                        method: 'POST',
+                        isArray: false,
+                        url: config.host + '/api/deposit/depositions/:depositionId/actions/publish',
+                        headers: {
+                            'Authorization': 'Bearer ' + config.token
+                        }
+                    }
+                });
+                
+                return depositionResource;
+            }
+        ]);

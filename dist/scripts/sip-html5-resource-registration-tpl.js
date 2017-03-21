@@ -693,11 +693,13 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                   id=\"datasetContactperson\" name=\"datasetContactperson\" \r" +
     "\n" +
-    "                   placeholder=\"Optional point of contact information\"\r" +
+    "                   ng-attr-placeholder=\"{{licenseController.generateDOI ? 'Required' : 'Optional'}} point of contact information\"\r" +
     "\n" +
     "                   ng-model=\"dataset.contact.name\"\r" +
     "\n" +
-    "                   ng-focus=\"showInfoMessage('Please provide a name of the contact person responsible for the establishment, management, maintenance and distribution of dataset.');\">\r" +
+    "                   ng-focus=\"showInfoMessage('Please provide a name of the contact person responsible for the establishment, management, maintenance and distribution of dataset or publication in the format Family name, Given name');\"\r" +
+    "\n" +
+    "                   ng-required=\"licenseController.generateDOI\">\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
@@ -711,7 +713,7 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                   ng-model=\"dataset.contact.email\"\r" +
     "\n" +
-    "                   ng-focus=\"showInfoMessage('Please provide an emal address of the contact person.');\">\r" +
+    "                   ng-focus=\"showInfoMessage('Please provide an email address of the contact person.');\">\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
@@ -735,11 +737,13 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                   id=\"datasetOrganisation\" name=\"datasetOrganisation\" \r" +
     "\n" +
-    "                   placeholder=\"Optional name of the institution providing the dataset \"\r" +
+    "                   ng-attr-placeholder=\"{{licenseController.generateDOI ? 'Required' : 'Optional'}} name of the institution providing the dataset\"\r" +
     "\n" +
     "                   ng-model=\"dataset.contact.organisation\"\r" +
     "\n" +
-    "                   ng-focus=\"showInfoMessage('Please provide a name of the organisation responsible for the establishment, management, maintenance and distribution of dataset.');\">\r" +
+    "                   ng-focus=\"showInfoMessage('Please provide a name of the organisation responsible for the establishment, management, maintenance and distribution of dataset or publication.');\"\r" +
+    "\n" +
+    "                   ng-required=\"licenseController.generateDOI\">\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
@@ -761,15 +765,17 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "    \r" +
     "\n" +
-    "    <!-- Citation / DOI -->\r" +
+    "    <!-- Citation / self-provided DOI -->\r" +
     "\n" +
     "    <div class=\"row form-group\"\r" +
     "\n" +
-    "         ng-class=\"{'has-error':wizard.hasError === 'datasetCitation'}\">\r" +
+    "         ng-class=\"{'has-error':wizard.hasError === 'datasetCitation'}\"\r" +
+    "\n" +
+    "         ng-if=\"licenseController.generateDOI === false\">\r" +
     "\n" +
     "        <label for=\"datasetCitation\" class=\"col-md-2 form-control-label\">Citation / DOI</label>\r" +
     "\n" +
-    "        <div class=\"col-md-8\">\r" +
+    "        <div class=\"col-md-6\">\r" +
     "\n" +
     "            <textarea class=\"form-control\" \r" +
     "\n" +
@@ -777,13 +783,15 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                      name=\"datasetCitation\" \r" +
     "\n" +
-    "                      placeholder=\"Optional citation information\"\r" +
+    "                      placeholder=\"Optional citation information or manually provided Digital Object Identifier (DOI)\"\r" +
     "\n" +
-    "                      rows=\"3\"\r" +
+    "                      rows=\"6\"\r" +
     "\n" +
     "                      ng-model=\"dataset.contact.description\" \r" +
     "\n" +
-    "                      ng-focus=\"showInfoMessage('Please provide bibliographic citation or a Digital Object Identifier (<a href=\\'https://www.doi.org/\\' target=\\'_blank\\'>DOI</a>).')\">  \r" +
+    "                      ng-disabled=\"dataset.$deposition !== null && dataset.$deposition.metadata.prereserve_doi.doi !== null\"\r" +
+    "\n" +
+    "                      ng-focus=\"showInfoMessage('Please enter a bibliographic citation or a manually provided Digital Object Identifier (<a href=\\'https://www.doi.org/\\' target=\\'_blank\\'>DOI</a>).<br/> If you want to generate a <strong>new</strong>DOI, you have to enable this Feature under <i>Dataset Description</i> and upload a new dataset.')\">  \r" +
     "\n" +
     "            </textarea>\r" +
     "\n" +
@@ -791,7 +799,99 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "    </div>\r" +
     "\n" +
-    "    \r" +
+    "    <!-- Citation / self-provided DOI -->\r" +
+    "\n" +
+    "    <div class=\"row form-group\"\r" +
+    "\n" +
+    "         ng-class=\"{'has-error':wizard.hasError === 'datasetDeposition'}\"\r" +
+    "\n" +
+    "         ng-if=\"licenseController.generateDOI === true\">\r" +
+    "\n" +
+    "        <div class=\"col-md-2\">\r" +
+    "\n" +
+    "            <label for=\"datasetDeposition\" \r" +
+    "\n" +
+    "                   class=\"form-control-label\">Prereserved DOI\r" +
+    "\n" +
+    "            </label>\r" +
+    "\n" +
+    "       </div>\r" +
+    "\n" +
+    "        \r" +
+    "\n" +
+    "        <!--<div class=\"col-md-10\">\r" +
+    "\n" +
+    "            <div class=\"row form-group\">-->\r" +
+    "\n" +
+    "                <div class=\"col-md-2\">\r" +
+    "\n" +
+    "                    <span class=\"label label-danger\" \r" +
+    "\n" +
+    "                      title=\"Preresevred DOI\">{{dataset.$deposition.metadata.prereserve_doi.doi}}\r" +
+    "\n" +
+    "                    </span>\r" +
+    "\n" +
+    "                </div>\r" +
+    "\n" +
+    "\r" +
+    "\n" +
+    "                <div class=\"col-md-2\">\r" +
+    "\n" +
+    "                    <select class=\"form-control\"   \r" +
+    "\n" +
+    "                        id=\"depositionUploadType\" \r" +
+    "\n" +
+    "                        name=\"depositionUploadType\" \r" +
+    "\n" +
+    "                        placeholder=\"DOI Upload Type\"\r" +
+    "\n" +
+    "                        ng-init=\"dataset.$deposition.metadata.upload_type = 'dataset'\" \r" +
+    "\n" +
+    "                        ng-model=\"dataset.$deposition.metadata.upload_type\"\r" +
+    "\n" +
+    "                        size=\"1\"\r" +
+    "\n" +
+    "                        required \r" +
+    "\n" +
+    "                        >\r" +
+    "\n" +
+    "                    <option value=\"publication\">Publication</option>\r" +
+    "\n" +
+    "                    <option value=\"poster\">Poster</option>\r" +
+    "\n" +
+    "                    <option value=\"presentation\">Presentation</option>\r" +
+    "\n" +
+    "                    <option value=\"dataset\">Dataset</option>\r" +
+    "\n" +
+    "                    <option value=\"image\">Image</option>\r" +
+    "\n" +
+    "                    <option value=\"video\">Video/Audio</option>\r" +
+    "\n" +
+    "                    <option value=\"software\">Software</option>\r" +
+    "\n" +
+    "                    </select> \r" +
+    "\n" +
+    "                </div>\r" +
+    "\n" +
+    "                <div class=\"col-md-4\">\r" +
+    "\n" +
+    "                <input type=\"checkbox\" \r" +
+    "\n" +
+    "                         ng-class=\"{'has-error':wizard.hasError === 'datasetDeposition'}\"\r" +
+    "\n" +
+    "                         ng-model=\"dataset.$deposition.metadata.grants\" \r" +
+    "\n" +
+    "                         ng-change=\"showInfoMessage('SWITCH-ON has received funding from the European Union\\'s Seventh Programme for research, technological development and demonstration under grant agreement No 603587. If you check this box, the grant agreement number will be associated with the DOI');\"> \r" +
+    "\n" +
+    "                SWITCH-ON FP7 Result\r" +
+    "\n" +
+    "                </div>        \r" +
+    "\n" +
+    "            <!--</div>\r" +
+    "\n" +
+    "        </div>-->\r" +
+    "\n" +
+    "    </div>\r" +
     "\n" +
     "    <!-- Data Lineage -->\r" +
     "\n" +
@@ -811,7 +911,7 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                      placeholder=\"Optional data lineage / data provenance information\"\r" +
     "\n" +
-    "                      rows=\"6\"\r" +
+    "                      rows=\"3\"\r" +
     "\n" +
     "                      ng-model=\"dataset.metadata[1].description\" \r" +
     "\n" +
@@ -865,13 +965,61 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                       ng-focus=\"showInfoMessage('Please provide a characteristic, and often unique, name by which the dataset is known.');\">\r" +
     "\n" +
-    "                </div>\r" +
-    "\n" +
     "            </div>\r" +
+    "\n" +
+    "        </div>\r" +
+    "\n" +
+    "        \r" +
+    "\n" +
+    "        <div class=\"col-md-3\">\r" +
+    "\n" +
+    "        <!-- Get DOI -->\r" +
+    "\n" +
+    "            <div class=\"input-group\"\r" +
+    "\n" +
+    "                tooltip=\"{{(dataset.$uploaded !== undefined && odRegistrationController.generateDOI === false) ? 'This feature must be enabled before the dataset is uploaded!' : null}}\">\r" +
+    "\n" +
+    "                <span class=\"input-group-addon\">\r" +
+    "\n" +
+    "                  <input type=\"checkbox\" \r" +
+    "\n" +
+    "                         ng-class=\"{'has-error':wizard.hasError === 'datasetDeposition'}\"\r" +
+    "\n" +
+    "                         ng-model=\"odRegistrationController.generateDOI\" \r" +
+    "\n" +
+    "                         ng-change=\"showInfoMessage('By selecting \\'Get Digital Object Identifier\\' you agree that your dataset is also uploaded to <a href=\\'http://help.zenodo.org/features/\\' title=\\'Zenodo Open Science Services\\' target=\\'_blank\\'>Zenodo</a> in order to obtain a persistent <a href=\\'https://en.wikipedia.org/wiki/Digital_object_identifier\\' target=\\'_blank\\'>Digital Object Identifier</a> (DOI).<br/>Zenodo is a research data repository. It was created by <a href=\\'https://www.openaire.eu\\' target=\\'_blank\\'>OpenAIRE<a/> and CERN to provide a place for researchers to deposit datasets. For further information please consult Zenodo\\'s <a href=\\'http://about.zenodo.org/terms\\' target=\\'_blank\\'>Terms of Use</a> and <a href=\\'http://about.zenodo.org/policies\\' target=\\'_blank\\'>Policies</a>.');\"\r" +
+    "\n" +
+    "                         ng-disabled=\"dataset.$uploaded !== undefined\"> \r" +
+    "\n" +
+    "                </span>\r" +
+    "\n" +
+    "                <span class=\"input-group-btn\">\r" +
+    "\n" +
+    "                    <label class=\"btn btn-success\" \r" +
+    "\n" +
+    "                                btn-checkbox=\"true\"\r" +
+    "\n" +
+    "                                ng-class=\"{'btn-danger':wizard.hasError === 'datasetDeposition'}\"\r" +
+    "\n" +
+    "                                ng-model=\"odRegistrationController.generateDOI\" \r" +
+    "\n" +
+    "                                ng-click=\"dataset.$uploaded !== undefined || (odRegistrationController.generateDOI = !odRegistrationController.generateDOI); showInfoMessage('By selecting \\'Generate DOI\\' you agree that your dataset is also uploaded to <a href=\\'http://help.zenodo.org/features/\\' title=\\'Zenodo Open Science Services\\' target=\\'_blank\\'>Zenodo</a> in order to obtain a persistent <a href=\\'https://en.wikipedia.org/wiki/Digital_object_identifier\\' target=\\'_blank\\'>Digital Object Identifier</a> (DOI).<br/>Zenodo is a research data repository. It was created by <a href=\\'https://www.openaire.eu\\' target=\\'_blank\\'>OpenAIRE<a/> and CERN to provide a place for researchers to deposit datasets. For further information please consult Zenodo\\'s <a href=\\'http://about.zenodo.org/terms\\' target=\\'_blank\\'>Terms of Use</a> and <a href=\\'http://about.zenodo.org/policies\\' target=\\'_blank\\'>Policies</a>.');\"\r" +
+    "\n" +
+    "                                ng-disabled=\"dataset.$uploaded !== undefined\"> \r" +
+    "\n" +
+    "                             Get Digital Object Identifier\r" +
+    "\n" +
+    "                    </label>\r" +
+    "\n" +
+    "                </span>\r" +
+    "\n" +
+    "            </div>    \r" +
+    "\n" +
+    "        </div>\r" +
     "\n" +
     "    </div>\r" +
     "\n" +
-    "    \r" +
+    "\r" +
     "\n" +
     "    <!-- Link Buttons-->\r" +
     "\n" +
@@ -883,53 +1031,85 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "            <label for=\"datasetUploadchoice\" class=\"col-md-1 form-control-label\">Link to Data</label>\r" +
     "\n" +
-    "            <div class=\"col-md-10\">\r" +
+    "            \r" +
     "\n" +
-    "                <button class=\"btn btn-primary\" \r" +
+    "            <div class=\"col-md-5\">\r" +
     "\n" +
-    "                          type=\"button\"\r" +
+    "            <!-- Fake disabled Link Button (tooltips do not work with ng-disabled!) -->    \r" +
     "\n" +
-    "                          ng-class=\"{'btn-danger':wizard.hasError === 'datasetUploadchoice'}\"\r" +
+    "            <button class=\"btn btn-primary disabled\" \r" +
     "\n" +
-    "                          ng-click=\"dataset.$uploaded = false\">Provide Link to existing Dataset</button>\r" +
+    "                    type=\"button\"\r" +
     "\n" +
-    "                <span>or</span>\r" +
+    "                    tooltip=\"{{!odRegistrationController.generateDOI ? null : 'Please uncheck \\'Get Digital Object Identifier\\' to enable this functionality'}}\"\r" +
     "\n" +
-    "                    <!-- Fake disabled button -->\r" +
+    "                    ng-class=\"{'btn-danger':wizard.hasError === 'datasetUploadchoice'}\"\r" +
     "\n" +
-    "                    <button class=\"btn btn-primary disabled\" \r" +
+    "                    ng-if=\"odRegistrationController.generateDOI\">Provide Link to existing Dataset\r" +
     "\n" +
-    "                              type=\"button\"\r" +
+    "            </button>\r" +
     "\n" +
-    "                              ng-class=\"{'btn-danger':(wizard.hasError === 'datasetUploadchoice' || wizard.hasError === 'datasetUploadchoiceName')}\"\r" +
+    "            \r" +
     "\n" +
-    "                              tooltip=\"{{!dataset.name ? 'Please enter the name of the dataset to enable the Data Upload Tool' : 'Open the Data Upload Tool'}}\"\r" +
+    "            <!--  Enabled Link Button (tooltips do not work with ng-disabled!) -->    \r" +
     "\n" +
-    "                              ng-if=\"!dataset.name\">Upload new Dataset\r" +
+    "            <button class=\"btn btn-primary\" \r" +
     "\n" +
-    "                    </button>\r" +
+    "                    type=\"button\"\r" +
     "\n" +
-    "                    <!-- Enabled link button -->\r" +
+    "                    tooltip=\"{{!odRegistrationController.generateDOI ? null : 'Please uncheck \\'GGet Digital Object Identifier\\' to enable this functionality'}}\"\r" +
     "\n" +
-    "                    <a class=\"btn btn-primary\" \r" +
+    "                    ng-class=\"{'btn-danger':wizard.hasError === 'datasetUploadchoice'}\"\r" +
     "\n" +
-    "                              type=\"button\"\r" +
+    "                    ng-click=\"dataset.$uploaded = false; odRegistrationController.generateDOI = false;\"\r" +
     "\n" +
-    "                              ng-class=\"{'btn-danger':(wizard.hasError === 'datasetUploadchoice' || wizard.hasError === 'datasetUploadchoiceName')}\"\r" +
+    "                    ng-if=\"!odRegistrationController.generateDOI\">Provide Link to existing Dataset\r" +
     "\n" +
-    "                              ng-href=\"{{config.uploadtool.baseUrl}}?datasetname={{dataset.name}}\"\r" +
+    "            </button>\r" +
     "\n" +
-    "                              tooltip=\"{{!dataset.name ? 'Please enter the name of the dataset to enable the Data Upload Tool' : 'Open the Data Upload Tool'}}\"\r" +
+    "            \r" +
     "\n" +
-    "                              ng-if=\"dataset.name\">Upload new Dataset\r" +
+    "            <!-- HacketyHack! -->\r" +
     "\n" +
-    "                    </a> \r" +
+    "            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>\r" +
     "\n" +
-    "            </div>\r" +
+    "            \r" +
+    "\n" +
+    "            <!-- Fake disabled Upload button -->\r" +
+    "\n" +
+    "            <button class=\"btn btn-primary disabled\" \r" +
+    "\n" +
+    "                    type=\"button\"\r" +
+    "\n" +
+    "                    ng-class=\"{'btn-danger':(wizard.hasError === 'datasetUploadchoice' || wizard.hasError === 'datasetUploadchoiceName')}\"\r" +
+    "\n" +
+    "                    tooltip=\"{{!dataset.name ? 'Please enter the name of the dataset to enable the Data Upload Tool' : 'Open the Data Upload Tool'}}\"\r" +
+    "\n" +
+    "                    ng-if=\"!dataset.name\">Upload new Dataset\r" +
+    "\n" +
+    "            </button>\r" +
+    "\n" +
+    "            <!-- Enabled Upload button -->\r" +
+    "\n" +
+    "            <a class=\"btn btn-primary\" \r" +
+    "\n" +
+    "               type=\"button\"\r" +
+    "\n" +
+    "               ng-class=\"{'btn-danger':(wizard.hasError === 'datasetUploadchoice' || wizard.hasError === 'datasetUploadchoiceName')}\"\r" +
+    "\n" +
+    "               ng-href=\"{{config.uploadtool.baseUrl}}?datasetname={{dataset.name}}&generateDOI={{odRegistrationController.generateDOI}}\"\r" +
+    "\n" +
+    "               tooltip=\"{{!dataset.name ? 'Please enter the name of the dataset to enable the Data Upload Tool' : 'Open the Data Upload Tool'}}\"\r" +
+    "\n" +
+    "               ng-if=\"dataset.name\">Upload new Dataset\r" +
+    "\n" +
+    "            </a> \r" +
+    "\n" +
+    "        </div>\r" +
     "\n" +
     "    </div>\r" +
     "\n" +
-    "    \r" +
+    "\r" +
     "\n" +
     "    <!-- Link -->\r" +
     "\n" +
@@ -971,7 +1151,7 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                    required>\r" +
     "\n" +
-    "                    <option style=\"color:#999999\" ng-show=\"!dataset.representation[0].function\" value=\"\">Type of Link</option>\r" +
+    "                <option style=\"color:#999999\" ng-show=\"!dataset.representation[0].function\" value=\"\">Type of Link</option>\r" +
     "\n" +
     "            </select>\r" +
     "\n" +
@@ -1071,7 +1251,7 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "    </div>\r" +
     "\n" +
-    "    \r" +
+    "\r" +
     "\n" +
     "    <!-- Keywords -->\r" +
     "\n" +
@@ -1087,13 +1267,13 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                <span ng-repeat=\"tag in dataset.tags\">\r" +
     "\n" +
-    "                        <span class=\"label label-primary\">{{tag.name}}</span>\r" +
+    "                    <span class=\"label label-primary\">{{tag.name}}</span>\r" +
     "\n" +
     "                </span>\r" +
     "\n" +
     "            </div>\r" +
     "\n" +
-    "         </div>\r" +
+    "        </div>\r" +
     "\n" +
     "    </div>\r" +
     "\n" +
@@ -1363,15 +1543,43 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "            \r" +
     "\n" +
-    "            <!-- Citation / DOI -->\r" +
+    "            <!-- Citation / manual DOI -->\r" +
     "\n" +
-    "            <div class=\"row\" ng-if=\"dataset.contact && dataset.contact.description\">\r" +
+    "            <div class=\"row\" \r" +
+    "\n" +
+    "                 ng-if=\"summaryController.generateDOI === false && dataset.contact && dataset.contact.description\">\r" +
     "\n" +
     "                <label class=\"col-md-3\">Citation / DOI</label>\r" +
     "\n" +
     "                <div class=\"col-md-9\">\r" +
     "\n" +
     "                    {{dataset.contact.description}}\r" +
+    "\n" +
+    "                </div>\r" +
+    "\n" +
+    "            </div>\r" +
+    "\n" +
+    "            \r" +
+    "\n" +
+    "            <!-- Citation / DOI -->\r" +
+    "\n" +
+    "            <div class=\"row\" \r" +
+    "\n" +
+    "                 ng-if=\"summaryController.generateDOI === true\">\r" +
+    "\n" +
+    "                <label class=\"col-md-3\">Prereserved DOI</label>\r" +
+    "\n" +
+    "                <div class=\"col-md-9\">\r" +
+    "\n" +
+    "                    <span class=\"label label-danger\" \r" +
+    "\n" +
+    "                      title=\"Preresevred DOI\">{{dataset.$deposition.metadata.prereserve_doi.doi}}\r" +
+    "\n" +
+    "                    </span>\r" +
+    "\n" +
+    "                    <span>&nbsp;{{dataset.$deposition.metadata.upload_type}}</span>\r" +
+    "\n" +
+    "                    <span ng-if=\"dataset.$deposition.metadata.grants === true\"> / SWITCH-ON FP7 Result<span>        \r" +
     "\n" +
     "                </div>\r" +
     "\n" +

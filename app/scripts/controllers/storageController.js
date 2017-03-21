@@ -100,7 +100,7 @@ angular.module(
                        deposition.metadata.keywords.push(tag.name);
                    });
 
-                   if(dataset.metadata[1] && dataset.metadata[1].description) {
+                   if(dataset.metadata[1] && dataset.metadata[1].description && dataset.metadata[1].type.name === 'lineage meta-data') {
                        deposition.metadata.notes = dataset.metadata[1].description;
                    }
 

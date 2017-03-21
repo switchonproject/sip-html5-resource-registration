@@ -218,6 +218,13 @@ angular.module(
 
                         $scope.wizard.hasError = 'datasetName';
                         context.valid = false;
+                    } else if (dataset.name.length < 3) {
+                        $scope.message.text = 'The name / title of the dataset is too short.';
+                        $scope.message.icon = 'fa-warning';
+                        $scope.message.type = 'warning';
+
+                        $scope.wizard.hasError = 'datasetName';
+                        context.valid = false;
                     } else if (dataset.$uploaded === undefined) {
                         $scope.message.text = 'Please chose wheter you want to upload a new dataset or to provide a link to anexisting dataset.';
                         $scope.message.icon = 'fa-warning';
@@ -278,6 +285,14 @@ angular.module(
                     } else if (!dataset.description) {
                         // DESCRIPTION
                         $scope.message.text = 'Please provide a description of the dataset.';
+                        $scope.message.icon = 'fa-warning';
+                        $scope.message.type = 'warning';
+
+                        $scope.wizard.hasError = 'datasetDescription';
+                        context.valid = false;
+                    } else if (dataset.description.length < 12) {
+                        // DESCRIPTION
+                        $scope.message.text = 'The description of the dataset is too short. Use between 100 and 500 words.';
                         $scope.message.icon = 'fa-warning';
                         $scope.message.type = 'warning';
 

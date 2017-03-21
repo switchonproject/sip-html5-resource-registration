@@ -1083,9 +1083,9 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                    ng-class=\"{'btn-danger':(wizard.hasError === 'datasetUploadchoice' || wizard.hasError === 'datasetUploadchoiceName')}\"\r" +
     "\n" +
-    "                    tooltip=\"{{!dataset.name ? 'Please enter the name of the dataset to enable the Data Upload Tool' : 'Open the Data Upload Tool'}}\"\r" +
+    "                    tooltip=\"{{!dataset.name || dataset.name.length < 3 ? 'Please enter the name of the dataset to enable the Data Upload Tool' : 'Open the Data Upload Tool'}}\"\r" +
     "\n" +
-    "                    ng-if=\"!dataset.name\">Upload new Dataset\r" +
+    "                    ng-if=\"!dataset.name || dataset.name.length < 3\">Upload new Dataset\r" +
     "\n" +
     "            </button>\r" +
     "\n" +
@@ -1099,9 +1099,9 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "               ng-href=\"{{config.uploadtool.baseUrl}}?datasetname={{dataset.name}}&generateDOI={{odRegistrationController.generateDOI}}\"\r" +
     "\n" +
-    "               tooltip=\"{{!dataset.name ? 'Please enter the name of the dataset to enable the Data Upload Tool' : 'Open the Data Upload Tool'}}\"\r" +
+    "               tooltip=\"{{!dataset.name || dataset.name.length < 3 ? 'Please enter the name of the dataset to enable the Data Upload Tool' : 'Open the Data Upload Tool'}}\"\r" +
     "\n" +
-    "               ng-if=\"dataset.name\">Upload new Dataset\r" +
+    "               ng-if=\"dataset.name && dataset.name.length >= 3\">Upload new Dataset\r" +
     "\n" +
     "            </a> \r" +
     "\n" +
@@ -1589,7 +1589,7 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "            <!-- Lineage -->\r" +
     "\n" +
-    "            <div class=\"row\" ng-if=\"dataset.metadata[1].description\">\r" +
+    "            <div class=\"row\" ng-if=\"dataset.metadata[1].description && dataset.metadata[1].type.name === 'lineage meta-data'\">\r" +
     "\n" +
     "                <label class=\"col-md-3\">Data Lineage</label>\r" +
     "\n" +

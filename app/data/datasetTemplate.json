@@ -42,7 +42,9 @@
             "tags": [],
             "description": null,
             "contact": null,
-            "type": null,
+            "type": {
+                "name": "basic meta-data"
+            },
             "language": null,
             "standard": null,
             "uuid": null,
@@ -57,7 +59,9 @@
             "tags": [],
             "description": null,
             "contact": null,
-            "type": null,
+            "type": {
+                "name": "lineage meta-data"
+            },
             "language": null,
             "standard": null,
             "uuid": null,
@@ -70,9 +74,11 @@
             "id": -1,
             "name": "Zenodo Deposition Resource",
             "tags": [],
-            "description": "The Deposition resource is used for uploading and editing records on zenodo.org.",
+            "description": null,
             "contact": null,
-            "type": null,
+            "type": {
+                "name": "deposition meta-data"
+            },
             "language": null,
             "standard": null,
             "uuid": null,

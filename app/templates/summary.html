@@ -121,7 +121,7 @@
             </div>
 
             <!-- Lineage -->
-            <div class="row" ng-if="dataset.metadata[1].description">
+            <div class="row" ng-if="dataset.metadata[1].description && dataset.metadata[1].type.name === 'lineage meta-data'">
                 <label class="col-md-3">Data Lineage</label>
                 <div class="col-md-9">
                     {{dataset.metadata[1].description}}

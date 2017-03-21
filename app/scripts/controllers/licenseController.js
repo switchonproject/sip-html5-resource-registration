@@ -9,6 +9,7 @@
  */
 
 /*jshint sub:true*/
+/*jshint camelcase: false */
 
 angular.module(
     'de.cismet.sip-html5-resource-registration.controllers'
@@ -39,7 +40,7 @@ angular.module(
                     } else {
                         _this.generateDOI = false;     
                     }
-                }, function error(response) {
+                }, function error() {
                     _this.generateDOI = false;
                 });
             }

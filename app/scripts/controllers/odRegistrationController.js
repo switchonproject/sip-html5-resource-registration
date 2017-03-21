@@ -9,7 +9,7 @@
  */
 
 /*jshint sub:true*/
-
+/*jshint camelcase: false */
 angular.module(
         'de.cismet.sip-html5-resource-registration.controllers'
         ).controller(
@@ -46,10 +46,10 @@ angular.module(
                             function success(deposition) {
                         if(deposition.metadata.prereserve_doi.doi !== null) {
                             _this.generateDOI = true;     
-                            $scope.message.text = 'The preliminary <a href=\'https://en.wikipedia.org/wiki/Digital_object_identifier\' target=\'_blank\'>Digital Object Identifier</a> (DOI) \'<strong>'
-                                    + deposition.metadata.prereserve_doi.doi 
-                                    + '</strong>\' for this dataset was successfully prereserved at <a href=\'http://help.zenodo.org/features/\' title=\'Zenodo Open Science Services\' target=\'_blank\'>Zenodo</a>.'
-                                    + '<br/>To publish the DOI, please complete all steps of the Open-Data Registration Tool.'
+                            $scope.message.text = 'The preliminary <a href=\'https://en.wikipedia.org/wiki/Digital_object_identifier\' target=\'_blank\'>Digital Object Identifier</a> (DOI) \'<strong>' + 
+                                    deposition.metadata.prereserve_doi.doi + 
+                                    '</strong>\' for this dataset was successfully prereserved at <a href=\'http://help.zenodo.org/features/\' title=\'Zenodo Open Science Services\' target=\'_blank\'>Zenodo</a>.' + 
+                                    '<br/>To publish the DOI, please complete all steps of the Open-Data Registration Tool.';
                             $scope.message.icon = 'fa-success';
                             $scope.message.type = 'success';
                         } else {
@@ -63,8 +63,8 @@ angular.module(
                     }, function error(response) {
                         _this.generateDOI = false;
                         
-                        $scope.message.text = 'The <a href=\'https://en.wikipedia.org/wiki/Digital_object_identifier\' target=\'_blank\'>Digital Object Identifier</a> (DOI) for this dataset could not be obtained from <a href=\'http://help.zenodo.org/features/\' title=\'Zenodo Open Science Services\' target=\'_blank\'>Zenodo</a>: <strong>'
-                            + response.statusText + ' (' + response.status + ')</strong>';
+                        $scope.message.text = 'The <a href=\'https://en.wikipedia.org/wiki/Digital_object_identifier\' target=\'_blank\'>Digital Object Identifier</a> (DOI) for this dataset could not be obtained from <a href=\'http://help.zenodo.org/features/\' title=\'Zenodo Open Science Services\' target=\'_blank\'>Zenodo</a>: <strong>' +
+                            response.statusText + ' (' + response.status + ')</strong>';
                         $scope.message.icon = 'fa-warning';
                         $scope.message.type = 'warning';
                         $scope.wizard.hasError = 'datasetDeposition';

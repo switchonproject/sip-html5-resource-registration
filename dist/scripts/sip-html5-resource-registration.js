@@ -711,11 +711,13 @@ angular.module(
                     });
                 };
                 
-                // retrieve the access token from server!
-                _this.config.zenodo.token = tagGroupService.getTag('tokens', 'zenodo', function (tag) {
-                        _this.config.zenodo.token = tag.description;
-                        //console.log(_this.config.zenodo.token);
-                });
+                // TODO: retrieve the access token from server!
+                // FIXME: Promise synchronisation problem. zenodoSerrvice ($resource) requires token before token promise is resolved
+                // and generateDOI property in controllers is set when $resource promise is resolved !!!
+                
+                //_this.config.zenodo.token = tagGroupService.getTag('tokens', 'zenodo', function (tag) {
+                //        _this.config.zenodo.token = tag.description;
+                //});
 
                 // - dataset: the resource meta data, initialized from a template and changed by the app
                 // - tags: list of selectable tags
@@ -1806,8 +1808,8 @@ angular.module(
         
         this.zenodo = {};
         this.zenodo.host = this.developmentMode ? 'https://sandbox.zenodo.org' : 'https://zenodo.org';
-        // retrieve non-sanbox token from the server!
-        this.zenodo.token = this.developmentMode ? 'A7PpJjp9GmcSs17BXjDzxd1BN5CG1dGGZFRxm5CNzEPPeiaB8HQUdZg5I8Mj' : null;
+        // FIXME: retrieve non-sanbox token from the server when promise synchronisation Problem is resolved
+        this.zenodo.token = this.developmentMode ? 'A7PpJjp9GmcSs17BXjDzxd1BN5CG1dGGZFRxm5CNzEPPeiaB8HQUdZg5I8Mj' : '3B5R7pGxHueMoI4mgo16kYHRb97Upcnd9B3eXPRetD5V1isgJ2BqlToBSYVi';
     }]);
 angular.module(
     'de.cismet.sip-html5-resource-registration.filters',
@@ -2919,6 +2921,9 @@ angular.module(
                 'use strict';
                 var config, depositionResource;
                 config = AppConfig.zenodo;
+                
+                // FIXME: retrieve non-sanbox token from the server
+                // Promise Synchronisation Problem: depositionResource requires config.token to be resolved!
                 depositionResource = $resource(config.host + '/api/deposit/depositions/:depositionId',
                         {
                             depositionId: '@id'

@@ -114,6 +114,6 @@ angular.module(
         
         this.zenodo = {};
         this.zenodo.host = this.developmentMode ? 'https://sandbox.zenodo.org' : 'https://zenodo.org';
-        // retrieve non-sanbox token from the server!
-        this.zenodo.token = this.developmentMode ? 'A7PpJjp9GmcSs17BXjDzxd1BN5CG1dGGZFRxm5CNzEPPeiaB8HQUdZg5I8Mj' : null;
+        // FIXME: retrieve non-sanbox token from the server when promise synchronisation Problem is resolved
+        this.zenodo.token = this.developmentMode ? 'A7PpJjp9GmcSs17BXjDzxd1BN5CG1dGGZFRxm5CNzEPPeiaB8HQUdZg5I8Mj' : '3B5R7pGxHueMoI4mgo16kYHRb97Upcnd9B3eXPRetD5V1isgJ2BqlToBSYVi';
     }]);

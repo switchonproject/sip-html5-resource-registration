@@ -41,6 +41,16 @@ angular.module(
             _this.config = AppConfig;
             _this.readOnly = dataset.$geoserverUploaded;
             _this.generateDOI = false;
+            
+            _this.saveJSON = function () {
+                    var blob = new Blob([angular.toJson(_this.dataset, true)], { type:'application/json;charset=utf-8;' });			
+                    var downloadLink = angular.element('<a></a>');
+                    downloadLink.attr('href',window.URL.createObjectURL(blob));
+                    downloadLink.attr('download', 'metadata.json');
+                    downloadLink[0].click();
+            };
+            
+            
             if(dataset.$deposition && dataset.$deposition !== null) {
                 dataset.$deposition.$promise.then(
                         function success(deposition) {
@@ -85,11 +95,7 @@ angular.module(
 
             // validation functions
             $scope.wizard.enterValidators['Summary'] = function(context){
-                
-                if(_this.config.developmentMode === true) {
-                        return true;
-                }
-                
+
                 if(context.valid === true){
                     $scope.message.text='Please review the meta-data of the dataset and press <strong>Finish</strong> to register the dataset in the SWITCH-ON Spatial Information Platform.';
                     $scope.message.icon='fa-info-circle';
@@ -120,14 +126,14 @@ angular.module(
                     } 
                 }
                 
+                if(_this.config.developmentMode === true) {
+                    context.valid = true;
+                }
+                
                 return context.valid;
             };
             
             $scope.wizard.exitValidators['Summary'] = function() {
-                
-                if(_this.config.developmentMode === true) {
-                        return true;
-                }
                 
                 $scope.wizard.hasError = null;
                 return true;

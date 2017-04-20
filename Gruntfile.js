@@ -619,7 +619,7 @@ module.exports = function (grunt) {
      * sync karma conf with index.html
      */
     grunt.registerTask('updateKarmaConfAndRun', function () {
-        var indexhtml, jsFiles, karmaconf, match, regex, sep, specFiles, templateFiles, testFiles, viewFiles;
+        var indexhtml, jsFiles, karmaconf, match, regex, sep, specFiles, templateFiles, testFiles;//, viewFiles;
 
         specFiles = grunt.file.expand(grunt.config.get('testSpec') + '/**/*.js');
         
@@ -643,7 +643,7 @@ module.exports = function (grunt) {
         }
         
         templateFiles = grunt.file.expand(grunt.config.get('templates') + '/**/*.html');
-        viewFiles = grunt.file.expand(grunt.config.get('views') + '/**/*.html');
+        //viewFiles = grunt.file.expand(grunt.config.get('views') + '/**/*.html');
         
         sep = "',\n        '";
         testFiles = "    files: [\n        '" 
@@ -651,9 +651,9 @@ module.exports = function (grunt) {
                 + sep
                 + grunt.config.get('targetDist') + '/bower_components/angular-mocks/angular-mocks.js'
                 + sep
-                + templateFiles.join(sep)
-                + sep
-                + viewFiles.join(sep);
+                + templateFiles.join(sep);
+                //+ sep
+                //+ viewFiles.join(sep);
         
         if (specFiles.length > 0) {
             testFiles = testFiles

@@ -51,14 +51,14 @@ angular.module(
             // validation functions
             $scope.wizard.enterValidators['License and Conditions'] = function(context) {
                 
-                if(_this.config.developmentMode === true) {
-                        return true;
-                }
-                
                 if(context.valid === true){
                     $scope.message.text='Please select a predefined license for regulating the conditions for access and use of the dataset and / or provide a brief statement or URL to the license which applies to the usage of the dataset. This statement should provide additional information.';
                     $scope.message.icon='fa-info-circle';
                     $scope.message.type = 'success';
+                }
+                
+                if(_this.config.developmentMode === true) {
+                    context.valid = true;
                 }
                 
                 return context.valid;
@@ -66,10 +66,6 @@ angular.module(
 
             $scope.wizard.exitValidators['License and Conditions'] = function(context){
                 context.valid = true;
-                
-                if(_this.config.developmentMode === true) {
-                        return true;
-                }
                 
                 // ACCESS CONDITIONS
                 var isInvalidAccessconditions = $scope.tags['accessconditions'].every(function(element) {
@@ -168,13 +164,16 @@ angular.module(
                     $scope.wizard.hasError = 'datasetLineage';
                     context.valid = false;
                 }
-                
+
                 if(context.valid === true) {
                     $scope.wizard.hasError = null;
                 }
+                
+                if(_this.config.developmentMode === true) {
+                    context.valid = true;
+                }
 
                 return context.valid;
-                
             };
         }
     ]

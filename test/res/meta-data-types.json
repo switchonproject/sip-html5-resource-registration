@@ -1,0 +1,76 @@
+{
+    "$self": "http://localhost:8890/searches/SWITCHON.de.cismet.cids.custom.switchon.search.server.TagsSearch/results",
+    "$offset": 0,
+    "$limit": 100,
+    "$first": "http://localhost:8890/searches/SWITCHON.de.cismet.cids.custom.switchon.search.server.TagsSearch/results",
+    "$previous": null,
+    "$next": "not available",
+    "$last": "not available",
+    "$collection": [{
+            "$self": "/SWITCHON.TAG/177",
+            "id": 177,
+            "name": "basic meta-data",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/160",
+                "id": 160,
+                "name": "meta-data type",
+                "description": "SIP internal type of the Meta-Data Record (fixed group)."
+            },
+            "description": "Type of the Meta-Data Record. \"basic meta-data\" refers to meta-data collected by switch-on according to the SIM meta-data schema. In fact, this meta-meta-data record refers to enclosing resource meta-data record."
+        }, {
+            "$self": "/SWITCHON.TAG/1542",
+            "id": 1542,
+            "name": "deposition meta-data",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/160",
+                "id": 160,
+                "name": "meta-data type",
+                "description": "SIP internal type of the Meta-Data Record (fixed group)."
+            },
+            "description": "Type of the Meta-Data Record. \"deposition meta-data\" refers to meta-data about depositions stored at zenodo.org ."
+        }, {
+            "$self": "/SWITCHON.TAG/180",
+            "id": 180,
+            "name": "lineage meta-data",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/160",
+                "id": 160,
+                "name": "meta-data type",
+                "description": "SIP internal type of the Meta-Data Record (fixed group)."
+            },
+            "description": "Type of the Meta-Data Record. \"lineage meta-data\" refers to meta-data about the lineage of the resource, e.g. a protocol of an experiment."
+        }, {
+            "$self": "/SWITCHON.TAG/178",
+            "id": 178,
+            "name": "origin meta-data",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/160",
+                "id": 160,
+                "name": "meta-data type",
+                "description": "SIP internal type of the Meta-Data Record (fixed group)."
+            },
+            "description": "Type of the Meta-Data Record. \"origin meta-data\" refers to meta-data available at the origin (e.g. website) of the resource. It could refer to a webpage which provides information on the resource or, if available, a meta-data catalogue entry. There may be multiple entries of this meta-data record."
+        }, {
+            "$self": "/SWITCHON.TAG/179",
+            "id": 179,
+            "name": "quality meta-data",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/160",
+                "id": 160,
+                "name": "meta-data type",
+                "description": "SIP internal type of the Meta-Data Record (fixed group)."
+            },
+            "description": "Type of the Meta-Data Record. \"quality meta-data\" refers to meta-data on data quality either available at the origin (e.g. website) of the resource or provided by SWITCH-ON. Since no default schema for meta-data on data quality has been defined yet, the content of this meta-data record will be limited to a short statement by the person collecting the meta-data."
+        }, {
+            "$self": "/SWITCHON.TAG/181",
+            "id": 181,
+            "name": "relationship meta-data",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/160",
+                "id": 160,
+                "name": "meta-data type",
+                "description": "SIP internal type of the Meta-Data Record (fixed group)."
+            },
+            "description": "Refers to meta-data about the relationship of the resource to other resources in the SIP, e.g. a protocol of an experiment."
+        }]
+}

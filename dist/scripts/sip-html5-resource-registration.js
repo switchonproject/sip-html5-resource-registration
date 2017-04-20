@@ -145,12 +145,6 @@ angular.module(
                 
             // resize the map on enter, read spatial coverage from dataset
             $scope.wizard.enterValidators['Geographic Location'] = function(context) {
-                
-                if(_this.config.developmentMode === true) {
-                        return true;
-                }
-                
-                
                 if(context.valid === true)
                 {
                     if(_this.readOnly) {
@@ -188,7 +182,11 @@ angular.module(
                                 });
                             }
                     } 
-               }
+                }
+               
+                if(_this.config.developmentMode === true) {
+                    context.valid = true;
+                }
                 
                 return context.valid;
             };            
@@ -197,10 +195,6 @@ angular.module(
             $scope.wizard.exitValidators['Geographic Location'] = function(context){
                 context.valid = true;
                 
-                if(_this.config.developmentMode === true) {
-                        return true;
-                }
-                
                 if(_this.mode.defineBBox === true && $scope.forms.coordinatesForm.$invalid) {
                     $scope.message.text='Please specify a valid bounding box or use an other option to specify the geographic location of the dataset!';
                     $scope.message.icon='fa-warning';
@@ -208,7 +202,7 @@ angular.module(
                     
                     context.valid = false;
                 } else if(!layerGroup || !layerGroup.getLayers() || layerGroup.getLayers().length === 0) {
-                    
+
                     $scope.message.text='Please specify the geographic location (spatial extent) of the dataset!';
                     $scope.message.icon='fa-warning';
                     $scope.message.type = 'warning';
@@ -238,6 +232,10 @@ angular.module(
                          wkt = new Wkt.Wkt().fromObject(layerGroup.getLayers()[0]);
                     }
                     writeSpatialCoverage(_this.dataset, wkt.write());
+                }
+                
+                if(_this.config.developmentMode === true) {
+                    context.valid = true;
                 }
                 
                 return context.valid;
@@ -574,14 +572,14 @@ angular.module(
             // validation functions
             $scope.wizard.enterValidators['License and Conditions'] = function(context) {
                 
-                if(_this.config.developmentMode === true) {
-                        return true;
-                }
-                
                 if(context.valid === true){
                     $scope.message.text='Please select a predefined license for regulating the conditions for access and use of the dataset and / or provide a brief statement or URL to the license which applies to the usage of the dataset. This statement should provide additional information.';
                     $scope.message.icon='fa-info-circle';
                     $scope.message.type = 'success';
+                }
+                
+                if(_this.config.developmentMode === true) {
+                    context.valid = true;
                 }
                 
                 return context.valid;
@@ -589,10 +587,6 @@ angular.module(
 
             $scope.wizard.exitValidators['License and Conditions'] = function(context){
                 context.valid = true;
-                
-                if(_this.config.developmentMode === true) {
-                        return true;
-                }
                 
                 // ACCESS CONDITIONS
                 var isInvalidAccessconditions = $scope.tags['accessconditions'].every(function(element) {
@@ -691,13 +685,16 @@ angular.module(
                     $scope.wizard.hasError = 'datasetLineage';
                     context.valid = false;
                 }
-                
+
                 if(context.valid === true) {
                     $scope.wizard.hasError = null;
                 }
+                
+                if(_this.config.developmentMode === true) {
+                    context.valid = true;
+                }
 
                 return context.valid;
-                
             };
         }
     ]
@@ -720,13 +717,11 @@ angular.module(
             '$scope',
             'AppConfig',
             'de.cismet.sip-html5-resource-registration.services.dataset',
-            'de.cismet.sip-html5-resource-registration.services.TagGroupService',
             '$modal',
             function (
                     $scope,
                     AppConfig,
                     dataset,
-                    tagGroupService,
                     $modal
                     ) {
                 'use strict';
@@ -748,7 +743,7 @@ angular.module(
                         backdrop: 'static'
                     });
                 };
-                
+
                 // TODO: retrieve the access token from server!
                 // FIXME: Promise synchronisation problem. zenodoSerrvice ($resource) requires token before token promise is resolved
                 // and generateDOI property in controllers is set when $resource promise is resolved !!!
@@ -809,7 +804,7 @@ angular.module(
                 $scope.wizard.isFirstStep = function () {
                     return $scope.wizard.currentStep === 'Dataset Description';
                 };
-
+                
                 $scope.mapData = {};
 
                 $scope.$watch('wizard.currentStep', function (n) {
@@ -999,14 +994,14 @@ angular.module(
 
                 $scope.wizard.enterValidators['Dataset Description'] = function (context) {
                     
-                    if(_this.config.developmentMode === true) {
-                        return true;
-                    }
-                    
                     if (context.valid === true) {
                         $scope.message.text = 'Please provide some general information about the new dataset such as name, description, a (download) link and keywords.';
                         $scope.message.icon = 'fa-info-circle';
                         $scope.message.type = 'success';
+                    }
+                    
+                    if(_this.config.developmentMode === true) {
+                        context.valid = true;
                     }
 
                     return context.valid;
@@ -1014,10 +1009,6 @@ angular.module(
 
                 $scope.wizard.exitValidators['Dataset Description'] = function (context) {
                     context.valid = true;
-                    
-                    if(_this.config.developmentMode === true) {
-                        return true;
-                    }
 
                     // CONTENT TYPE
                     var isInvalidContenttype = $scope.tags['content type'].every(function (element) {
@@ -1040,7 +1031,7 @@ angular.module(
                             return true;
                         }
                     });
-
+                    
                     // NAME
                     if (!dataset.name) {
                         $scope.message.text = 'Please enter the name / title of the dataset.';
@@ -1142,6 +1133,10 @@ angular.module(
                         $scope.wizard.hasError = null;
                     }
                     // no error? -> reset
+                    
+                    if(_this.config.developmentMode === true) {
+                        context.valid = true;
+                    }
 
                     return context.valid;
                 };
@@ -1193,7 +1188,7 @@ angular.module(
                 'use strict';
                 
                 var _this, currentdate, userAgent, maxProgress, accessConditions, 
-                    timer;
+                    timer; 
                 
                 /**
                 * Update deposition metadata and save to zenodo
@@ -1361,8 +1356,14 @@ angular.module(
                     $modalInstance.close();
                     $window.location.reload();
                 };
-
-
+                
+                _this.saveJSON = function () {
+                    var blob = new Blob([angular.toJson(_this.dataset, true)], { type:'application/json;charset=utf-8;' });			
+                    var downloadLink = angular.element('<a></a>');
+                    downloadLink.attr('href',window.URL.createObjectURL(blob));
+                    downloadLink.attr('download', 'metadata.json');
+                    downloadLink[0].click();
+		};
 
                 $modalInstance.rendered.then(function () {
 
@@ -1444,14 +1445,23 @@ angular.module(
 
                     // META-DATA TYPE -> BASIC METADATA, LINEAGE METADATA
                     tagGroupService.getTagList('meta-data type', 'basic meta-data,lineage meta-data,deposition meta-data').$promise.then(function (tags) {
+                        // BASIC METADATA TAG
                         _this.dataset.metadata[0].type = tags.getTagByName('basic meta-data');
-                        if (_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
-                            _this.dataset.metadata[1].type = tags.getTagByName('lineage meta-data');
-                        }
-                        if (_this.dataset.metadata[2]) {
-                            _this.dataset.metadata[2].type = tags.getTagByName('deposition meta-data');
+                        
+                        // LINEAGE OR DEPOSITION METADATA TAG
+                        if (_this.dataset.metadata[1] && _this.dataset.metadata[1].type) {
+                            if(_this.dataset.metadata[1].type.name === 'lineage meta-data') {
+                                _this.dataset.metadata[1].type = tags.getTagByName('lineage meta-data');
+                            } else {
+                                _this.dataset.metadata[1].type = tags.getTagByName('deposition meta-data');
+                            }
                         }
                         
+                        // DEPOSITION METADATA TAG
+                        if (_this.dataset.metadata[2] && _this.dataset.metadata[2].type) {
+                             _this.dataset.metadata[2].type = tags.getTagByName('deposition meta-data');
+                        }
+
                         _this.progress.currval += 10; // 70
                         //console.log('META-DATA TYPE: ' + _this.progress.currval);
                     });
@@ -1556,14 +1566,14 @@ angular.module(
                                         if(deposition && deposition !== null) {
                                             _this.progress.message = 'The Meta-Data of the dataset ' + _this.dataset.name + 
                                             ' has been successfully associated with the Digital Object Identifier "' + 
-                                            deposition.doi + '"';
+                                            deposition.metadata.prereserve_doi.doi + '"';
                                             //console.log(_this.progress.message);
                                             return deposition.$publish();
                                         } else {
                                             _this.progress.message = 'The Meta-Data of the dataset ' + _this.dataset.name + 
                                                 ' has been successfully associated with the Digital Object Identifier "' + 
                                                 dataset.$deposition.metadata.prereserve_doi.doi + '"';
-                                            console.error(_this.progress.message);
+                                            //console.error(_this.progress.message);
                                         }  
                                     })
                                 .then(function publishDepositionSuccess(deposition) {
@@ -1638,6 +1648,16 @@ angular.module(
             _this.config = AppConfig;
             _this.readOnly = dataset.$geoserverUploaded;
             _this.generateDOI = false;
+            
+            _this.saveJSON = function () {
+                    var blob = new Blob([angular.toJson(_this.dataset, true)], { type:'application/json;charset=utf-8;' });			
+                    var downloadLink = angular.element('<a></a>');
+                    downloadLink.attr('href',window.URL.createObjectURL(blob));
+                    downloadLink.attr('download', 'metadata.json');
+                    downloadLink[0].click();
+            };
+            
+            
             if(dataset.$deposition && dataset.$deposition !== null) {
                 dataset.$deposition.$promise.then(
                         function success(deposition) {
@@ -1682,11 +1702,7 @@ angular.module(
 
             // validation functions
             $scope.wizard.enterValidators['Summary'] = function(context){
-                
-                if(_this.config.developmentMode === true) {
-                        return true;
-                }
-                
+
                 if(context.valid === true){
                     $scope.message.text='Please review the meta-data of the dataset and press <strong>Finish</strong> to register the dataset in the SWITCH-ON Spatial Information Platform.';
                     $scope.message.icon='fa-info-circle';
@@ -1717,14 +1733,14 @@ angular.module(
                     } 
                 }
                 
+                if(_this.config.developmentMode === true) {
+                    context.valid = true;
+                }
+                
                 return context.valid;
             };
             
             $scope.wizard.exitValidators['Summary'] = function() {
-                
-                if(_this.config.developmentMode === true) {
-                        return true;
-                }
                 
                 $scope.wizard.hasError = null;
                 return true;

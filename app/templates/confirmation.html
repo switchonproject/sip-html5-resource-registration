@@ -3,18 +3,31 @@
 </div>
 <div class="modal-body">
     <p class="danger" ng-bind-html="storageController.progress.message"></p>
-    
     <progressbar class="progress-striped active" 
                  ng-class="{active:storageController.progress.active}"
                  max="200" 
                  value="storageController.progress.currval"
                  type="{{storageController.progress.type}}">
-        <!--<span ng-show="storageController.progress.error">{storageController.progress.error}</span>-->
+        <p class="danger" ng-show="storageController.progress.error">Please report this error to SWITCH-ON (Feedback) and attach the erroneous meta-data file (Download Meta-Data).</p>
     </progressbar>
 </div>
 <div class="modal-footer">
+    <a class="btn btn-primary pull-left"
+       href="mailto:switchon.odr@gmail.com?subject=Open-Data Registration Tool">
+        <span class="fa fa-fw fa-envelope"></span>
+        <span>Feedback</span>
+    </a>
+    <button class="btn btn-danger" 
+            type="button"  
+            ng-if="storageController.config.developmentMode === true || storageController.progress.error"
+            ng-click="storageController.saveJSON()" 
+            ng-href="{{ url}}">
+        Download Meta-Data 
+    </button>
     <button class="btn btn-primary" 
             type="button" 
             ng-disabled="!storageController.progress.finished"
-            ng-click="storageController.close()">Close</button>
+            ng-click="storageController.close()">
+        Close
+    </button>
 </div>

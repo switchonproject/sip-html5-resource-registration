@@ -1,0 +1,230 @@
+{
+    "$self": "http://localhost:8890/searches/SWITCHON.de.cismet.cids.custom.switchon.search.server.TagsSearch/results",
+    "$offset": 0,
+    "$limit": 100,
+    "$first": "http://localhost:8890/searches/SWITCHON.de.cismet.cids.custom.switchon.search.server.TagsSearch/results",
+    "$previous": null,
+    "$next": "not available",
+    "$last": "not available",
+    "$collection": [{
+            "$self": "/SWITCHON.TAG/1450",
+            "id": 1450,
+            "name": "all rights reserved",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/145",
+                "id": 145,
+                "name": "access conditions",
+                "description": "License regulating the conditions for access and use of the data (open group with some predefined tags)."
+            },
+            "description": "None of the materials provided on this web site may be used, reproduced or transmitted, in whole or in part, in any form or by any means"
+        }, {
+            "$self": "/SWITCHON.TAG/1447",
+            "id": 1447,
+            "name": "citation needed",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/145",
+                "id": 145,
+                "name": "access conditions",
+                "description": "License regulating the conditions for access and use of the data (open group with some predefined tags)."
+            },
+            "description": "Data may be used without limitation but a citation is mandatory."
+        }, {
+            "$self": "/SWITCHON.TAG/170",
+            "id": 170,
+            "name": "Conditions unknown",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/145",
+                "id": 145,
+                "name": "access conditions",
+                "description": "License regulating the conditions for access and use of the data (open group with some predefined tags)."
+            },
+            "description": "Conditions unknown"
+        }, {
+            "$self": "/SWITCHON.TAG/158",
+            "id": 158,
+            "name": "Creative Commons (CC BY)",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/145",
+                "id": 145,
+                "name": "access conditions",
+                "description": "License regulating the conditions for access and use of the data (open group with some predefined tags)."
+            },
+            "description": "<a href='http://creativecommons.org/licenses/by/4.0/legalcode' target='_blank'>Creative Commons Attribution 4.0 International (CC BY 4.0)</a>"
+        }, {
+            "$self": "/SWITCHON.TAG/161",
+            "id": 161,
+            "name": "Creative Commons (CC BY-NC)",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/145",
+                "id": 145,
+                "name": "access conditions",
+                "description": "License regulating the conditions for access and use of the data (open group with some predefined tags)."
+            },
+            "description": "<a href='http://creativecommons.org/licenses/by-nc/4.0/' target='_blank'>Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)</a>"
+        }, {
+            "$self": "/SWITCHON.TAG/163",
+            "id": 163,
+            "name": "Creative Commons (CC BY-NC-ND)",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/145",
+                "id": 145,
+                "name": "access conditions",
+                "description": "License regulating the conditions for access and use of the data (open group with some predefined tags)."
+            },
+            "description": "<a href='http://creativecommons.org/licenses/by-nc-nd/4.0/legalcode' target='_blank'>Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)</a>"
+        }, {
+            "$self": "/SWITCHON.TAG/162",
+            "id": 162,
+            "name": "Creative Commons (CC BY-NC-SA)",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/145",
+                "id": 145,
+                "name": "access conditions",
+                "description": "License regulating the conditions for access and use of the data (open group with some predefined tags)."
+            },
+            "description": "<a href='http://creativecommons.org/licenses/by-nc-sa/4.0/legalcode' target='_blank'>Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</a>"
+        }, {
+            "$self": "/SWITCHON.TAG/160",
+            "id": 160,
+            "name": "Creative Commons (CC BY-ND)",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/145",
+                "id": 145,
+                "name": "access conditions",
+                "description": "License regulating the conditions for access and use of the data (open group with some predefined tags)."
+            },
+            "description": "<a href='http://creativecommons.org/licenses/by-nd/4.0/legalcode' target='_blank'>Creative Commons Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0)</a>"
+        }, {
+            "$self": "/SWITCHON.TAG/159",
+            "id": 159,
+            "name": "Creative Commons (CC BY-SA)",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/145",
+                "id": 145,
+                "name": "access conditions",
+                "description": "License regulating the conditions for access and use of the data (open group with some predefined tags)."
+            },
+            "description": "<a href='http://creativecommons.org/licenses/by-sa/4.0/legalcode' target='_blank'>Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)</a>"
+        }, {
+            "$self": "/SWITCHON.TAG/165",
+            "id": 165,
+            "name": "DbCL",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/145",
+                "id": 145,
+                "name": "access conditions",
+                "description": "License regulating the conditions for access and use of the data (open group with some predefined tags)."
+            },
+            "description": "<a href='http://opendatacommons.org/licenses/dbcl/1.0/' target='_blank'>Database Contents License (DbCL) v1.0</a>"
+        }, {
+            "$self": "/SWITCHON.TAG/1448",
+            "id": 1448,
+            "name": "for research only",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/145",
+                "id": 145,
+                "name": "access conditions",
+                "description": "License regulating the conditions for access and use of the data (open group with some predefined tags)."
+            },
+            "description": "These data are for use in research projects only."
+        }, {
+            "$self": "/SWITCHON.TAG/169",
+            "id": 169,
+            "name": "No conditions apply",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/145",
+                "id": 145,
+                "name": "access conditions",
+                "description": "License regulating the conditions for access and use of the data (open group with some predefined tags)."
+            },
+            "description": "No conditions apply"
+        }, {
+            "$self": "/SWITCHON.TAG/1451",
+            "id": 1451,
+            "name": "no limitations",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/145",
+                "id": 145,
+                "name": "access conditions",
+                "description": "License regulating the conditions for access and use of the data (open group with some predefined tags)."
+            },
+            "description": "You may download and use any data unless it is specifically stated that the information has limitations for its use."
+        }, {
+            "$self": "/SWITCHON.TAG/1449",
+            "id": 1449,
+            "name": "non-commercial research",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/145",
+                "id": 145,
+                "name": "access conditions",
+                "description": "License regulating the conditions for access and use of the data (open group with some predefined tags)."
+            },
+            "description": "These data are strictly for use in non-commercial research and non-commercial education projects only."
+        }, {
+            "$self": "/SWITCHON.TAG/1446",
+            "id": 1446,
+            "name": "non-commercial use",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/145",
+                "id": 145,
+                "name": "access conditions",
+                "description": "License regulating the conditions for access and use of the data (open group with some predefined tags)."
+            },
+            "description": "Free for non-commercial use"
+        }, {
+            "$self": "/SWITCHON.TAG/164",
+            "id": 164,
+            "name": "ODbL",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/145",
+                "id": 145,
+                "name": "access conditions",
+                "description": "License regulating the conditions for access and use of the data (open group with some predefined tags)."
+            },
+            "description": "<a href='http://opendatacommons.org/licenses/odbl/1.0/' target='_blank'>Open Database License (ODbL) v1.0</a>"
+        }, {
+            "$self": "/SWITCHON.TAG/167",
+            "id": 167,
+            "name": "ODC-By",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/145",
+                "id": 145,
+                "name": "access conditions",
+                "description": "License regulating the conditions for access and use of the data (open group with some predefined tags)."
+            },
+            "description": "<a href='http://opendatacommons.org/licenses/by/1.0/' target='_blank'>Open Data Commons Attribution License (ODC-By) v1.0</a>"
+        }, {
+            "$self": "/SWITCHON.TAG/866",
+            "id": 866,
+            "name": "other",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/145",
+                "id": 145,
+                "name": "access conditions",
+                "description": "License regulating the conditions for access and use of the data (open group with some predefined tags)."
+            },
+            "description": "Non-standard license. Please refer to the additional license conditions, if available."
+        }, {
+            "$self": "/SWITCHON.TAG/166",
+            "id": 166,
+            "name": "PDDL",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/145",
+                "id": 145,
+                "name": "access conditions",
+                "description": "License regulating the conditions for access and use of the data (open group with some predefined tags)."
+            },
+            "description": "<a href='http://opendatacommons.org/licenses/pddl/1.0/' target='_blank'>ODC Public Domain Dedication and Licence (PDDL)</a>"
+        }, {
+            "$self": "/SWITCHON.TAG/168",
+            "id": 168,
+            "name": "proprietary",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/145",
+                "id": 145,
+                "name": "access conditions",
+                "description": "License regulating the conditions for access and use of the data (open group with some predefined tags)."
+            },
+            "description": "Proprietary License."
+        }]
+}

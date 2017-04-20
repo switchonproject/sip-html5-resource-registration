@@ -1,0 +1,284 @@
+{
+    "$self": "/SWITCHON.RESOURCE/12095",
+    "id": 12095,
+    "fromdate": null,
+    "accessconditions": {
+        "$self": "/SWITCHON.TAG/158",
+        "id": 158,
+        "name": "Creative Commons (CC BY)",
+        "taggroup": {
+            "$self": "/SWITCHON.TAGGROUP/145",
+            "id": 145,
+            "name": "access conditions",
+            "description": "License regulating the conditions for access and use of the data (open group with some predefined tags)."
+        },
+        "description": "<a href='http://creativecommons.org/licenses/by/4.0/legalcode' target='_blank'>Creative Commons Attribution 4.0 International (CC BY 4.0)</a>"
+    },
+    "spatialcoverage": {
+        "$self": "/SWITCHON.GEOM/12247",
+        "id": 12247,
+        "geo_field": "SRID=4326;POLYGON ((16.979667 48.123497, 16.903754 47.714866, 16.340584 47.712902, 16.534268 47.496171, 16.202298 46.852386, 16.011664 46.683611, 15.137092 46.658703, 14.632472 46.431817, 13.806475 46.509306, 12.376485 46.767559, 12.153088 47.115393, 11.164828 46.941579, 11.048556 46.751359, 10.442701 46.893546, 9.932448 46.920728, 9.47997 47.10281, 9.632932 47.347601, 9.594226 47.525058, 9.896068 47.580197, 10.402084 47.302488, 10.544504 47.566399, 11.426414 47.523766, 12.141357 47.703083, 12.62076 47.672388, 12.932627 47.467646, 13.025851 47.637584, 12.884103 48.289146, 13.243357 48.416115, 13.595946 48.877172, 14.338898 48.555305, 14.901447 48.964402, 15.253416 49.039074, 16.029647 48.733899, 16.499283 48.785808, 16.960288 48.596982, 16.879983 48.470013, 16.979667 48.123497))"
+    },
+    "todate": null,
+    "srid": {
+        "$self": "/SWITCHON.TAG/226",
+        "id": 226,
+        "name": "EPSG:4326",
+        "taggroup": {
+            "$self": "/SWITCHON.TAGGROUP/167",
+            "id": 167,
+            "name": "srid",
+            "description": "The Spatial Reference System Identifier (SRID) of the spatial coverage of the resource EPSG format (open group with some predefined tags)."
+        },
+        "description": "WGS 84 / World Geodetic System 1984"
+    },
+    "conformity": {
+        "$self": "/SWITCHON.TAG/253",
+        "id": 253,
+        "name": "Not evaluated",
+        "taggroup": {
+            "$self": "/SWITCHON.TAGGROUP/150",
+            "id": 150,
+            "name": "conformity",
+            "description": "This is a citation of the implementing rules adopted under Article 7(1) of Directive 2007/2/EC or other specification to which a particular resource conforms. (fixed group)"
+        },
+        "description": "Not evaluated"
+    },
+    "language": {
+        "$self": "/SWITCHON.TAG/145",
+        "id": 145,
+        "name": "eng",
+        "taggroup": {
+            "$self": "/SWITCHON.TAGGROUP/157",
+            "id": 157,
+            "name": "language",
+            "description": "The language(s) used within the resource or in which the metadata elements are expressed.  The value domain of this tag is limited to the languages defined in ISO 639-2."
+        },
+        "description": "English"
+    },
+    "description": "This dataset PRESENTS long-term observations from an experimental snow lysimeter plot in Kühtai (Austrian Alps). The data set includes 15 minutes data of snow water equivalent from a 10 m² snow pillow, snow melt outflow from a 10 m² snow lysimeter placed at the same location as the pillow, meteorological data (precipitation, incoming global radiation, reflected short wave radiation, air temperature, relative air humidity and wind speed), and other data (snow depths, snow temperatures at seven heights) from the period October, 1990 – May, 2015. All data have been quality checked, and gaps in the meteorological data have been filled in.",
+    "type": {
+        "$self": "/SWITCHON.TAG/1535",
+        "id": 1535,
+        "name": "open data",
+        "taggroup": {
+            "$self": "/SWITCHON.TAGGROUP/164",
+            "id": 164,
+            "name": "resource type",
+            "description": "SIP internal type of the resource (fixed group)."
+        },
+        "description": "This is data available as open data from any source on the Internet. The data has been registered through the switchon website"
+    },
+    "location": null,
+    "topiccategory": {
+        "$self": "/SWITCHON.TAG/230",
+        "id": 230,
+        "name": "climatologyMeteorologyAtmosphere",
+        "taggroup": {
+            "$self": "/SWITCHON.TAGGROUP/168",
+            "id": 168,
+            "name": "topic category",
+            "description": "High-level classification of resources in accordance with ISO 19115 for grouping and topic-based search (fixed group)."
+        },
+        "description": "processes and phenomena of the atmosphere. Examples: cloud cover, weather, climate, atmospheric conditions, climate change, precipitation"
+    },
+    "creationdate": null,
+    "name": "The Kühtai data set: 25 years of lysimetric, snow pillow and meteorological measurements",
+    "licensestatement": null,
+    "tags": [{
+            "$self": "/SWITCHON.TAG/1492",
+            "id": 1492,
+            "name": "Water body, sea",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/169",
+                "id": 169,
+                "name": "keywords - X-CUAHSI",
+                "description": "X-CUAHSI keywords build on a hierarchical keyword selection from the hydrologic ontology developed by CUAHSI, with additinal hierarchical keywords for relevant non-hydrosphere data."
+            },
+            "description": null
+        }],
+    "contact": {
+        "$self": "/SWITCHON.CONTACT/196",
+        "id": 196,
+        "organisation": "TU Wien, Austria",
+        "name": "Juraj Parajka",
+        "description": null,
+        "email": null,
+        "url": null,
+        "role": {
+            "$self": "/SWITCHON.TAG/221",
+            "id": 221,
+            "name": "pointOfContact",
+            "taggroup": {
+                "$self": "/SWITCHON.TAGGROUP/165",
+                "id": 165,
+                "name": "role",
+                "description": "Function performed by the responsible party (fixed group, standard codelist)."
+            },
+            "description": "Party that can be contacted for acquiring knowledge about or acquisition of the data resource. Person or organization that can be contacted to acquire data on the resource."
+        }
+    },
+    "geography": null,
+    "representation": [{
+            "$self": "/SWITCHON.REPRESENTATION/13107",
+            "id": 13107,
+            "name": "The Kühtai data set: 25 years of lysimetric, snow pillow and meteorological measurements",
+            "description": "File download",
+            "content": null,
+            "type": {
+                "$self": "/SWITCHON.TAG/212",
+                "id": 212,
+                "name": "original data",
+                "taggroup": {
+                    "$self": "/SWITCHON.TAGGROUP/163",
+                    "id": 163,
+                    "name": "representation type",
+                    "description": "SIP internal type of the representation of the resource (fixed group)."
+                },
+                "description": "The representation holds the original data of the resource"
+            },
+            "function": {
+                "$self": "/SWITCHON.TAG/71",
+                "id": 71,
+                "name": "download",
+                "taggroup": {
+                    "$self": "/SWITCHON.TAGGROUP/152",
+                    "id": 152,
+                    "name": "function",
+                    "description": "Function that can be perfomred following the contentLocation link to the resource representation (fixed group, standard codelist)."
+                },
+                "description": "The link will get the dataset. The function of the link is to download a file."
+            },
+            "protocol": {
+                "$self": "/SWITCHON.TAG/1386",
+                "id": 1386,
+                "name": "WWW:DOWNLOAD-1.0-http--download",
+                "taggroup": {
+                    "$self": "/SWITCHON.TAGGROUP/161",
+                    "id": 161,
+                    "name": "protocol",
+                    "description": "Protocol of the service that can be accessed at the contentLocation of the resource representation (open group with several predefined tags from standard codelists)."
+                },
+                "description": "Web Address (URL), this is a download URL"
+            },
+            "applicationprofile": null,
+            "uuid": "3fe78476-e045-476c-858e-f8a4ff0b7d0f",
+            "temporalresolution": null,
+            "spatialresolution": null,
+            "spatialscale": null,
+            "contentlocation": "https://zenodo.org/record/556110/files/snow_and_meteo_data_kuhtai_1990-2015.zip",
+            "tags": [],
+            "contenttype": {
+                "$self": "/SWITCHON.TAG/53",
+                "id": 53,
+                "name": "application/zip",
+                "taggroup": {
+                    "$self": "/SWITCHON.TAGGROUP/151",
+                    "id": 151,
+                    "name": "content type",
+                    "description": "MIME Type of the representation (open group which several predefined tags)."
+                },
+                "description": "ZIP (zip archive file format)"
+            },
+            "uploadstatus": null,
+            "uploadmessage": null
+        }],
+    "lastmodificationdate": null,
+    "metadata": [{
+            "$self": "/SWITCHON.METADATA/14613",
+            "id": 14613,
+            "name": "OpenData Registration Meta-Data",
+            "tags": [],
+            "description": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36",
+            "contact": null,
+            "type": {
+                "$self": "/SWITCHON.TAG/177",
+                "id": 177,
+                "name": "basic meta-data",
+                "taggroup": {
+                    "$self": "/SWITCHON.TAGGROUP/160",
+                    "id": 160,
+                    "name": "meta-data type",
+                    "description": "SIP internal type of the Meta-Data Record (fixed group)."
+                },
+                "description": "Type of the Meta-Data Record. \"basic meta-data\" refers to meta-data collected by switch-on according to the SIM meta-data schema. In fact, this meta-meta-data record refers to enclosing resource meta-data record."
+            },
+            "language": {
+                "$ref": "/SWITCHON.TAG/145"
+            },
+            "standard": {
+                "$self": "/SWITCHON.TAG/1387",
+                "id": 1387,
+                "name": "SWITCH-ON SIM",
+                "taggroup": {
+                    "$self": "/SWITCHON.TAGGROUP/159",
+                    "id": 159,
+                    "name": "meta-data standard",
+                    "description": "Official standard on which the meta-data record is based (open group with some predefined tags)."
+                },
+                "description": "Meta-Data Record compliant to the Standard Information Model (SIM) of the Spatial Information Platform (SIP) of the EU FP7 project SWITCH-ON."
+            },
+            "uuid": null,
+            "contentlocation": null,
+            "creationdate": 1492672800292,
+            "contenttype": {
+                "$self": "/SWITCHON.TAG/40",
+                "id": 40,
+                "name": "application/json",
+                "taggroup": {
+                    "$ref": "/SWITCHON.TAGGROUP/151"
+                },
+                "description": "JSON (Java Script Object Notation)"
+            },
+            "content": "[{\"key\":\"serverStart\",\"value\":\"1492672588017\",\"lastBuildDate\":1492672588017},{\"key\":\"startupMode\",\"value\":\"interactive\",\"lastBuildDate\":1492672588020},{\"key\":\"registry\",\"value\":\"NO-REGISTRY-BECAUSE-OF-STANDALONE-SERVER\",\"lastBuildDate\":1492672587812},{\"key\":\"connector\",\"value\":\"0.0.0.0:8890\",\"lastBuildDate\":1492672587967},{\"key\":\"sslEnabled\",\"value\":\"false\",\"lastBuildDate\":1492672587812},{\"key\":\"activeCores\",\"value\":[\"core.legacy.action\",\"core.legacy.entity\",\"core.legacy.entityInfo\",\"core.default.infrastructure\",\"core.legacy.node\",\"core.legacy.permission\",\"core.legacy.search\",\"core.legacy.user\"],\"lastBuildDate\":1492672587823},{\"key\":\"standalone\",\"value\":\"true\",\"lastBuildDate\":1492672587812},{\"key\":\"request\",\"value\":{\"Origin\":\"http://localhost:8383\",\"localName\":\"127.0.0.1\",\"Cache-Control\":\"no-cache\",\"Accept\":\"application/json, text/plain, */*\",\"localAddress\":\"127.0.0.1\",\"User-Agent\":\"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36\",\"Referer\":\"http://localhost:8383/sip-html5-resource-registration/app/index.html\",\"Host\":\"localhost:8890\",\"Pragma\":\"no-cache\",\"DNT\":\"1\",\"Accept-Encoding\":\"gzip, deflate, sdch, br\",\"Accept-Language\":\"de-DE,de;q=0.8,en-US;q=0.6,en;q=0.4\"},\"lastBuildDate\":1492672801643}]"
+        }, {
+            "$self": "/SWITCHON.METADATA/14614",
+            "id": 14614,
+            "name": "Zenodo Deposition Resource",
+            "tags": [],
+            "description": "https://doi.org/10.5281/zenodo.556110",
+            "contact": null,
+            "type": {
+                "$self": "/SWITCHON.TAG/1542",
+                "id": 1542,
+                "name": "deposition meta-data",
+                "taggroup": {
+                    "$ref": "/SWITCHON.TAGGROUP/160"
+                },
+                "description": "Type of the Meta-Data Record. \"deposition meta-data\" refers to meta-data about depositions stored at zenodo.org ."
+            },
+            "language": null,
+            "standard": null,
+            "uuid": "10.5281/zenodo.556110",
+            "contentlocation": "https://zenodo.org/api/records/556110",
+            "creationdate": 1492672800292,
+            "contenttype": null,
+            "content": "{\"created\":\"2017-04-20T07:13:17.049795+00:00\",\"doi\":\"10.5281/zenodo.556110\",\"doi_url\":\"https://doi.org/10.5281/zenodo.556110\",\"files\":[{\"checksum\":\"1e1c7e8d32b2dfd7442ef4ff8ec452e8\",\"filename\":\"snow_and_meteo_data_kuhtai_1990-2015.zip\",\"filesize\":14851684,\"id\":\"e09c05b6-89b5-473a-b988-174f22fa77cd\",\"links\":{\"download\":\"https://sandbox.zenodo.org/api/files/ae46ad0d-e6dc-4171-bdfd-fdf5b01ce2c0/snow_and_meteo_data_kuhtai_1990-2015.zip\",\"self\":\"https://sandbox.zenodo.org/api/deposit/depositions/71554/files/e09c05b6-89b5-473a-b988-174f22fa77cd\"}}],\"id\":556110,\"links\":{\"badge\":\"https://sandbox.zenodo.org/badge/doi/10.5281/zenodo.556110.svg\",\"bucket\":\"https://sandbox.zenodo.org/api/files/ae46ad0d-e6dc-4171-bdfd-fdf5b01ce2c0\",\"conceptbadge\":\"https://sandbox.zenodo.org/badge/doi/10.5281/zenodo.71760.svg\",\"conceptdoi\":\"https://doi.org/10.5281/zenodo.71760\",\"doi\":\"https://doi.org/10.5281/zenodo.556110\",\"latest\":\"https://sandbox.zenodo.org/api/records/556110\",\"latest_html\":\"https://sandbox.zenodo.org/record/556110\",\"record\":\"https://sandbox.zenodo.org/api/records/556110\",\"record_html\":\"https://sandbox.zenodo.org/record/556110\"},\"metadata\":{\"access_right\":\"open\",\"communities\":[{\"identifier\":\"switchon\"},{\"identifier\":\"zenodo\"}],\"creators\":[{\"affiliation\":\"TU Wien, Austria\",\"name\":\"Juraj Parajka\"}],\"description\":\"This dataset PRESENTS long-term observations from an experimental snow lysimeter plot in Kühtai (Austrian Alps). The data set includes 15 minutes data of snow water equivalent from a 10 m² snow pillow, snow melt outflow from a 10 m² snow lysimeter placed at the same location as the pillow, meteorological data (precipitation, incoming global radiation, reflected short wave radiation, air temperature, relative air humidity and wind speed), and other data (snow depths, snow temperatures at seven heights) from the period October, 1990 – May, 2015. All data have been quality checked, and gaps in the meteorological data have been filled in.\",\"doi\":\"10.5281/zenodo.556110\",\"keywords\":[\"Water body, sea\"],\"license\":\"CC-BY-4.0\",\"prereserve_doi\":{\"doi\":\"10.5281/zenodo.556110\",\"recid\":556110},\"publication_date\":\"2017-04-20\",\"related_identifiers\":[],\"title\":\"The Kühtai data set: 25 years of lysimetric, snow pillow and meteorological measurements\",\"upload_type\":\"dataset\"},\"modified\":\"2017-04-20T07:20:15.907029+00:00\",\"owner\":123,\"record_id\":556110,\"state\":\"done\",\"submitted\":true,\"title\":\"The Kühtai data set: 25 years of lysimetric, snow pillow and meteorological measurements\"}"
+        }],
+    "accesslimitations": {
+        "$self": "/SWITCHON.TAG/1",
+        "id": 1,
+        "name": "limitation not listed",
+        "taggroup": {
+            "$self": "/SWITCHON.TAGGROUP/146",
+            "id": 146,
+            "name": "access limitations",
+            "description": "Limitations on public access in accordance to Article 13 of Directive 2007/2/EC (fixed group with tags from a standard codelist)."
+        },
+        "description": "otherRestrictions (limitation not listed)"
+    },
+    "uuid": "0888751d-6010-4ce9-a273-b1d7845710be",
+    "collection": {
+        "$self": "/SWITCHON.TAG/1534",
+        "id": 1534,
+        "name": "Open Datasets",
+        "taggroup": {
+            "$self": "/SWITCHON.TAGGROUP/149",
+            "id": 149,
+            "name": "collection",
+            "description": "Assigns the resource to a collection of resources for cataloguing purposes, e.g. SWITCH-ON Experiment Results, etc. (open group with some predefined tags)."
+        },
+        "description": "Open Datasets registered through the SWITCH-ON Website"
+    },
+    "publicationdate": null
+}

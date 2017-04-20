@@ -116,7 +116,7 @@
                       title="Preresevred DOI">{{dataset.$deposition.metadata.prereserve_doi.doi}}
                     </span>
                     <span>&nbsp;{{dataset.$deposition.metadata.upload_type}}</span>
-                    <span ng-if="dataset.$deposition.metadata.grants === true"> / SWITCH-ON FP7 Result<span>        
+                    <span ng-if="dataset.$deposition.metadata.grants === true"> / SWITCH-ON FP7 Result</span>        
                 </div>
             </div>
 
@@ -127,6 +127,20 @@
                     {{dataset.metadata[1].description}}
                 </div>
             </div>
+            
+            <!-- Lineage -->
+            <div class="row" ng-if="summaryController.config.developmentMode === true">
+                <label class="col-md-3">DEBUG</label>
+                <div class="col-md-9">
+                <button class="btn btn-danger" 
+                        type="button"  
+                        ng-if="summaryController.config.developmentMode === true || storageController.progress.error"
+                        ng-click="summaryController.saveJSON()" 
+                        ng-href="{{ url}}">
+                    Download Meta-Data 
+                </button>
+                </div>
+            </div> 
         </div>
         <div class="col-md-6">
             <leaflet id="summarymap" 

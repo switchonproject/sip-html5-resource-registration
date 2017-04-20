@@ -65,8 +65,6 @@ module.exports = function(config) {
         'app/templates/summary.html',
         'app/templates/wizard-step-tpl.html',
         'app/templates/wizard-tpl.html',
-        'app/views/myView.html',
-        'test/spec/controllers/myController.js',
         'test/spec/services/representationFactoryTest.js',
         {pattern: 'test/res/**/*.json', watched: true, included: true, served: true}
     ],

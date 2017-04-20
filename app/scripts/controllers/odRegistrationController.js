@@ -168,14 +168,14 @@ angular.module(
 
                 $scope.wizard.enterValidators['Dataset Description'] = function (context) {
                     
-                    if(_this.config.developmentMode === true) {
-                        return true;
-                    }
-                    
                     if (context.valid === true) {
                         $scope.message.text = 'Please provide some general information about the new dataset such as name, description, a (download) link and keywords.';
                         $scope.message.icon = 'fa-info-circle';
                         $scope.message.type = 'success';
+                    }
+                    
+                    if(_this.config.developmentMode === true) {
+                        context.valid = true;
                     }
 
                     return context.valid;
@@ -183,10 +183,6 @@ angular.module(
 
                 $scope.wizard.exitValidators['Dataset Description'] = function (context) {
                     context.valid = true;
-                    
-                    if(_this.config.developmentMode === true) {
-                        return true;
-                    }
 
                     // CONTENT TYPE
                     var isInvalidContenttype = $scope.tags['content type'].every(function (element) {
@@ -209,7 +205,7 @@ angular.module(
                             return true;
                         }
                     });
-
+                    
                     // NAME
                     if (!dataset.name) {
                         $scope.message.text = 'Please enter the name / title of the dataset.';
@@ -311,6 +307,10 @@ angular.module(
                         $scope.wizard.hasError = null;
                     }
                     // no error? -> reset
+                    
+                    if(_this.config.developmentMode === true) {
+                        context.valid = true;
+                    }
 
                     return context.valid;
                 };

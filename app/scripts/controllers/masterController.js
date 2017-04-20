@@ -16,13 +16,11 @@ angular.module(
             '$scope',
             'AppConfig',
             'de.cismet.sip-html5-resource-registration.services.dataset',
-            'de.cismet.sip-html5-resource-registration.services.TagGroupService',
             '$modal',
             function (
                     $scope,
                     AppConfig,
                     dataset,
-                    tagGroupService,
                     $modal
                     ) {
                 'use strict';
@@ -44,7 +42,7 @@ angular.module(
                         backdrop: 'static'
                     });
                 };
-                
+
                 // TODO: retrieve the access token from server!
                 // FIXME: Promise synchronisation problem. zenodoSerrvice ($resource) requires token before token promise is resolved
                 // and generateDOI property in controllers is set when $resource promise is resolved !!!
@@ -105,7 +103,7 @@ angular.module(
                 $scope.wizard.isFirstStep = function () {
                     return $scope.wizard.currentStep === 'Dataset Description';
                 };
-
+                
                 $scope.mapData = {};
 
                 $scope.$watch('wizard.currentStep', function (n) {

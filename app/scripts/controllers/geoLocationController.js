@@ -120,12 +120,6 @@ angular.module(
                 
             // resize the map on enter, read spatial coverage from dataset
             $scope.wizard.enterValidators['Geographic Location'] = function(context) {
-                
-                if(_this.config.developmentMode === true) {
-                        return true;
-                }
-                
-                
                 if(context.valid === true)
                 {
                     if(_this.readOnly) {
@@ -163,7 +157,11 @@ angular.module(
                                 });
                             }
                     } 
-               }
+                }
+               
+                if(_this.config.developmentMode === true) {
+                    context.valid = true;
+                }
                 
                 return context.valid;
             };            
@@ -172,10 +170,6 @@ angular.module(
             $scope.wizard.exitValidators['Geographic Location'] = function(context){
                 context.valid = true;
                 
-                if(_this.config.developmentMode === true) {
-                        return true;
-                }
-                
                 if(_this.mode.defineBBox === true && $scope.forms.coordinatesForm.$invalid) {
                     $scope.message.text='Please specify a valid bounding box or use an other option to specify the geographic location of the dataset!';
                     $scope.message.icon='fa-warning';
@@ -183,7 +177,7 @@ angular.module(
                     
                     context.valid = false;
                 } else if(!layerGroup || !layerGroup.getLayers() || layerGroup.getLayers().length === 0) {
-                    
+
                     $scope.message.text='Please specify the geographic location (spatial extent) of the dataset!';
                     $scope.message.icon='fa-warning';
                     $scope.message.type = 'warning';
@@ -213,6 +207,10 @@ angular.module(
                          wkt = new Wkt.Wkt().fromObject(layerGroup.getLayers()[0]);
                     }
                     writeSpatialCoverage(_this.dataset, wkt.write());
+                }
+                
+                if(_this.config.developmentMode === true) {
+                    context.valid = true;
                 }
                 
                 return context.valid;

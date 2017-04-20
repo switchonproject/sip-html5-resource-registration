@@ -12,8 +12,6 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "    <p class=\"danger\" ng-bind-html=\"storageController.progress.message\"></p>\r" +
     "\n" +
-    "    \r" +
-    "\n" +
     "    <progressbar class=\"progress-striped active\" \r" +
     "\n" +
     "                 ng-class=\"{active:storageController.progress.active}\"\r" +
@@ -24,7 +22,7 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                 type=\"{{storageController.progress.type}}\">\r" +
     "\n" +
-    "        <!--<span ng-show=\"storageController.progress.error\">{storageController.progress.error}</span>-->\r" +
+    "        <p class=\"danger\" ng-show=\"storageController.progress.error\">Please report this error to SWITCH-ON (Feedback) and attach the erroneous meta-data file (Download Meta-Data).</p>\r" +
     "\n" +
     "    </progressbar>\r" +
     "\n" +
@@ -32,13 +30,41 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "<div class=\"modal-footer\">\r" +
     "\n" +
+    "    <a class=\"btn btn-primary pull-left\"\r" +
+    "\n" +
+    "       href=\"mailto:switchon.odr@gmail.com?subject=Open-Data Registration Tool\">\r" +
+    "\n" +
+    "        <span class=\"fa fa-fw fa-envelope\"></span>\r" +
+    "\n" +
+    "        <span>Feedback</span>\r" +
+    "\n" +
+    "    </a>\r" +
+    "\n" +
+    "    <button class=\"btn btn-danger\" \r" +
+    "\n" +
+    "            type=\"button\"  \r" +
+    "\n" +
+    "            ng-if=\"storageController.config.developmentMode === true || storageController.progress.error\"\r" +
+    "\n" +
+    "            ng-click=\"storageController.saveJSON()\" \r" +
+    "\n" +
+    "            ng-href=\"{{ url}}\">\r" +
+    "\n" +
+    "        Download Meta-Data \r" +
+    "\n" +
+    "    </button>\r" +
+    "\n" +
     "    <button class=\"btn btn-primary\" \r" +
     "\n" +
     "            type=\"button\" \r" +
     "\n" +
     "            ng-disabled=\"!storageController.progress.finished\"\r" +
     "\n" +
-    "            ng-click=\"storageController.close()\">Close</button>\r" +
+    "            ng-click=\"storageController.close()\">\r" +
+    "\n" +
+    "        Close\r" +
+    "\n" +
+    "    </button>\r" +
     "\n" +
     "</div>"
   );
@@ -412,7 +438,7 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "        <div class=\"col-md-10\">\r" +
     "\n" +
-    "            <p>Please chose one or more <a href=\"https://www.cuahsi.org/\" target=\"_blank\">CUAHSI</a> Keywords from the extended <a href=\"http://his.cuahsi.org/ontologyfiles.html\" title=\"\" target=\"_blank\">Hydrologic Ontology for Discovery</a>.</p>\r" +
+    "            <p>Please chose one or more <a href=\"https://www.cuahsi.org/\" target=\"_blank\">CUAHSI</a> Keywords from the extended <a href=\"https://www.cuahsi.org/Ontology\" title=\"CUAHSI HIS Ontology\" target=\"_blank\">Hydrologic Ontology for Discovery</a>.</p>\r" +
     "\n" +
     "        </div>\r" +
     "\n" +
@@ -1579,7 +1605,7 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "\n" +
     "                    <span>&nbsp;{{dataset.$deposition.metadata.upload_type}}</span>\r" +
     "\n" +
-    "                    <span ng-if=\"dataset.$deposition.metadata.grants === true\"> / SWITCH-ON FP7 Result<span>        \r" +
+    "                    <span ng-if=\"dataset.$deposition.metadata.grants === true\"> / SWITCH-ON FP7 Result</span>        \r" +
     "\n" +
     "                </div>\r" +
     "\n" +
@@ -1600,6 +1626,34 @@ angular.module('').run(['$templateCache', function($templateCache) {
     "                </div>\r" +
     "\n" +
     "            </div>\r" +
+    "\n" +
+    "            \r" +
+    "\n" +
+    "            <!-- Lineage -->\r" +
+    "\n" +
+    "            <div class=\"row\" ng-if=\"summaryController.config.developmentMode === true\">\r" +
+    "\n" +
+    "                <label class=\"col-md-3\">DEBUG</label>\r" +
+    "\n" +
+    "                <div class=\"col-md-9\">\r" +
+    "\n" +
+    "                <button class=\"btn btn-danger\" \r" +
+    "\n" +
+    "                        type=\"button\"  \r" +
+    "\n" +
+    "                        ng-if=\"summaryController.config.developmentMode === true || storageController.progress.error\"\r" +
+    "\n" +
+    "                        ng-click=\"summaryController.saveJSON()\" \r" +
+    "\n" +
+    "                        ng-href=\"{{ url}}\">\r" +
+    "\n" +
+    "                    Download Meta-Data \r" +
+    "\n" +
+    "                </button>\r" +
+    "\n" +
+    "                </div>\r" +
+    "\n" +
+    "            </div> \r" +
     "\n" +
     "        </div>\r" +
     "\n" +

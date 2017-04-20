@@ -43,7 +43,7 @@ angular.module(
                 'use strict';
                 
                 var _this, currentdate, userAgent, maxProgress, accessConditions, 
-                    timer;
+                    timer; 
                 
                 /**
                 * Update deposition metadata and save to zenodo
@@ -211,8 +211,14 @@ angular.module(
                     $modalInstance.close();
                     $window.location.reload();
                 };
-
-
+                
+                _this.saveJSON = function () {
+                    var blob = new Blob([angular.toJson(_this.dataset, true)], { type:'application/json;charset=utf-8;' });			
+                    var downloadLink = angular.element('<a></a>');
+                    downloadLink.attr('href',window.URL.createObjectURL(blob));
+                    downloadLink.attr('download', 'metadata.json');
+                    downloadLink[0].click();
+		};
 
                 $modalInstance.rendered.then(function () {
 
@@ -294,14 +300,23 @@ angular.module(
 
                     // META-DATA TYPE -> BASIC METADATA, LINEAGE METADATA
                     tagGroupService.getTagList('meta-data type', 'basic meta-data,lineage meta-data,deposition meta-data').$promise.then(function (tags) {
+                        // BASIC METADATA TAG
                         _this.dataset.metadata[0].type = tags.getTagByName('basic meta-data');
-                        if (_this.dataset.metadata[1] && _this.dataset.metadata[1].description) {
-                            _this.dataset.metadata[1].type = tags.getTagByName('lineage meta-data');
-                        }
-                        if (_this.dataset.metadata[2]) {
-                            _this.dataset.metadata[2].type = tags.getTagByName('deposition meta-data');
+                        
+                        // LINEAGE OR DEPOSITION METADATA TAG
+                        if (_this.dataset.metadata[1] && _this.dataset.metadata[1].type) {
+                            if(_this.dataset.metadata[1].type.name === 'lineage meta-data') {
+                                _this.dataset.metadata[1].type = tags.getTagByName('lineage meta-data');
+                            } else {
+                                _this.dataset.metadata[1].type = tags.getTagByName('deposition meta-data');
+                            }
                         }
                         
+                        // DEPOSITION METADATA TAG
+                        if (_this.dataset.metadata[2] && _this.dataset.metadata[2].type) {
+                             _this.dataset.metadata[2].type = tags.getTagByName('deposition meta-data');
+                        }
+
                         _this.progress.currval += 10; // 70
                         //console.log('META-DATA TYPE: ' + _this.progress.currval);
                     });
@@ -406,14 +421,14 @@ angular.module(
                                         if(deposition && deposition !== null) {
                                             _this.progress.message = 'The Meta-Data of the dataset ' + _this.dataset.name + 
                                             ' has been successfully associated with the Digital Object Identifier "' + 
-                                            deposition.doi + '"';
+                                            deposition.metadata.prereserve_doi.doi + '"';
                                             //console.log(_this.progress.message);
                                             return deposition.$publish();
                                         } else {
                                             _this.progress.message = 'The Meta-Data of the dataset ' + _this.dataset.name + 
                                                 ' has been successfully associated with the Digital Object Identifier "' + 
                                                 dataset.$deposition.metadata.prereserve_doi.doi + '"';
-                                            console.error(_this.progress.message);
+                                            //console.error(_this.progress.message);
                                         }  
                                     })
                                 .then(function publishDepositionSuccess(deposition) {

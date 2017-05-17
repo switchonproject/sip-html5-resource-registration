@@ -1324,6 +1324,7 @@ angular.module(
                     _this.progress.finished = true;
                     _this.progress.type = 'danger';
                     _this.progress.currval = 200;
+                    _this.progress.error = error.data;
                 }
 
                 currentdate = new Date().getTime();
@@ -1777,7 +1778,7 @@ angular.module(
     [function () {
         'use strict'; 
         
-        this.developmentMode = false;
+        this.developmentMode = true;
 
         this.cidsRestApi = {};
         this.cidsRestApi.host = this.developmentMode ? 'http://localhost:8890' : 'http://data.water-switch-on.eu/switchon_server_rest';

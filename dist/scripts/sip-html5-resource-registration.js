@@ -1778,7 +1778,7 @@ angular.module(
     [function () {
         'use strict'; 
         
-        this.developmentMode = true;
+        this.developmentMode = false;
 
         this.cidsRestApi = {};
         this.cidsRestApi.host = this.developmentMode ? 'http://localhost:8890' : 'http://data.water-switch-on.eu/switchon_server_rest';

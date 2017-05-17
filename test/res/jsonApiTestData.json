@@ -1,35 +1,34 @@
 [{
-        "function": "download",
-        "contenttype": "application/zip",
-        "name": "SHP Upload TEST 2016-06-13",
-        "protocol": "WWW:DOWNLOAD-1.0-http--download",
-        "type": "original data",
-        "contentlocation": "http://dl-ng003.xtr.deltares.nl/data/shp_upload_test_2016_06_13/download.zip",
-        "description": "File download",
-        "uploadmessage": "deriveSpatialIndex:shp"
-    }, {
         "function": "service",
         "contenttype": "application/xml",
-        "name": "20141218_GRDC_Stations.shp WMS",
+        "name": "simplified_water_polygons",
         "protocol": "OGC:WMS-1.1.1-http-get-capabilities",
         "type": "original data",
-        "contentlocation": "http://dl-ng003.xtr.deltares.nl/geoserver/shp_upload_test_2016_06_13/wms?service=WMS&version=1.1.0&request=GetCapabilities",
+        "contentlocation": "http://dl-ng003.xtr.deltares.nl/geoserver/osm_simplified_water_polygons/wms?service=WMS&version=1.1.0&request=GetCapabilities",
         "description": "WMS service"
     }, {
         "function": "service",
         "contenttype": "application/xml",
-        "name": "20141218_GRDC_Stations.shp WFS",
-        "protocol": "OGC:WFS-1.0.0-http-get-capabilities",
-        "type": "original data",
-        "contentlocation": "http://dl-ng003.xtr.deltares.nl/geoserver/shp_upload_test_2016_06_13/ows?service=WFS&version=1.0.0&request=GetCapabilities",
-        "description": "WFS service"
+        "name": "simplified_water_polygons",
+        "protocol": "OGC:WMS-1.1.1-http-get-capabilities",
+        "type": "aggregated data",
+        "contentlocation": "http://dl-ng003.xtr.deltares.nl/geoserver/osm_simplified_water_polygons/wms?service=WMS&version=1.1.0&request=GetCapabilities",
+        "description": "WMS service"
     }, {
         "function": "service",
         "contenttype": "application/xml",
-        "name": "20141218_GRDC_Stations",
-        "protocol": "OGC:WMS-1.1.1-http-get-capabilities",
-        "type": "aggregated data",
-        "contentlocation": "http://dl-ng003.xtr.deltares.nl/geoserver/shp_upload_test_2016_06_13/wms?service=WMS&version=1.1.0&request=GetCapabilities",
-        "description": "WMS service",
-        "wktboundingbox": "POLYGON((-17.578125 73.02259157147301,65.390625 73.02259157147301,65.390625 29.53522956294847,-17.578125 29.53522956294847,-17.578125 73.02259157147301))"
+        "name": "simplified_water_polygons",
+        "protocol": "OGC:WFS-1.0.0-http-get-capabilities",
+        "type": "original data",
+        "contentlocation": "http://dl-ng003.xtr.deltares.nl/geoserver/osm_simplified_water_polygons/ows?service=WFS&version=1.0.0&request=GetCapabilities",
+        "description": "WFS service"
+    }, {
+        "function": "download",
+        "contenttype": "application/zip",
+        "name": "simplified-water-polygons-complete-3857.zip",
+        "uploadmessage": "deriveSpatialIndex:shp",
+        "protocol": "WWW:DOWNLOAD-1.0-http--download",
+        "type": "original data",
+        "contentlocation": "http://dl-ng003.xtr.deltares.nl/data/osm_simplified_water_polygons/simplified-water-polygons-complete-3857.zip",
+        "description": "Zipped shapefile"
     }]

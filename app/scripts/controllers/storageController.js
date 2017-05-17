@@ -179,6 +179,7 @@ angular.module(
                     _this.progress.finished = true;
                     _this.progress.type = 'danger';
                     _this.progress.currval = 200;
+                    _this.progress.error = error.data;
                 }
 
                 currentdate = new Date().getTime();
